@@ -1,11 +1,14 @@
 const port = process.env.PORT || 3000;
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: './src/index.js',
+  entry: { app: ['babel-polyfill', './src/index.js'] },
   output: {
     filename: 'bundle.[hash].js',
+    publicPath: '/',
+    path: path.resolve(__dirname, 'dist'),
   },
   module: {
     rules: [
@@ -42,6 +45,7 @@ module.exports = {
   ],
   devServer: {
     host: 'localhost',
+    historyApiFallback: true,
     port: port,
     open: true,
   },
