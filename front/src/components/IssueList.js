@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import IssueContext from './IssueContext';
+import IssueContext from './IssueContent';
 
 const IssueSection = styled.section`
   border: 1px solid #e1e4e8;
@@ -12,7 +12,7 @@ const Header = styled.header`
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 16px;
   background-color: #f6f8fa;
   border: 1px solid #e1e4e8;
 `;
@@ -32,6 +32,7 @@ const IssueList = () => {
         </div>
       </Header>
       <section>
+        <IssueContext />
         <IssueContext />
       </section>
     </IssueSection>
