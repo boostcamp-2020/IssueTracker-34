@@ -1,5 +1,6 @@
 import React, {useRef} from 'react';
 import styled from "styled-components";
+import SearchSvg from "../svgs/SearchSvg";
 
 const FilterSearchBar = () => {
     const inputRef = useRef(false);
@@ -13,6 +14,7 @@ const FilterSearchBar = () => {
         height:32px;
         background-color:#FAFBFC;
         color:#586069;
+        padding-left:32px;
 
         &:focus { 
             outline:none;
@@ -40,6 +42,7 @@ const FilterSearchBar = () => {
     return (
         <>
             <form action="">
+               <SearchSvg/>
                 <SearchInput type="text" ref={inputRef} defaultValue={initValue} placeholder="Search All Issues" onKeyPress={checkEnter}></SearchInput>
             </form>
         </>
