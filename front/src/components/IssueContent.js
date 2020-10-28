@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import ClosedIssueSvg from '../svgs/ClosedIssueSvg';
+import OpenIssueSvg from '../svgs/OpenIssueSvg';
 import IssueInfo from './IssueInfo';
 import IssueLabel from './IssueLabel';
 
@@ -9,6 +11,12 @@ const OutDiv = styled.div`
 `;
 
 const CheckBoxLabel = styled.label`
+  padding-left: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+`;
+
+const IconDiv = styled.div`
   padding-left: 16px;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -51,8 +59,11 @@ const IssueContent = ({ data }) => {
   return (
     <OutDiv>
       <CheckBoxLabel>
-        <input type="checkbox" name="issue" value="" />
+        <input type="checkbox" name={`issue${data.id}`} value={data.id} />
       </CheckBoxLabel>
+      <IconDiv>
+        {data.statusOpenClosed ? <OpenIssueSvg /> : <ClosedIssueSvg />}
+      </IconDiv>
       <TitleDiv>
         <IssueTitle>{data.title}</IssueTitle>
         <LabelsContaier>{issueLabels}</LabelsContaier>

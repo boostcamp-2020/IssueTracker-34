@@ -23,6 +23,7 @@ const tempIssueData = [
     id: 1,
     date: new Date('2020/10/27 11:00'),
     author: 'rockpell',
+    statusOpenClosed: true,
     labels: [
       { name: '이슈 목록 화면', color: '#77b21e' },
       { name: '이슈 상세 화면', color: '#eccf9e' },
@@ -33,6 +34,7 @@ const tempIssueData = [
     id: 2,
     date: new Date('2020/10/28 12:00'),
     author: 'rockpell',
+    statusOpenClosed: true,
     labels: [{ name: '이슈 목록 화면', color: '#77b21e' }],
   },
   {
@@ -40,6 +42,7 @@ const tempIssueData = [
     id: 3,
     date: new Date('2020/10/28 14:00'),
     author: 'rockpell',
+    statusOpenClosed: false,
     labels: [{ name: '새로운 이슈', color: '#1d76db' }],
   },
 ];
