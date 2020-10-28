@@ -44,7 +44,7 @@ const FilterList = styled.section`
   position: absolute;
   background: white;
   width: 12rem;
-  animation: ${slideDownAnimation} .5s ease-out;
+  animation: ${slideDownAnimation} .1s ease-out;
 `;
 
 const Div = styled.div`
