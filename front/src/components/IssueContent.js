@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import IssueInfo from './IssueInfo';
+import IssueLabel from './IssueLabel';
 
 const OutDiv = styled.div`
   display: flex;
@@ -29,37 +31,37 @@ const LabelsContaier = styled.span`
   line-height: 1.5;
 `;
 
-const IssueLabel = styled.a`
-  background-color: #77b21e;
-  color: #000000;
-  padding: 0 7px;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 18px;
-  border: 1px solid transparent;
-  border-radius: 2em;
-`;
-
 const IssueDataDiv = styled.div`
   font-size: 12px;
   margin-top: 4px;
   color: #586069;
 `;
 
-const IssueContent = () => {
+const IssueContent = ({ data }) => {
+  const issueLabels = data.labels.map((labelData, index) => {
+    return (
+      <IssueLabel
+        key={`issueLabel${data.id}-${index}`}
+        name={labelData.name}
+        color={labelData.color}
+      />
+    );
+  });
+
   return (
     <OutDiv>
       <CheckBoxLabel>
         <input type="checkbox" name="issue" value="" />
       </CheckBoxLabel>
       <TitleDiv>
-        <IssueTitle>First Issue</IssueTitle>
-        <LabelsContaier>
-          <IssueLabel>이슈 목록 화면</IssueLabel>
-          <IssueLabel>이슈 상세 화면</IssueLabel>
-        </LabelsContaier>
+        <IssueTitle>{data.title}</IssueTitle>
+        <LabelsContaier>{issueLabels}</LabelsContaier>
         <IssueDataDiv>
-          <span>#1 opened yesterday by ???</span>
+          <IssueInfo
+            issueId={data.id}
+            makeDate={data.date}
+            author={data.author}
+          />
         </IssueDataDiv>
       </TitleDiv>
     </OutDiv>
