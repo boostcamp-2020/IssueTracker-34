@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import ClearFilterSvg from '../svgs/ClearFilterSvg'
 
-const FilterContainer = styled.div`
+const FilterResetButtonContainer = styled.div`
     display: flex;
     flex-direction: row;
     inline-size: fit-content;
@@ -34,11 +34,11 @@ const FilterResetButton = ({setFilterStatus}) => {
 
   return ( 
     <>
-    <FilterContainer onClick={()=> clearFilter()}>
-      <ClearFilterSvg />  
+      <FilterResetButtonContainer onClick={()=> clearFilter()}>
+        <ClearFilterSvg />  
         <Text>{text}</Text>
-      </FilterContainer>
-      </>
+      </FilterResetButtonContainer>
+    </>
   );
 
 
