@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import ClosedIssueSvg from '../svgs/ClosedIssueSvg';
 import OpenIssueSvg from '../svgs/OpenIssueSvg';
 import IssueInfo from './IssueInfo';
@@ -45,6 +46,10 @@ const IssueDataDiv = styled.div`
   color: #586069;
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+`;
+
 const IssueContent = ({ data }) => {
   const issueLabels = data.labels.map((labelData, index) => {
     return (
@@ -65,7 +70,9 @@ const IssueContent = ({ data }) => {
         {data.statusOpenClosed ? <OpenIssueSvg /> : <ClosedIssueSvg />}
       </IconDiv>
       <TitleDiv>
-        <IssueTitle>{data.title}</IssueTitle>
+        <StyledLink to={`/issue/${data.id}`}>
+          <IssueTitle>{data.title}</IssueTitle>
+        </StyledLink>
         <LabelsContaier>{issueLabels}</LabelsContaier>
         <IssueDataDiv>
           <IssueInfo
