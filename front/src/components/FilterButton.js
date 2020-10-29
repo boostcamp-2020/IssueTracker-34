@@ -29,6 +29,11 @@ const Button = styled.button`
     }
 `;
 
+const slideDownAnimation = keyframes`{
+  0% { opacity: 0; transform: translateY(-5%); }   
+100% { opacity: 1; transform: translateY(0%); }
+}`;
+
 const FilterList = styled.section`
   margin: 8px 0 16px;
   font-size: 10px;
@@ -39,6 +44,7 @@ const FilterList = styled.section`
   position: absolute;
   background: white;
   width: 12rem;
+  animation: ${slideDownAnimation} .1s ease-out;
 `;
 
 const Div = styled.div`
@@ -67,6 +73,10 @@ const DropDownOverlay = styled.div`
   width: 100%;
   height: 100%;
 `;
+
+
+
+
 
 const FilterButton = ({setFilters}) => {
   const [isOpen, setIsOpen] = useState(false);
