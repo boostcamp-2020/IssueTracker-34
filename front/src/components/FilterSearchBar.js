@@ -30,34 +30,25 @@ const FilterSearchBar = () => {
     width: 100%;
   `;
 
-  const checkEnter = (e) => {
-    if (window.event.keyCode == 13) {
+  const searchIssues = (e)=>{
       e.preventDefault();
-
-      searchIssues();
-    }
-  };
-
-  const searchIssues = () => {
-    const content = inputRef.current.value;
-    console.log(content);
-    //TODO: content로 검색 결과 보이게 하기.
-    //사용자가 입력한 것까지 검색되도록 하려면 parsing 필요.
-  };
+      const content = inputRef.current.value;
+      console.log('submit ', content);
+  }
 
   return (
     <SearchBarDiv>
-      <form action="">
+      <form onSubmit={searchIssues}>
         <SearchSvg />
         <SearchInput
           type="text"
           ref={inputRef}
           defaultValue={initValue}
           placeholder="Search All Issues"
-          onKeyPress={checkEnter}
         ></SearchInput>
       </form>
     </SearchBarDiv>
   );
 };
+
 export default FilterSearchBar;
