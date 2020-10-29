@@ -133,7 +133,8 @@ const tempAuthors = [
 
 const AuthorFilterButton = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const checkedAuthor = queryString.parse(window.location.search).author;
+  const parsed = queryString.parse(window.location.search);
+  const checkedAuthor = parsed.author;
 
   const authorList = tempAuthors
     .sort((a, b) => {
@@ -142,14 +143,13 @@ const AuthorFilterButton = () => {
       return a.id > b.id ? 1 : -1;
     })
     .map((author) => {
-      const stringified = queryString.stringify({ author: author.id });
       const isSelected = checkedAuthor == author.id;
-
+      const query = queryString.stringify({
+        ...parsed,
+        author: isSelected ? undefined : author.id,
+      });
       return (
-        <FilterLink
-          to={isSelected ? `/issue/list` : `/issue/list?${stringified}`}
-          key={author.id}
-        >
+        <FilterLink to={`/issue/list?${query}`} key={author.id}>
           <DropDownListItem onClick={() => setIsOpen(false)}>
             {isSelected ? <Check /> : <Unchecked />}
             <Avatar src={author.profileUrl}></Avatar>
