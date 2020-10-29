@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import ClosedIssueSvg from '../svgs/ClosedIssueSvg';
-import OpenIssueSvg from '../svgs/OpenIssueSvg';
+import ClosedSvg from '../svgs/ClosedSvg';
+import OpenedSvg from '../svgs/OpenedSvg';
 import IssueInfo from './IssueInfo';
 import IssueLabel from './IssueLabel';
 
@@ -28,7 +28,7 @@ const TitleDiv = styled.div`
   padding: 8px;
 `;
 
-const IssueTitle = styled.a`
+const IssueTitle = styled.span`
   font-weight: 600;
   font-size: 16px;
   vertical-align: middle;
@@ -67,7 +67,11 @@ const IssueContent = ({ data }) => {
         <input type="checkbox" name={`issue${data.id}`} value={data.id} />
       </CheckBoxLabel>
       <IconDiv>
-        {data.statusOpenClosed ? <OpenIssueSvg /> : <ClosedIssueSvg />}
+        {data.statusOpenClosed ? (
+          <OpenedSvg color={'#28a745'} />
+        ) : (
+          <ClosedSvg color={'#cb2431'} />
+        )}
       </IconDiv>
       <TitleDiv>
         <StyledLink to={`/issue/${data.id}`}>
