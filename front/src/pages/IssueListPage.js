@@ -1,31 +1,47 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import IssueList from '../components/IssueList';
+import FilterButton from '../components/FilterButton';
+import FilterSearchBar from '../components/FilterSearchBar';
+import LabelsButton from '../components/LabelsButton';
+import MilestonesButton from '../components/MilestonesButton';
+import NewIssueButton from '../components/NewIssueButton';
+
+const FilterDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const InnerFilterDivOne = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 65%;
+`;
+
+const InnerFilterDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 const IssueListPage = () => {
-  //개발용 임시 데이터
-  const issues = [1, 2, 3];
-
-  const issueList = issues.map((issueNumber) => {
-    return (
-      <div key={`issue${issueNumber}`}>
-        <Link to={`/issue/${issueNumber}`}>issue {issueNumber}</Link>
-      </div>
-    );
-  });
-
   return (
     <>
-      <div>IssueListPage</div>
       <div>
-        <Link to="/issue/make">Issue Make</Link>
+        <FilterDiv>
+          <InnerFilterDivOne>
+            <FilterButton />
+            <FilterSearchBar />
+          </InnerFilterDivOne>
+          <InnerFilterDiv>
+            <LabelsButton />
+            <MilestonesButton />
+          </InnerFilterDiv>
+          <NewIssueButton />
+        </FilterDiv>
+        <IssueList />
       </div>
-      <div>
-        <Link to="/label/list">Label List </Link>
-      </div>
-      <div>
-        <Link to="/milestone/list">milestone list </Link>
-      </div>
-      <div>{issueList}</div>
     </>
   );
 };
