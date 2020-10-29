@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
+import LabelSvg from "../svgs/LabelSvg";
 
 const MyLink = styled(Link) `
     text-decoration:none;
@@ -27,6 +28,10 @@ const WrapDiv = styled.div `
     align-items:center;
 `
 
+const ButtonName = styled.div `
+    margin-left:3px;
+`
+
 const StyledDiv = styled.div `
     background-color:grey;
     color:white;
@@ -42,12 +47,13 @@ const LabelsButton = () => {
         <MyLink to="/label/list">
             <MyButton>
                 <WrapDiv>
-                     <div>Labels</div>
+                     <LabelSvg/>
+                     <ButtonName>Labels</ButtonName>
                      <StyledDiv>3</StyledDiv>
                 </WrapDiv>
             </MyButton>
         </MyLink>
     );
-
 }
+
 export default LabelsButton;
