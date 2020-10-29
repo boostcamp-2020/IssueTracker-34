@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import queryString from 'query-string';
-import Check from '../svgs/Check';
+import Check from '../svgs/CheckSvg';
 
 const DropDownIcon = styled.span`
   display: inline-block;
@@ -23,8 +23,13 @@ const Button = styled.button`
   outline: 0;
   background-color: transparent;
   font-size: 14px;
-  position: relative;
+  // position: relative;
   cursor: pointer;
+`;
+
+const AuthorFilterDiv = styled.div`
+  position: relative;
+  display: inline;
 `;
 
 const DropDownOverlay = styled.div`
@@ -38,19 +43,25 @@ const DropDownOverlay = styled.div`
   background: transparent;
 `;
 
+const slideDownAnimation = keyframes`{
+  0% { opacity: 0; transform: translateY(-5%); }   
+100% { opacity: 1; transform: translateY(0%); }
+}`;
+
 const DropdownMenu = styled.div`
   position: absolute;
-  top: auto;
-  right: auto;
+  margin-top: 8px;
+  right: 0;
   bottom: auto;
   left: auto;
-  transform: translate(0px, 10px);
+  // transform: translate(-180px, 10px);
   width: 230px;
   padding: 0;
   z-index: 99;
   background-color: #fff;
   border-radius: 6px;
   border: 1px solid #ddd;
+  animation: ${slideDownAnimation} 0.1s ease-out;
 `;
 
 const Header = styled.header`
@@ -162,7 +173,7 @@ const AuthorFilterButton = () => {
     });
 
   return (
-    <div>
+    <AuthorFilterDiv>
       <Button onClick={() => setIsOpen(true)}>
         <span>Author </span>
         <DropDownIcon />
@@ -182,7 +193,7 @@ const AuthorFilterButton = () => {
           </DropdownMenu>
         </>
       )}
-    </div>
+    </AuthorFilterDiv>
   );
 };
 
