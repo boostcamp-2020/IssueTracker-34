@@ -64,14 +64,18 @@ const tempIssueData = [
 function reducer(state, action) {
   switch (action.type) {
     case 'INCREMENT':
-      return state.count + 1;
+      return { count: state.count + 1 };
     case 'DECREMENT':
-      return state.count - 1;
+      return { count: state.count - 1 };
   }
 }
 
-const allCheckHandler = (e) => {
-  console.log('e.target.checked: ', e.target.checked);
+const allCheckHandler = (e, dispatch) => {
+  if (e.target.checked) {
+    dispatch({ type: 'INCREMENT' });
+  } else {
+    dispatch({ type: 'DECREMENT' });
+  }
 };
 
 const checkHandler = (e) => {
@@ -112,14 +116,14 @@ const IssueList = () => {
             type="checkbox"
             name="all-issue"
             value="all"
-            onChange={allCheckHandler}
+            onChange={(e) => allCheckHandler(e, dispatch)}
           />
         </AllCheckDiv>
-        {isVisible ? (
+        {!(state.count > 0) ? (
           <ExtraHeader>{dropDownTags}</ExtraHeader>
         ) : (
           <ExtraHeader>
-            <SelectedCount count={2} />
+            <SelectedCount count={state.count} />
             {markAs}
           </ExtraHeader>
         )}
