@@ -9,9 +9,8 @@ import MilestoneEditPage from './pages/MilestoneEditPage';
 import MilestoneListPage from './pages/MilestoneListPage';
 import MilestoneMakePage from './pages/MilestoneMakePage';
 import {
-  HashRouter as Router,
+  BrowserRouter as Router,
   Switch,
-  Link,
   Route,
   Redirect,
 } from 'react-router-dom';
@@ -58,4 +57,5 @@ const App = () => {
     </Router>
   );
 };
+
 export default App;
