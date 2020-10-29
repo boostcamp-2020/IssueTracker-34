@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import IssueContent from './IssueContent';
 import SelectedCount from './SelectedCount';
@@ -61,37 +61,40 @@ const tempIssueData = [
   },
 ];
 
-function reducer(state, action) {
-  switch (action.type) {
-    case 'INCREMENT':
-      return { count: state.count + 1 };
-    case 'DECREMENT':
-      return { count: state.count - 1 };
-  }
-}
-
-const allCheckHandler = (e, dispatch) => {
-  if (e.target.checked) {
-    dispatch({ type: 'INCREMENT' });
-  } else {
-    dispatch({ type: 'DECREMENT' });
-  }
-};
-
-const checkHandler = (e) => {
-  console.log('e.target.checked: ', e.target.checked);
-};
-
-const initialState = { count: 0 };
-
 const IssueList = () => {
-  const isVisible = true;
-  const [state, dispatch] = useReducer(reducer, initialState); // checkHandler와 연계 예정
+  const [checkedState, setCheckedState] = useState(
+    tempIssueData.map((issueData) => {
+      return { id: issueData.id, isChecked: false };
+    })
+  );
+
   const issueContents = tempIssueData.map((issueData, index) => {
     return (
-      <IssueContent key={`issue${issueData.id}-${index}`} data={issueData} />
+      <IssueContent
+        key={`issue${issueData.id}-${index}`}
+        data={issueData}
+        checkedState={checkedState}
+        setCheckedState={setCheckedState}
+      />
     );
   });
+
+  const allCheckHandler = (e) => {
+    setCheckedState(
+      checkedState.map((element) => {
+        element.isChecked = e.target.checked;
+        return element;
+      })
+    );
+  };
+
+  const getCountChecked = () => {
+    let count = 0;
+    checkedState.forEach((checked) => {
+      if (checked.isChecked) count++;
+    });
+    return count;
+  };
 
   const dropDownTags = (
     <RightFloatDiv>
@@ -116,14 +119,14 @@ const IssueList = () => {
             type="checkbox"
             name="all-issue"
             value="all"
-            onChange={(e) => allCheckHandler(e, dispatch)}
+            onChange={(e) => allCheckHandler(e)}
           />
         </AllCheckDiv>
-        {!(state.count > 0) ? (
+        {!(getCountChecked() > 0) ? (
           <ExtraHeader>{dropDownTags}</ExtraHeader>
         ) : (
           <ExtraHeader>
-            <SelectedCount count={state.count} />
+            <SelectedCount count={getCountChecked()} />
             {markAs}
           </ExtraHeader>
         )}

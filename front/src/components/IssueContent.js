@@ -50,7 +50,17 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 
-const IssueContent = ({ data }) => {
+const checkHandler = (e, checkedState, setCheckedState) => {
+  setCheckedState(
+    checkedState.map((element) => {
+      if (element.id === Number(e.target.value))
+        element.isChecked = e.target.checked;
+      return element;
+    })
+  );
+};
+
+const IssueContent = ({ data, checkedState, setCheckedState }) => {
   const issueLabels = data.labels.map((labelData, index) => {
     return (
       <IssueLabel
@@ -64,7 +74,15 @@ const IssueContent = ({ data }) => {
   return (
     <OutDiv>
       <CheckBoxLabel>
-        <input type="checkbox" name={`issue${data.id}`} value={data.id} />
+        <input
+          type="checkbox"
+          name={`issue${data.id}`}
+          value={data.id}
+          checked={checkedState.find((item) => item.id === data.id).isChecked}
+          onChange={(e) => {
+            checkHandler(e, checkedState, setCheckedState);
+          }}
+        />
       </CheckBoxLabel>
       <IconDiv>
         {data.statusOpenClosed ? <OpenIssueSvg /> : <ClosedIssueSvg />}
