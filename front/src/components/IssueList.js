@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import IssueContent from './IssueContent';
+import AuthorFilterButton from './AuthorFilterButton';
+import AssigneeFilterButton from './AssigneeFilterButton';
 
 const IssueSection = styled.section`
   border: 1px solid #e1e4e8;
@@ -61,10 +63,10 @@ const IssueList = () => {
           <input type="checkbox" name="all-issue" value="all" />
         </div>
         <div>
-          <span>Author &nbsp;</span>
+          <AuthorFilterButton />
           <span>Label &nbsp;</span>
           <span>Milestones &nbsp;</span>
-          <span>Assignee &nbsp;</span>
+          <AssigneeFilterButton />
         </div>
       </Header>
       <section>{issueContents}</section>
