@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import styled from 'styled-components';
 import IssueContent from './IssueContent';
+import SelectedCount from './SelectedCount';
 
 const IssueSection = styled.section`
   border: 1px solid #e1e4e8;
@@ -15,6 +16,19 @@ const Header = styled.header`
   padding: 16px;
   background-color: #f6f8fa;
   border: 1px solid #e1e4e8;
+`;
+
+const AllCheckDiv = styled.div`
+  margin-right: 16px;
+`;
+
+const ExtraHeader = styled.div`
+  display: block;
+  flex: auto;
+`;
+
+const RightFloatDiv = styled.div`
+  float: right;
 `;
 
 const tempIssueData = [
@@ -47,25 +61,68 @@ const tempIssueData = [
   },
 ];
 
+function reducer(state, action) {
+  switch (action.type) {
+    case 'INCREMENT':
+      return state.count + 1;
+    case 'DECREMENT':
+      return state.count - 1;
+  }
+}
+
+const allCheckHandler = (e) => {
+  console.log('e.target.checked: ', e.target.checked);
+};
+
+const checkHandler = (e) => {
+  console.log('e.target.checked: ', e.target.checked);
+};
+
+const initialState = { count: 0 };
+
 const IssueList = () => {
+  const isVisible = true;
+  const [state, dispatch] = useReducer(reducer, initialState); // checkHandler와 연계 예정
   const issueContents = tempIssueData.map((issueData, index) => {
     return (
       <IssueContent key={`issue${issueData.id}-${index}`} data={issueData} />
     );
   });
 
+  const dropDownTags = (
+    <RightFloatDiv>
+      <span>Author &nbsp;</span>
+      <span>Label &nbsp;</span>
+      <span>Milestones &nbsp;</span>
+      <span>Assignee &nbsp;</span>
+    </RightFloatDiv>
+  );
+
+  const markAs = (
+    <RightFloatDiv>
+      <span>Mark as</span>
+    </RightFloatDiv>
+  );
+
   return (
     <IssueSection>
       <Header>
-        <div>
-          <input type="checkbox" name="all-issue" value="all" />
-        </div>
-        <div>
-          <span>Author &nbsp;</span>
-          <span>Label &nbsp;</span>
-          <span>Milestones &nbsp;</span>
-          <span>Assignee &nbsp;</span>
-        </div>
+        <AllCheckDiv>
+          <input
+            type="checkbox"
+            name="all-issue"
+            value="all"
+            onChange={allCheckHandler}
+          />
+        </AllCheckDiv>
+        {isVisible ? (
+          <ExtraHeader>{dropDownTags}</ExtraHeader>
+        ) : (
+          <ExtraHeader>
+            <SelectedCount count={2} />
+            {markAs}
+          </ExtraHeader>
+        )}
       </Header>
       <section>{issueContents}</section>
     </IssueSection>
