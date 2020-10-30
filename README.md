@@ -14,8 +14,8 @@
 
 | J064 류남광 | J169 임기봉  | J171 임채욱  | J211 탁성건 |
 | :--------: | :--------: | :---------: | :-------: |
-|   <img src="https://user-images.githubusercontent.com/35261724/97651451-6dd91e80-1a9f-11eb-8baf-19d2fa93c77e.jpg" alt="img" height="150px" width="150px" /> |   <img src="https://avatars2.githubusercontent.com/u/57941049?s=460&u=b20800e6bc681bf4c683143cbcf11b9aa7dcf50c&v=4 =150x150" alt="img" height="150px" width="150px" />     | <img src="https://avatars1.githubusercontent.com/u/8137615?s=460&u=3cbc84a925ac49ae3603adbcff8b24b444e478da&v=4" alt="img" height="150px" width="150px" /> | <img src="https://ca.slack-edge.com/T019JFET9H7-U019L4YL8N9-1da28c881b21-512" alt="img" height="150px" width="150px" /> |
-| ISFJ     | ISFP     |  ISFJ   | ISFJ     |
+|   <img src="https://user-images.githubusercontent.com/35261724/97651451-6dd91e80-1a9f-11eb-8baf-19d2fa93c77e.jpg" alt="img" height="150px" width="150px" /> |   <img src="https://avatars2.githubusercontent.com/u/57941049?s=460&u=b20800e6bc681bf4c683143cbcf11b9aa7dcf50c&v=4 =150x150" alt="img" height="150px" width="150px" />     | <img src="https://avatars1.githubusercontent.com/u/8137615?s=460&u=3cbc84a925ac49ae3603adbcff8b24b444e478da&v=4" alt="img" height="150px" width="150px" /> | <img src="https://avatars2.githubusercontent.com/u/59037261?s=460&u=7b7a0a2f151c1f49c5bc8068d4d6a5bf50c94c7b&v=4" alt="img" height="150px" width="150px" /> |
+| ISFJ     | ISFP     | ISFJ    | ISFJ     |
 
 
 <br />
