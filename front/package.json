@@ -21,6 +21,7 @@
     "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
+    "query-string": "^6.13.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",

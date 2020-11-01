@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import IssueContent from './IssueContent';
 import SelectedCount from './SelectedCount';
+import AuthorFilterButton from './AuthorFilterButton';
+import AssigneeFilterButton from './AssigneeFilterButton';
 
 const IssueSection = styled.section`
   border: 1px solid #e1e4e8;
@@ -98,10 +100,10 @@ const IssueList = () => {
 
   const dropDownTags = (
     <RightFloatDiv>
-      <span>Author &nbsp;</span>
+      <AuthorFilterButton />
       <span>Label &nbsp;</span>
       <span>Milestones &nbsp;</span>
-      <span>Assignee &nbsp;</span>
+      <AssigneeFilterButton />
     </RightFloatDiv>
   );
 

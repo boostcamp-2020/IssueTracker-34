@@ -2,17 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Svg = styled.svg`
-  color: #cb2431;
-  fill: currentColor;
+  fill: ${(props) => props.color || 'white'};
+  margin-right: ${(props) => props.marginRight || '0px'};
 `;
 
-export default () => (
+export default ({ color, marginRight }) => (
   <Svg
-    viewBox="0 0 16 16"
-    version="1.1"
-    width="16"
     height="16"
+    viewBox="0 0 16 16"
+    width="16"
     aria-hidden="true"
+    color={color}
+    marginRight={marginRight}
   >
     <path
       fillRule="evenodd"
