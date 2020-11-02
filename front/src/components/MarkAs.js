@@ -24,7 +24,7 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const AssigneeFilterDiv = styled.div`
+const MarkAsDiv = styled.div`
   position: relative;
   display: inline;
 `;
@@ -123,7 +123,7 @@ const MarkAs = () => {
   }
 
   return (
-    <AssigneeFilterDiv>
+    <MarkAsDiv>
       <Button onClick={() => setIsOpen(true)}>
         <span>Mark as </span>
         <DropDownIcon />
@@ -154,7 +154,7 @@ const MarkAs = () => {
           </DropdownMenu>
         </>
       )}
-    </AssigneeFilterDiv>
+    </MarkAsDiv>
   );
 
 }
