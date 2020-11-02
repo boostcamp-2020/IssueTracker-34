@@ -91,11 +91,10 @@ const IssueList = () => {
   };
 
   const getCountChecked = () => {
-    let count = 0;
-    checkedState.forEach((checked) => {
+    return checkedState.reduce((count, checked) => {
       if (checked.isChecked) count++;
-    });
-    return count;
+      return count;
+    }, 0);
   };
 
   const dropDownTags = (
