@@ -11,7 +11,7 @@ const OutDiv = styled.div`
   border-top: 1px solid #e1e4e8;
 `;
 
-const CheckBoxLabel = styled.label`
+const CheckBoxDiv = styled.div`
   padding-left: 16px;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -73,7 +73,7 @@ const IssueContent = ({ data, checkedState, setCheckedState }) => {
 
   return (
     <OutDiv>
-      <CheckBoxLabel>
+      <CheckBoxDiv>
         <input
           type="checkbox"
           name={`issue${data.id}`}
@@ -83,7 +83,7 @@ const IssueContent = ({ data, checkedState, setCheckedState }) => {
             checkHandler(e, checkedState, setCheckedState);
           }}
         />
-      </CheckBoxLabel>
+      </CheckBoxDiv>
       <IconDiv>
         {data.statusOpenClosed ? (
           <OpenedSvg color={'#28a745'} />
