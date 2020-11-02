@@ -124,14 +124,15 @@ const IssueList = () => {
             onChange={(e) => allCheckHandler(e)}
           />
         </AllCheckDiv>
-        {!(getCountChecked() > 0) ? (
-          <ExtraHeader>{dropDownTags}</ExtraHeader>
-        ) : (
-          <ExtraHeader>
-            <SelectedCount count={getCountChecked()} />
-            {markAs}
-          </ExtraHeader>
-        )}
+        <ExtraHeader>
+          {!(getCountChecked() > 0) ? (
+            <>{dropDownTags}</>
+          ) : (
+            <>
+              <SelectedCount count={getCountChecked()} /> {markAs}{' '}
+            </>
+          )}
+        </ExtraHeader>
       </Header>
       <section>{issueContents}</section>
     </IssueSection>
