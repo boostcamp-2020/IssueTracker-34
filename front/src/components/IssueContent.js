@@ -11,7 +11,7 @@ const OutDiv = styled.div`
   border-top: 1px solid #e1e4e8;
 `;
 
-const CheckBoxLabel = styled.label`
+const CheckBoxDiv = styled.div`
   padding-left: 16px;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -50,7 +50,17 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 
-const IssueContent = ({ data }) => {
+const checkHandler = (e, checkedState, setCheckedState) => {
+  setCheckedState(
+    checkedState.map((element) => {
+      if (element.id === Number(e.target.value))
+        element.isChecked = e.target.checked;
+      return element;
+    })
+  );
+};
+
+const IssueContent = ({ data, checkedState, setCheckedState }) => {
   const issueLabels = data.labels.map((labelData, index) => {
     return (
       <IssueLabel
@@ -63,9 +73,17 @@ const IssueContent = ({ data }) => {
 
   return (
     <OutDiv>
-      <CheckBoxLabel>
-        <input type="checkbox" name={`issue${data.id}`} value={data.id} />
-      </CheckBoxLabel>
+      <CheckBoxDiv>
+        <input
+          type="checkbox"
+          name={`issue${data.id}`}
+          value={data.id}
+          checked={checkedState.find((item) => item.id === data.id).isChecked}
+          onChange={(e) => {
+            checkHandler(e, checkedState, setCheckedState);
+          }}
+        />
+      </CheckBoxDiv>
       <IconDiv>
         {data.statusOpenClosed ? (
           <OpenedSvg color={'#28a745'} />

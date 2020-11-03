@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import IssueContent from './IssueContent';
+import SelectedCount from './SelectedCount';
 import AuthorFilterButton from './AuthorFilterButton';
 import AssigneeFilterButton from './AssigneeFilterButton';
 
@@ -17,6 +18,19 @@ const Header = styled.header`
   padding: 16px;
   background-color: #f6f8fa;
   border: 1px solid #e1e4e8;
+`;
+
+const AllCheckDiv = styled.div`
+  margin-right: 16px;
+`;
+
+const ExtraHeader = styled.div`
+  display: block;
+  flex: auto;
+`;
+
+const RightFloatDiv = styled.div`
+  float: right;
 `;
 
 const tempIssueData = [
@@ -50,24 +64,74 @@ const tempIssueData = [
 ];
 
 const IssueList = () => {
+  const [checkedState, setCheckedState] = useState(
+    tempIssueData.map((issueData) => {
+      return { id: issueData.id, isChecked: false };
+    })
+  );
+
   const issueContents = tempIssueData.map((issueData, index) => {
     return (
-      <IssueContent key={`issue${issueData.id}-${index}`} data={issueData} />
+      <IssueContent
+        key={`issue${issueData.id}-${index}`}
+        data={issueData}
+        checkedState={checkedState}
+        setCheckedState={setCheckedState}
+      />
     );
   });
+
+  const allCheckHandler = (e) => {
+    setCheckedState(
+      checkedState.map((element) => {
+        element.isChecked = e.target.checked;
+        return element;
+      })
+    );
+  };
+
+  const getCountChecked = () => {
+    return checkedState.reduce((count, checked) => {
+      if (checked.isChecked) count++;
+      return count;
+    }, 0);
+  };
+
+  const dropDownTags = (
+    <RightFloatDiv>
+      <AuthorFilterButton />
+      <span>Label &nbsp;</span>
+      <span>Milestones &nbsp;</span>
+      <AssigneeFilterButton />
+    </RightFloatDiv>
+  );
+
+  const markAs = (
+    <RightFloatDiv>
+      <span>Mark as</span>
+    </RightFloatDiv>
+  );
 
   return (
     <IssueSection>
       <Header>
-        <div>
-          <input type="checkbox" name="all-issue" value="all" />
-        </div>
-        <div>
-          <AuthorFilterButton />
-          <span>Label &nbsp;</span>
-          <span>Milestones &nbsp;</span>
-          <AssigneeFilterButton />
-        </div>
+        <AllCheckDiv>
+          <input
+            type="checkbox"
+            name="all-issue"
+            value="all"
+            onChange={(e) => allCheckHandler(e)}
+          />
+        </AllCheckDiv>
+        <ExtraHeader>
+          {!(getCountChecked() > 0) ? (
+            <>{dropDownTags}</>
+          ) : (
+            <>
+              <SelectedCount count={getCountChecked()} /> {markAs}{' '}
+            </>
+          )}
+        </ExtraHeader>
       </Header>
       <section>{issueContents}</section>
     </IssueSection>
