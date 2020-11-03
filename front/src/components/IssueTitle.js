@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import styled from 'styled-components';
 import OpenedSvg from '../svgs/OpenedSvg';
 import ClosedSvg from '../svgs/ClosedSvg';
+import { IssueContext } from '../pages/IssueDetailPage';
 
 const TitleWrap = styled.div`
   display: flex;
@@ -20,6 +21,12 @@ const EditButton = styled.button`
   background-color: #fafbfc;
   border: 1px solid #e1e4e8;
   border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f6f8fa;
+    color: black;
+  }
 `;
 
 const SaveButton = styled.button`
@@ -96,11 +103,10 @@ const IssueTitle = () => {
 
   const [title, setTitle] = useState('my title');
   const [isEditMode, editTitle] = useState(false);
-  //const [isOpened, setOpen] = useState(true);
+  const { issueInfo } = useContext(IssueContext);
 
   const inputRef = useRef(false);
 
-  const isOpened = false;
   const issueNumber = 1;
   const creator = 'temp';
   const passedDate = '2';
@@ -112,17 +118,20 @@ const IssueTitle = () => {
 
   const saveTitle = () => {
     const newTitle = inputRef.current.value;
-    if (newTitle == '') {
+    if (newTitle === '') {
+      //개발용
       console.log('빈 제목은 save 불가.');
       return;
     }
 
-    console.log(inputRef.current.value, '를 저장했어요.');
+    //개발용
+    console.log(inputRef.current.value, '를 title로 저장했어요.');
     setTitle(inputRef.current.value);
     editTitle(false);
   };
 
   const cancelEdit = () => {
+    //개발용
     console.log('취소합니다.');
     editTitle(false);
   };
@@ -146,14 +155,14 @@ const IssueTitle = () => {
       )}
 
       <IssueInfo>
-        {isOpened ? (
+        {issueInfo.status === true ? (
           <IssueStateWrap backgroundColor={'#28a745'}>
-            <OpenedSvg color={'white'} marginRight={'3px'} /> <div>Open</div>
+            <OpenedSvg marginRight={'4px'} /> <div>Open</div>
           </IssueStateWrap>
         ) : (
           <IssueStateWrap backgroundColor={'#d73a49'}>
             {' '}
-            <ClosedSvg color={'white'} marginRight={'3px'} />
+            <ClosedSvg marginRight={'4px'} />
             <div>Close</div>
           </IssueStateWrap>
         )}
