@@ -30,11 +30,12 @@ const FilterSearchBar = () => {
     width: 100%;
   `;
 
-  const searchIssues = (e)=>{
-      e.preventDefault();
-      const content = inputRef.current.value;
-      console.log('submit ', content);
-  }
+  const searchIssues = (e) => {
+    e.preventDefault();
+    const content = inputRef.current.value;
+    //개발용
+    console.log('submit ', content);
+  };
 
   return (
     <SearchBarDiv>
