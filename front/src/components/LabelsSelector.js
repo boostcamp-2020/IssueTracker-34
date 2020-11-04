@@ -86,9 +86,20 @@ const DropDownListWrapper = styled.div`
 
 const LabelDiv = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   height: 34px;
   margin: 0px 16px;
+`;
+
+const LabelInnerDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const LabelDescription = styled.div`
+  margin-left: 20px;
+  font-size: 12px;
 `;
 
 const CheckedLabelDiv = styled.div`
@@ -144,12 +155,14 @@ const LabelsSelector = () => {
       color: 'red',
       name: 'bug',
       checked: false,
+      description: "Somthing isn't working",
     },
     {
       id: 2,
       color: 'blue',
       name: 'test',
       checked: false,
+      description: '',
     },
   ]);
 
@@ -182,9 +195,16 @@ const LabelsSelector = () => {
     return (
       <div key={idx} onClick={() => selectLabel(label.id)}>
         <LabelDiv>
-          {label.checked ? <CheckSvg /> : <Unchecked />}
-          <LabelColorDiv backgroundColor={label.color}></LabelColorDiv>
-          <LabelId>{label.name}</LabelId>
+          <LabelInnerDiv>
+            {label.checked ? <CheckSvg /> : <Unchecked />}
+            <LabelColorDiv backgroundColor={label.color}></LabelColorDiv>
+            <LabelId>{label.name}</LabelId>
+          </LabelInnerDiv>
+          {label.description !== '' ? (
+            <LabelDescription>{label.description}</LabelDescription>
+          ) : (
+            <></>
+          )}
         </LabelDiv>
         <Hr />
       </div>
