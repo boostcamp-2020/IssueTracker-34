@@ -9,7 +9,7 @@ const createMilestone = async (data) => {
 };
 
 const editMilestone = async (data) => {
-  return await milesonteModel.editMilestone(data);
+  return await milestoneModel.editMilestone(data);
 };
 
 const deleteMilestone = async (data) => {
