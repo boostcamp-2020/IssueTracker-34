@@ -90,37 +90,37 @@ const Button = styled.button`
   display: flex;
   outline: none;
   padding: 5px 10px;
-  background: ${(props) => props.background || 
+  background: ${(props) => props.background ||
   '#fafbfc'};
-  color: ${(props)=> props.color || "black"};
-  border: ${(props)=> props.border || "1px solid #d9dadc"};
+  color: ${(props) => props.color || "black"};
+  border: ${(props) => props.border || "1px solid #d9dadc"};
     &:hover {
       /* background-color: black; */
-      background-color: ${(props)=> props.hoverColor || props.background}
+      background-color: ${(props) => props.hoverColor || props.background}
     }
     &:active{
-      background-color: ${(props)=> props.activeColor || props.background}
+      background-color: ${(props) => props.activeColor || props.background}
     }
   `;
 
 
 
-const CommentWriteSection = ({userProfileURL, status, placeholder}) => {
+const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
   // status 로 edit 인지 생성인지 구분
   // placeholder는 edit용 이전 썼던 글
   // userProfileURL 은 현제 로그인 유저의 이미지 주소
-  
-  const [isEmpty, setIsEmpty] = useState(true);
-  
-  const imageURL = (userProfileURL) ? userProfileURL :  defaultUserImageUrl;
+
+  const [textIsEmpty, setTextIsEmpty] = useState(true);
+
+  const imageURL = (userProfileURL) ? userProfileURL : defaultUserImageUrl;
   const inputRef = useRef();
 
-  const handleChange = (e) => {
-    if(e.target.value === ''){
-      setIsEmpty(true);
+  const handleTextInputChange = (e) => {
+    if (e.target.value === '') {
+      setTextIsEmpty(true);
       return
     }
-    setIsEmpty(false);
+    setTextIsEmpty(false);
   }
 
   const closeIssue = () => {
@@ -149,42 +149,42 @@ const CommentWriteSection = ({userProfileURL, status, placeholder}) => {
         display: 'flex',
         flexDirection: 'row',
       }}>
-      <Img src={imageURL} alt="user" />
-      <Box>
-        <Header>
-          <Tab>Write</Tab>
-        </Header>
-        <LowerContainer>
-        <TextArea
-          type="text"
-          ref={inputRef}
-          placeholder="Leave a comment" 
-          onChange={handleChange}
-          />
-        <ButtonBox>
-        {isEmpty 
-          ? ( 
-            <>
-              <Button hoverColor="#f3f4f6" activeColor="#edeff2" onClick={closeIssue}>
-                <ClosedSvg color={"red"} marginRight={"4px"} />
+        <Img src={imageURL} alt="user" />
+        <Box>
+          <Header>
+            <Tab>Write</Tab>
+          </Header>
+          <LowerContainer>
+            <TextArea
+              type="text"
+              ref={inputRef}
+              placeholder="Leave a comment"
+              onChange={handleTextInputChange}
+            />
+            <ButtonBox>
+              {textIsEmpty
+                ? (
+                  <>
+                    <Button hoverColor="#f3f4f6" activeColor="#edeff2" onClick={closeIssue}>
+                      <ClosedSvg color={"red"} marginRight={"4px"} />
                  Close issue
-                </Button>
-              <Button background="#94d3a2" color="#ffffffcc" border="1px solid #1b1f231a">Comment</Button>  
-            </>
-          )
-          : ( 
-            <>
-              <Button hoverColor="#f3f4f6" activeColor="#edeff2" onClick={closeAndAddComment}>
-                <ClosedSvg color={"red"} marginRight={"4px"} />
+                    </Button>
+                    <Button background="#94d3a2" color="#ffffffcc" border="1px solid #1b1f231a">Comment</Button>
+                  </>
+                )
+                : (
+                  <>
+                    <Button hoverColor="#f3f4f6" activeColor="#edeff2" onClick={closeAndAddComment}>
+                      <ClosedSvg color={"red"} marginRight={"4px"} />
                   Close with comment
-                </Button>
-              <Button background="#2c974b" color="#ffffff" border="1px solid #2c974b" onClick={addComment}>Comment</Button>  
-            </>
-          )    
-        }
-        </ButtonBox>
-        </LowerContainer>
-      </Box>
+                    </Button>
+                    <Button background="#2c974b" color="#ffffff" border="1px solid #2c974b" onClick={addComment}>Comment</Button>
+                  </>
+                )
+              }
+            </ButtonBox>
+          </LowerContainer>
+        </Box>
       </div>
     </>
   );
