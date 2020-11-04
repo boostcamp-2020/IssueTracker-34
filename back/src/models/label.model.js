@@ -1,4 +1,3 @@
-const { model } = require('../sequelizeModels/config.sequelizeModels');
 const Label = require('../sequelizeModels/label.sequelizeModel');
 
 const createLabel = async ({ name, color, content }) => {
