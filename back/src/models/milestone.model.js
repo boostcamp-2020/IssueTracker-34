@@ -18,7 +18,7 @@ const createMilestone = async ({
   });
 };
 
-const updateMilestone = async ({
+const editMilestone = async ({
   title,
   description,
   due_date,
@@ -38,6 +38,6 @@ const deleteMilestone = async ({ id }) => {
 module.exports = {
   getMilestones,
   createMilestone,
-  updateMilestone,
+  editMilestone,
   deleteMilestone,
 };
