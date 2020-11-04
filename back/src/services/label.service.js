@@ -2,10 +2,10 @@ const labelModel = require('../models/label.model');
 
 const labelService = {
   async deleteLabel({ id }) {
-    return await labelModel.updateLabel(id)
+    return await labelModel.deleteLabel(id)
   },
 
 
 }
 
-module.exports = labelModel;
+module.exports = labelService;
