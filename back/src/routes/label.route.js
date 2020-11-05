@@ -1,13 +1,9 @@
 const express = require('express');
 const router = express.Router();
-
-const { validateCreateLabelInput } = require('../middleware/validateInputs')
 const labelController = require('../controllers/label.controller');
+const { validateCreateLabelInput } = require('../middleware/validateInputs');
 
-router.get('/', (req, res) => {
-  res.send('label');
-});
-
-router.post('/label', validateCreateLabelInput, labelController.createLabel);
+router.post('/', validateCreateLabelInput, labelController.createLabel);
+router.delete('/', labelController.deleteLabel);
 
 module.exports = router;
