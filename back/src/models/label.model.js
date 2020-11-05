@@ -1,11 +1,19 @@
 const Label = require('../sequelizeModels/label.sequelizeModel');
 
-const createLabel = async ({ name, color, content }) => {
-  return await Label.create({
+const labelModel = {
+  async createLabel ({ name, color, content }) {
+    return await Label.create({
     name: name,
     color: color,
     content: content,
   });
-};
+  }
+  async editLabel ({ id, name, color, content }) {
+    if (content) {
+      return await Label.update({ id, name, color, content });
+    }
+    return await Label.update({ id, name, color });
+  },
+}
 
-module.exports = { createLabel };
+module.exports = labelModel;

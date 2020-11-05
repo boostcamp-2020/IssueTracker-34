@@ -9,15 +9,15 @@ const IssueInfo = ({ issueId, makeDate, author }) => {
   let agoText = '';
 
   if (agoTime < 1) {
-    agoText = 'a few seconds ago';
+    agoText = 'a few seconds';
   } else if (agoTime < 60) {
-    agoText = `${agoTime} minute ago`;
+    agoText = `${agoTime} minute`;
   } else if (agoHour < 24) {
-    agoText = `${agoHour} hours ago`;
+    agoText = `${agoHour} hours`;
   } else if (agoDay < 365) {
-    agoText = `${agoDay} days ago`;
+    agoText = `${agoDay} days`;
   } else {
-    agoText = `${Math.floor(agoDay / 365)} years ago`;
+    agoText = `${Math.floor(agoDay / 365)} years`;
   }
 
   return (
