@@ -1,7 +1,12 @@
 const labelModel = require('../models/label.model');
 
-const createLabel = async (data) => {
-  return await labelModel.createLabel(data);
-};
+const labelService = {
+  async createLabel(data) {
+    return await labelModel.createLabel(data);
+  },
+  async deleteLabel({ id }) {
+    return await labelModel.deleteLabel(id)
+  },
+}
 
-module.exports = { createLabel };
+module.exports = labelService;
