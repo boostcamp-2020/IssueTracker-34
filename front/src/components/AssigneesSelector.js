@@ -129,28 +129,30 @@ const Span = styled.span`
   cursor: pointer;
 `;
 
+const tempData = [
+  {
+    id: 'pieisland',
+    checked: true,
+    name: 'ryu',
+    profileUrl:
+      'https://avatars2.githubusercontent.com/u/35261724?s=80&amp;v=4',
+  },
+  { id: 'comi', checked: false },
+  { id: 'remi', checked: true },
+  { id: 'comi2', checked: false },
+  { id: 'remi2', checked: false },
+  { id: 'comi3', checked: false },
+  { id: 'remi3', checked: false },
+  { id: 'comi4', checked: false },
+  { id: 'remi4', checked: false },
+  { id: 'comi5', checked: false },
+  { id: 'remi5', checked: false },
+  { id: 'comi6', checked: false },
+];
+
 const AssineesSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [assignees, setAssignee] = useState([
-    {
-      id: 'pieisland',
-      checked: true,
-      name: 'ryu',
-      profileUrl:
-        'https://avatars2.githubusercontent.com/u/35261724?s=80&amp;v=4',
-    },
-    { id: 'comi', checked: false },
-    { id: 'remi', checked: true },
-    { id: 'comi2', checked: false },
-    { id: 'remi2', checked: false },
-    { id: 'comi3', checked: false },
-    { id: 'remi3', checked: false },
-    { id: 'comi4', checked: false },
-    { id: 'remi4', checked: false },
-    { id: 'comi5', checked: false },
-    { id: 'remi5', checked: false },
-    { id: 'comi6', checked: false },
-  ]);
+  const [assignees, setAssignee] = useState(tempData);
 
   const loginedUser = 'pieisland';
 
@@ -167,7 +169,8 @@ const AssineesSelector = () => {
     }
   });
 
-  //TODO: api 호출로 데이터베이스 값 변경.
+  // TODO: api 호출로 데이터베이스 값 변경.
+  // depth 깊어서 refactor 필요
   const selectAssignee = (id) => {
     const newAssignees = assignees.map((assignee) => {
       if (assignee.id === id) {
@@ -182,9 +185,9 @@ const AssineesSelector = () => {
     setAssignee(newAssignees);
   };
 
-  const allAssignees = assignees.map((assignee, idx) => {
+  const allAssignees = assignees.map((assignee) => {
     return (
-      <div key={idx} onClick={() => selectAssignee(assignee.id)}>
+      <div key={assignee.id} onClick={() => selectAssignee(assignee.id)}>
         <AssigneeDiv>
           {assignee.checked ? <CheckSvg /> : <Unchecked />}
           <Avatar src={assignee.profileUrl}></Avatar>
