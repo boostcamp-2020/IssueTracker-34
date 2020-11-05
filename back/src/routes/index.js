@@ -6,6 +6,6 @@ router.get('/', (req, res) => {
   res.send('hello');
 });
 
-router.use('/label', /*validateAuth,*/ label);
+router.use('/label', label);
 
 module.exports = router;
