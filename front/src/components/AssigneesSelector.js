@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import SettingSvg from '../svgs/SettingSvg';
 import CheckSvg from '../svgs/CheckSvg';
 
-const AssineesSelectorDiv = styled.div`
+const AssigneesSelectorDiv = styled.div`
   position: relative;
   width: 20%;
 `;
@@ -150,7 +150,7 @@ const tempData = [
   { id: 'comi6', checked: false },
 ];
 
-const AssineesSelector = () => {
+const AssigneesSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [assignees, setAssignee] = useState(tempData);
 
@@ -200,7 +200,7 @@ const AssineesSelector = () => {
   });
 
   return (
-    <AssineesSelectorDiv>
+    <AssigneesSelectorDiv>
       <AssinessButton onClick={() => setIsOpen(true)}>
         <div>Assignees</div>
         <SettingSvg />
@@ -229,8 +229,8 @@ const AssineesSelector = () => {
         </>
       )}
       <Hr marginTop={'15px'} />
-    </AssineesSelectorDiv>
+    </AssigneesSelectorDiv>
   );
 };
 
-export default AssineesSelector;
+export default AssigneesSelector;
