@@ -4,6 +4,7 @@ const labelController = require('../controllers/label.controller');
 const { validateCreateLabelInput } = require('../middleware/validateInputs');
 
 router.post('/', validateCreateLabelInput, labelController.createLabel);
+router.patch('/', labelController.editLabel);
 router.delete('/', labelController.deleteLabel);
 
 module.exports = router;
