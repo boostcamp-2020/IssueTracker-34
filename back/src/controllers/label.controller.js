@@ -34,6 +34,19 @@ const labelController = {
       return res.status(500).send();
     }
   },
+  async deleteLabel(req, res) {
+    try {
+      const { labelId } = req.body;
+      const result = await labelService.deleteLabel({ id: labelId });
+
+      return res.status(200).json(result);
+    } catch (err) {
+      if (err.message === 'Bad Request') {
+        return res.status(400).send();
+      }
+      return res.status(500).send();
+    }
+  },
 };
 
 module.exports = labelController;
