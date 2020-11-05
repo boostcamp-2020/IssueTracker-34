@@ -1,17 +1,20 @@
 const labelModel = require('../models/label.model');
 
-const editLabel = async ({ labelId, name, color, description }) => {
-  const result = await labelModel.editLabel({
-    labelId,
-    name,
-    color,
-    description,
-  });
+const labelService = {
+  async createLabel(data) {
+    return await labelModel.createLabel(data);
+  },
+  async editLabel(data) {
+    const result = await labelModel.editLabel(data);
 
-  if (result) {
-    return result;
-  }
-  return new Error('editLabel failed');
-};
+    if (result) {
+      return result;
+    }
+    return new Error('Bad Request');
+  },
+  async deleteLabel({ id }) {
+    return await labelModel.deleteLabel(id);
+  },
+}
 
-module.exports = { editLabel };
+module.exports = labelService;
