@@ -117,7 +117,7 @@ const CheckedLabelsDiv = styled.div`
 `;
 
 const CheckedLabelInnerDiv = styled.div`
-  background-color: ${(props) => props.backgroundColor || 'remon'};
+  background-color: ${(props) => props.backgroundColor || 'white'};
   width: 95%;
   height: 80%;
   color: white;
@@ -147,24 +147,26 @@ const LabelId = styled.span`
   color: #000;
 `;
 
+const tempData = [
+  {
+    id: 1,
+    color: 'red',
+    name: 'bug',
+    checked: false,
+    description: "Somthing isn't working",
+  },
+  {
+    id: 2,
+    color: 'blue',
+    name: 'test',
+    checked: false,
+    description: '',
+  },
+];
+
 const LabelsSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [labels, setLabel] = useState([
-    {
-      id: 1,
-      color: 'red',
-      name: 'bug',
-      checked: false,
-      description: "Somthing isn't working",
-    },
-    {
-      id: 2,
-      color: 'blue',
-      name: 'test',
-      checked: false,
-      description: '',
-    },
-  ]);
+  const [labels, setLabel] = useState(tempData);
 
   let checkedLabelsCnt = 0;
   const checkedLabels = labels.map((label, idx) => {
@@ -191,9 +193,9 @@ const LabelsSelector = () => {
     setLabel(newLabels);
   };
 
-  const allLabels = labels.map((label, idx) => {
+  const allLabels = labels.map((label) => {
     return (
-      <div key={idx} onClick={() => selectLabel(label.id)}>
+      <div key={label.id} onClick={() => selectLabel(label.id)}>
         <LabelDiv>
           <LabelInnerDiv>
             {label.checked ? <CheckSvg /> : <Unchecked />}
