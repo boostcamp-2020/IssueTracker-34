@@ -13,11 +13,12 @@ const editComment = async (req, res) => {
     });
 
     return res.status(200).json(result);
-  } catch (e) {
-    const { message } = e;
+  } catch (err) {
+    const { message } = err;
 
-    console.log(e);
-    if (message) return res.status(400).json(message);
+    if (message === 'Bad Request') {
+      return res.status(400).send();
+    }
     return res.status(500).json();
   }
 };

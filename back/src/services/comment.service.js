@@ -10,7 +10,7 @@ const editComment = async ({ commentId, comment, date }) => {
   if (result) {
     return result;
   }
-  throw new Error('editComment failed');
+  throw new Error('Bad Request');
 };
 
 module.exports = { editComment };
