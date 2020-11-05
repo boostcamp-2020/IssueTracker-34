@@ -6,12 +6,15 @@ module.exports = function(req, res, next) {
   }
 
   const [bearer, token] = req.headers.authorization.split(' ');
-  const username = JWTToken.verify(token)
-  const user = UserModel.findUser({ username })
+  const github_id = JWTToken.verify(token)
+  const user = UserModel.findUser({ github_id })
 
   if (!user) {
     return res.status(404).json('unauthorized');
   }
+
+  req.body.authorizedUsername = user.username;
+  req.body.userId = user.id;
 
   next();
 }
