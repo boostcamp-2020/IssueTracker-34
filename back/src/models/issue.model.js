@@ -4,7 +4,7 @@ const Milestone = require('../sequelizeModels/milestone.sequelizeModel');
 const Label = require('../sequelizeModels/label.sequelizeModel');
 
 const issueModel = {
-  getIssues: async () => {
+  async getIssues() {
     const issues = await Issue.findAll({
       attributes: [
         'id',
