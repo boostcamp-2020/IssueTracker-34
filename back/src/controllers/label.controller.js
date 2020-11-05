@@ -25,7 +25,7 @@ const labelController = {
   async editLabel(req, res) {
     try {
       const data = req.body;
-      const result = await labelService.updateLabel(data);
+      const result = await labelService.editLabel(data);
       return res.status(200).json(result);
     } catch (err) {
       if (err.message === 'Bad Request') {
@@ -37,7 +37,7 @@ const labelController = {
   async deleteLabel(req, res) {
     try {
       const { labelId } = req.body;
-      const result = await labelService.deleteLabel({ id: labelId });
+      const result = await labelService.deleteLabel({ labelId });
 
       return res.status(200).json(result);
     } catch (err) {

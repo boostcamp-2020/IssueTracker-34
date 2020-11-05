@@ -20,8 +20,8 @@ const labelService = {
     }
     throw new Error('Bad Request');
   },
-  async deleteLabel({ id }) {
-    return await labelModel.deleteLabel(id);
+  async deleteLabel({ labelId }) {
+    return await labelModel.deleteLabel({ labelId });
   },
 };
 
