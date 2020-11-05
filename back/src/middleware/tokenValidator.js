@@ -14,7 +14,7 @@ module.exports = function(req, res, next) {
   }
 
   req.body.authorizedUsername = user.username;
-  req.body.userId = user.id;
+  req.body.authorizedUserId = user.id;
 
   next();
 }
