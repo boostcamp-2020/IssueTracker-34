@@ -1,13 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const label = require('./label.route');
-const issue = require('./issue.route');
+const labelRouter = require('./label.route');
+const issueRouter = require('./issue.route');
+const commentRouter = require('./comment.route');
+const milestoneRouter = require('./milestone.route');
+const { testAuth } = require('../middleware/testAuth');
 
 router.get('/', (req, res) => {
   res.send('hello');
 });
 
-router.use('/issue', issue);
-router.use('/label', label);
+router.use(testAuth);
+router.use('/issue', issueRouter);
+router.use('/label', labelRouter);
+router.use('/comment', commentRouter);
+router.use('/milestone', milestoneRouter);
 
 module.exports = router;
