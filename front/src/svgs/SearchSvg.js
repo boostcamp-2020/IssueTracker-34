@@ -1,14 +1,28 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const Svg = styled.svg`
   position: absolute;
   left: 15px;
   margin-top: 8px;
+  ${ props => {
+    if (props.loginPage) {
+      return css`
+        left:0px;
+        margin-top:0px;
+        position:relative;
+        width: 1.3rem;
+        height: 1.2rem;
+        & > * {
+          fill: white;
+        }
+    `;
+    }
+  }}
 `;
 
-export default () => (
-  <Svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+export default ({ loginPage }) => (
+  <Svg loginPage={loginPage} viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
     <path
       fillRule="evenodd"
       fill="#586069"
