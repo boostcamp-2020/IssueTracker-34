@@ -18,5 +18,6 @@ thumb
 sketch
 
 */.env
+*/.env.test
 
 # End of https://www.toptal.com/developers/gitignore/api/react
