@@ -1,7 +1,9 @@
 const express = require('express');
 const passport = require("passport");
 
-require('dotenv').config();
+const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env'
+
+require('dotenv').config({ path: envFile });
 require('./sequelizeModels/index');
 
 const indexRouter = require('./routes/index');
