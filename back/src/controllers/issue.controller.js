@@ -3,25 +3,11 @@ const issueService = require('../services/issue.service');
 const issueController = {
   async createIssue(req, res) {
     try {
-      const { userId, title, content, milestone, labels, assignees } = req.body;
-
-      if (!userId || !title) {
-        throw new Error('param error');
-      }
-
-      const createResult = await issueService.createIssue({
-        userId,
-        title,
-        content,
-        milestone,
-        labels,
-        assignees,
-      });
-
-      res.status(200).json(createResult);
+      const data = req.body;
+      const result = await issueService.createIssue(data);
+      return res.status(200).json(result);
     } catch (err) {
-      const { message } = err;
-      res.status(500).json({ message: message });
+      res.status(500).send();
     }
   },
 };

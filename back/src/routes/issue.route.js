@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const issueController = require('../controllers/issue.controller');
+const { validateCreateIssueInput } = require('../middleware/validateInputs');
 
-router.post('/', issueController.createIssue);
+router.post('/', validateCreateIssueInput, issueController.createIssue);
 
 module.exports = router;
