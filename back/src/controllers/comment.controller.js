@@ -17,10 +17,22 @@ const commentController = {
       return res.status(200).json(result);
     } catch (e) {
       const { message } = e;
-
       console.log(e);
       if (message) return res.status(400).json(message);
       return res.status(500).json();
+    }
+  },
+
+  async getComments(req, res) {
+    try {
+      const { issueId } = req.query;
+      const result = await commentService.getComments({ issueId });
+      return res.status(200).json(result);
+    } catch (err) {
+      if (err.message) {
+        return res.status(400).send();
+      }
+      return res.status(500).send();
     }
   },
 

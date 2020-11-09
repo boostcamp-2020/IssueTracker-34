@@ -12,6 +12,15 @@ const commentService = {
     if (result) {
       return result;
     }
+    throw new Error('createComment failed');
+  },
+
+  async getComments({ issueId }) {
+    const result = await commentModel.getComments({ issueId });
+
+    if (result) {
+      return result;
+    }
     throw new Error('Bad Request');
   },
 
@@ -21,6 +30,7 @@ const commentService = {
       comment,
       date,
     });
+    
     if (result) {
       return result;
     }

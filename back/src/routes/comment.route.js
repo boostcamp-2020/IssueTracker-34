@@ -5,6 +5,7 @@ const deleteCommentValidator = require('../middleware/deleteCommentValidator');
 const editCommentValidator = require('../middleware/editCommentValidator');
 
 router.post('/', commentController.createComment);
+router.get('/', commentController.getComments);
 router.patch('/', editCommentValidator, commentController.editComment);
 router.delete('/', deleteCommentValidator, commentController.deleteComment);
 
