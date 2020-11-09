@@ -48,4 +48,8 @@ Issue.belongsTo(Milestone, {
   foreignKey: { name: 'milestone_id', allowNull: true },
 });
 
-sequelize.sync({ force: true });
+if (process.env.NODE_ENV === 'develop') {
+  sequelize.sync({ force: true }).then(require('../seeders/seeder'));
+} else {
+  sequelize.sync({ force: false });
+}
