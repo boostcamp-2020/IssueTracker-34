@@ -25,6 +25,7 @@ const commentController = {
   },
   async editComment(req, res) {
     try {
+      const { commentId, comment, date } = req.body;
       const result = await commentService.editComment({
         commentId,
         comment,

@@ -10,11 +10,10 @@ const commentModel = {
     });
   },
   async editComment({ commentId, comment, date }) {
-    return await Comment.update({
-      id: commentId,
-      comment: comment,
-      date: date,
-    });
+    return await Comment.update(
+      { comment: comment, date: date },
+      { where: { id: commentId } }
+    );
   },
 };
 
