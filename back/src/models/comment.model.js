@@ -9,11 +9,16 @@ const commentModel = {
       issue_id: issueId,
     });
   },
+  
   async editComment({ commentId, comment, date }) {
     return await Comment.update(
       { comment: comment, date: date },
       { where: { id: commentId } }
     );
+  },
+  
+  async deleteComment({ commentId }) {
+    return await Comment.destroy({ where: { id: commentId } });
   },
 };
 
