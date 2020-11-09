@@ -173,27 +173,26 @@ const getLabels = async () => {
     headers: { accept: 'application/json' },
   };
 
-  const db_data = await axios(options)
-    .then((res) => {
-      return res.data;
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((err) => res.status(500).json({ message: err.message }));
-
-  return db_data;
+  try {
+    const { data } = await axios(options);
+    return data;
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Labels load failed..',
+      text: 'Something went wrong!',
+    });
+    return [];
+  }
 };
 
 const LabelsSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
-  //const [labels, setLabel] = useState(tempData);
-
   const [labels, setLabel] = useState([]);
 
   useEffect(async () => {
-    const data_ = await getLabels();
-    setLabel(data_);
+    const labelData = await getLabels();
+    setLabel(labelData);
   }, []);
 
   let checkedLabelsCnt = 0;

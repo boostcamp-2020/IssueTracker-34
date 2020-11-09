@@ -5,6 +5,7 @@ import queryString from 'query-string';
 import Check from '../svgs/CheckSvg';
 
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const DropDownIcon = styled.span`
   display: inline-block;
@@ -177,16 +178,17 @@ const getLabels = async () => {
     headers: { accept: 'application/json' },
   };
 
-  const db_data = await axios(options)
-    .then((res) => {
-      return res.data;
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((err) => res.status(500).json({ message: err.message }));
-
-  return db_data;
+  try {
+    const { data } = await axios(options);
+    return data;
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Labels load failed..',
+      text: 'Something went wrong!',
+    });
+    return [];
+  }
 };
 
 const LabelFilterButton = () => {
@@ -197,8 +199,8 @@ const LabelFilterButton = () => {
   const [labels, setLabels] = useState([]);
 
   useEffect(async () => {
-    const data_ = await getLabels();
-    setLabels(data_);
+    const labelData = await getLabels();
+    setLabels(labelData);
   }, []);
 
   const labelList = [{ id: null }, ...labels]
