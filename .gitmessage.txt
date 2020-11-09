@@ -1,0 +1,23 @@
+# [Type] Title
+
+# Content
+# - Sub Content
+#
+# <type>: <subject>
+##### Subject 50 characters ################# -> |
+#
+# Body Message
+######## Body 72 characters ####################################### -> |
+#
+# --- COMMIT END ---
+# Type can be
+#   Build: Changes that affect the build system or # external dependencies (example scopes: gulp, broccoli, npm)
+#   Ci: Changes to our CI configuration files and scripts (example scopes: Circle, BrowserStack, SauceLabs)
+#   Docs: Documentation only changes
+#   Feat: A new feature
+#   Fix: A bug fix
+#   Add: add stuff (example scopes: files without # feature, dependencies, etc)
+#   Perf: A code change that improves performance
+#   Refactor: A code change that neither fixes a bug nor adds a feature
+#   Test: Adding missing tests or correcting existing tests
+# -------------------

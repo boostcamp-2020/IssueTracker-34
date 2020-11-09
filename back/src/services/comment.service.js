@@ -1,4 +1,3 @@
-const { getComments } = require('../controllers/comment.controller');
 const commentModel = require('../models/comment.model');
 
 const commentService = {
@@ -15,8 +14,31 @@ const commentService = {
     }
     throw new Error('createComment failed');
   },
+
   async getComments({ issueId }) {
     const result = await commentModel.getComments({ issueId });
+
+    if (result) {
+      return result;
+    }
+    throw new Error('Bad Request');
+  },
+
+  async editComment({ commentId, comment, date }) {
+    const result = await commentModel.editComment({
+      commentId,
+      comment,
+      date,
+    });
+    
+    if (result) {
+      return result;
+    }
+    throw new Error('Bad Request');
+  },
+
+  async deleteComment({ commentId }) {
+    const result = await commentModel.deleteComment({ commentId });
 
     if (result) {
       return result;
