@@ -21,7 +21,7 @@ const commentService = {
     if (result) {
       return result;
     }
-    throw new Error();
+    throw new Error('Bad Request');
   },
 };
 

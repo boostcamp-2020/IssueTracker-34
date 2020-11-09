@@ -30,9 +30,7 @@ const commentController = {
 
       return res.status(200).json(result);
     } catch (err) {
-      const { message } = err;
-
-      if (message === 'Bad Request') {
+      if (err.message) {
         return res.status(400).send();
       }
       return res.status(500).send();
