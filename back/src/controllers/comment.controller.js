@@ -1,26 +1,21 @@
 const commentService = require('../services/comment.service');
+const commentController = {
+  async editComment(req, res) {
+    try {
+      const result = await commentService.editComment({
+        commentId,
+        comment,
+        date,
+      });
 
-const editComment = async (req, res) => {
-  try {
-    const { commentId, comment, date } = req.body;
-    if (!userId || !issueId) {
-      throw new Error('param error');
+      return res.status(200).json(result);
+    } catch (err) {
+      if (err.message) {
+        return res.status(400).send();
+      }
+      return res.status(500).send();
     }
-    const result = await commentService.editComment({
-      commentId,
-      comment,
-      date,
-    });
-
-    return res.status(200).json(result);
-  } catch (err) {
-    const { message } = err;
-
-    if (message === 'Bad Request') {
-      return res.status(400).send();
-    }
-    return res.status(500).json();
-  }
+  },
 };
 
-module.exports = { editComment };
+module.exports = commentController;
