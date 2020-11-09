@@ -1,12 +1,27 @@
 const commentModel = require('../models/comment.model');
 
-const deleteComment = async ({ commentId }) => {
-  const result = await commentModel.deleteComment({ commentId });
+const commentService = {
+  async createComment({ userId, issueId, comment, date }) {
+    const result = await commentModel.createComment({
+      userId,
+      issueId,
+      comment,
+      date,
+    });
 
-  if (result) {
-    return result;
-  }
-  throw new Error('Bad Request');
+    if (result) {
+      return result;
+    }
+    throw new Error('Bad Request');
+  },
+  async deleteComment({ commentId }) {
+    const result = await commentModel.deleteComment({ commentId });
+
+    if (result) {
+      return result;
+    }
+    throw new Error('Bad Request');
+  },
 };
 
-module.exports = { deleteComment };
+module.exports = commentService;

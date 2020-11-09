@@ -4,6 +4,9 @@ import IssueContent from './IssueContent';
 import SelectedCount from './SelectedCount';
 import AuthorFilterButton from './AuthorFilterButton';
 import AssigneeFilterButton from './AssigneeFilterButton';
+import LabelFilterButton from './LabelFilterButton';
+import MilestoneFilterButton from './MilestoneFilterButton';
+import MarkAs from './MarkAs';
 
 const IssueSection = styled.section`
   border: 1px solid #e1e4e8;
@@ -31,6 +34,9 @@ const ExtraHeader = styled.div`
 
 const RightFloatDiv = styled.div`
   float: right;
+  display: ${(props) => props.display || 'block'};
+  justify-content: ${(props) => props.justifyContent || ''};
+  width: ${(props) => props.width || 'auto'};
 `;
 
 const tempIssueData = [
@@ -98,17 +104,17 @@ const IssueList = () => {
   };
 
   const dropDownTags = (
-    <RightFloatDiv>
+    <RightFloatDiv display="flex" justifyContent="space-between" width="300px">
       <AuthorFilterButton />
-      <span>Label &nbsp;</span>
-      <span>Milestones &nbsp;</span>
+      <LabelFilterButton />
+      <MilestoneFilterButton />
       <AssigneeFilterButton />
     </RightFloatDiv>
   );
 
   const markAs = (
     <RightFloatDiv>
-      <span>Mark as</span>
+      <MarkAs />
     </RightFloatDiv>
   );
 
