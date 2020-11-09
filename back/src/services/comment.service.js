@@ -6,7 +6,7 @@ const deleteComment = async ({ commentId }) => {
   if (result) {
     return result;
   }
-  throw new Error('deleteComment failed');
+  throw new Error('Bad Request');
 };
 
 module.exports = { deleteComment };
