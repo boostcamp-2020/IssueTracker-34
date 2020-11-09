@@ -12,6 +12,14 @@ const issueService = {
     }
     throw new Error();
   },
+  async editIssue(data) {
+    const result = await issueModel.editIssue(data);
+
+    if (result) {
+      return result;
+    }
+    throw new Error('Bad Request');
+  },
 };
 
 module.exports = issueService;
