@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useReducer, createContext } from 'react';
 import styled from 'styled-components';
 import IssueContent from './IssueContent';
 import SelectedCount from './SelectedCount';
@@ -40,27 +40,39 @@ const RightFloatDiv = styled.div`
   width: ${(props) => props.width || 'auto'};
 `;
 
+const issueListReducer = (issueList, { type, payload }) => {
+  switch (type) {
+    case 'setInitial':
+      return payload;
+    case 'checkAll':
+      return issueList.map((issue) => {
+        return { ...issue, isChecked: payload.isChecked };
+      });
+    case 'check':
+      return issueList.map((issue) => {
+        return issue.id === payload.id
+          ? { ...issue, isChecked: !issue.isChecked }
+          : issue;
+      });
+  }
+};
+
+export const IssueContext = createContext();
+
 const IssueList = () => {
-  const [issueList, setIssueList] = useState([]);
+  const [issueList, issueListDispatch] = useReducer(issueListReducer, []);
 
   useEffect(async () => {
     const issues = await issueAPI.getIssues();
-    setIssueList(
-      issues
-        .map((issue) => {
-          return { ...issue, isChecked: false };
-        })
-        .sort((a, b) => (a.id > b.id ? -1 : 1))
-    );
-  }, []);
 
-  const allCheckHandler = (e) => {
-    setIssueList(
-      issueList.map((issue) => {
-        return { ...issue, isChecked: e.target.checked };
+    const orderedIssues = issues
+      .map((issue) => {
+        return { ...issue, isChecked: false };
       })
-    );
-  };
+      .sort((a, b) => (a.id > b.id ? -1 : 1));
+
+    issueListDispatch({ type: 'setInitial', payload: orderedIssues });
+  }, []);
 
   const getCountChecked = () => {
     return issueList.reduce((count, issue) => {
@@ -85,39 +97,41 @@ const IssueList = () => {
   );
 
   return (
-    <IssueSection>
-      <Header>
-        <AllCheckDiv>
-          <input
-            type="checkbox"
-            name="all-issue"
-            value="all"
-            onChange={(e) => allCheckHandler(e)}
-          />
-        </AllCheckDiv>
-        <ExtraHeader>
-          {!(getCountChecked() > 0) ? (
-            <>{dropDownTags}</>
-          ) : (
-            <>
-              <SelectedCount count={getCountChecked()} /> {markAs}{' '}
-            </>
-          )}
-        </ExtraHeader>
-      </Header>
-      <section>
-        {issueList.map((issue, index) => {
-          return (
-            <IssueContent
-              key={`issue${issue.id}-${index}`}
-              data={issue}
-              issueList={issueList}
-              setIssueList={setIssueList}
+    <IssueContext.Provider value={{ issueList, issueListDispatch }}>
+      <IssueSection>
+        <Header>
+          <AllCheckDiv>
+            <input
+              type="checkbox"
+              name="all-issue"
+              value="all"
+              onChange={(e) =>
+                issueListDispatch({
+                  type: 'checkAll',
+                  payload: { isChecked: e.target.checked },
+                })
+              }
             />
-          );
-        })}
-      </section>
-    </IssueSection>
+          </AllCheckDiv>
+          <ExtraHeader>
+            {!(getCountChecked() > 0) ? (
+              <>{dropDownTags}</>
+            ) : (
+              <>
+                <SelectedCount count={getCountChecked()} /> {markAs}{' '}
+              </>
+            )}
+          </ExtraHeader>
+        </Header>
+        <section>
+          {issueList.map((issue, index) => {
+            return (
+              <IssueContent key={`issue${issue.id}-${index}`} data={issue} />
+            );
+          })}
+        </section>
+      </IssueSection>
+    </IssueContext.Provider>
   );
 };
 
