@@ -97,6 +97,7 @@ const DropDownListItem = styled.div`
   display: flex;
   align-items: center;
   padding: 7px 16px;
+  cursor: pointer;
 `;
 
 const Avatar = styled.img`
