@@ -1,4 +1,4 @@
-const JWTToken = require('../services/JWTToken');
+const JWTToken = require('../services/jwtToken.service');
 
 module.exports = function(req, res, next) {
   // if (!token.headers.authorization) {
