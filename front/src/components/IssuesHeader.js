@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import HeaderSvg from '../svgs/HeaderSvg';
+import { Redirect } from 'react-router-dom';
 
 const StyledA = styled.a`
   text-decoration: none;
@@ -17,13 +18,30 @@ const Header = styled.div`
   color: white;
 `;
 
-const IssuesHeader = () => {
+const LogoutButton = styled.button`
+  position: fixed;
+  right: 4rem;
+`
+
+const IssuesHeader = ({ loggedIn, setLoggedIn }) => {
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    console.log(loggedIn, "clicked logout", localStorage.getItem('token'));
+    return <Redirect to={`/`}/>
+  }
+
   return (
     <Header>
       <StyledA href={`/issue/list`}>
         <HeaderSvg />
         <span>ISSUES</span>
       </StyledA>
+      <LogoutButton type='button' onClick={() => {
+        logout()
+      }}>logout</LogoutButton>
+      {!loggedIn && <Redirect to={`/`}/>}
     </Header>
   );
 };
