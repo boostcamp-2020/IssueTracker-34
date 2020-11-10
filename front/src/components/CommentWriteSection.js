@@ -1,6 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import styled from 'styled-components';
 import ClosedSvg from '../svgs/ClosedSvg';
+import { IssueContext } from '../pages/IssueDetailPage';
+
+import axios from 'axios';
 
 const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
@@ -99,10 +102,42 @@ const Button = styled.button`
   }
 `;
 
+const createComment = async (userId, issueId, commentText) => {
+  const options = {
+    method: 'post',
+    url: '/comment',
+    headers: { accept: 'application/json' },
+    data: {
+      userId: userId,
+      issueId: issueId,
+      comment: commentText,
+      date: Date.now(),
+    },
+  };
+
+  try {
+    const { data } = await axios(options);
+    // 개발용. 데이터베이스에 잘 들어가면 나옴.
+    console.log(data, '입력 완료');
+    return data;
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Comment created failed..',
+      text: 'Something went wrong!',
+    });
+    return [];
+  }
+};
+
 const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
   // status 로 edit 인지 생성인지 구분
   // placeholder는 edit용 이전 썼던 글
   // userProfileURL 은 현제 로그인 유저의 이미지 주소
+
+  const { issueInfo, dispatch } = useContext(IssueContext);
+  const issueId = issueInfo.id;
+  const userId = 1; //로그인 후에 받아와야 함.
 
   const [textIsEmpty, setTextIsEmpty] = useState(true);
 
@@ -119,13 +154,14 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
 
   const closeIssue = () => {
     //개발용
+    dispatch({ type: 'toggle_status' });
     console.log('close');
   };
 
   const addComment = () => {
     const commentText = inputRef.current.value;
-    //개발용
-    //TODO: comment추가 API 호출
+
+    createComment(userId, issueId, commentText);
   };
 
   const closeAndAddComment = () => {
@@ -162,9 +198,16 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
                     activeColor="#edeff2"
                     onClick={closeIssue}
                   >
-                    <ClosedSvg color={'red'} marginRight={'4px'} />
-                    Close issue
+                    {issueInfo.status_open_closed == 0 ? (
+                      <>Reopen issue</>
+                    ) : (
+                      <>
+                        <ClosedSvg color={'red'} marginRight={'4px'} />
+                        Close issue
+                      </>
+                    )}
                   </Button>
+
                   <Button
                     background="#94d3a2"
                     color="#ffffffcc"
@@ -180,8 +223,17 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
                     activeColor="#edeff2"
                     onClick={closeAndAddComment}
                   >
-                    <ClosedSvg color={'red'} marginRight={'4px'} />
-                    Close with comment
+                    {issueInfo.status_open_closed == 0 ? (
+                      <>Reopen and comment</>
+                    ) : (
+                      <>
+                        <ClosedSvg color={'red'} marginRight={'4px'} />
+                        Close with comment
+                      </>
+                    )}
+
+                    {/* <ClosedSvg color={'red'} marginRight={'4px'} />
+                    Close with comment */}
                   </Button>
                   <Button
                     background="#2c974b"
