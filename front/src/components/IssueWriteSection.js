@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import issueAPI from '../apis/issue.api';
 import Swal from 'sweetalert2';
 import Box from './boxes/SpeechBox';
+import Img from './boxes/ProfileBox';
 
 const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
@@ -59,13 +60,6 @@ const TextArea = styled.textarea`
     border: 0.5px solid #0366d6;
     box-shadow: 0px 0px 3px 2px #0366d680;
   }
-`;
-
-const Img = styled.img`
-  padding-top: 3px;
-  height: 30px;
-  width: 30px;
-  padding-right: 10px;
 `;
 
 const ButtonBox = styled.div`
