@@ -152,7 +152,7 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
     setTextIsEmpty(false);
   };
 
-  const closeIssue = () => {
+  const changeIssueStatus = () => {
     //개발용
     dispatch({ type: 'toggle_status' });
     console.log('close');
@@ -164,8 +164,8 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
     createComment(userId, issueId, commentText);
   };
 
-  const closeAndAddComment = () => {
-    closeIssue();
+  const changeStatusAndAddComment = () => {
+    changeIssueStatus();
     //TODO: issue status 변화 API 호출
     addComment();
   };
@@ -196,7 +196,7 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
                   <Button
                     hoverColor="#f3f4f6"
                     activeColor="#edeff2"
-                    onClick={closeIssue}
+                    onClick={changeIssueStatus}
                   >
                     {issueInfo.status_open_closed == 0 ? (
                       <>Reopen issue</>
@@ -221,7 +221,7 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
                   <Button
                     hoverColor="#f3f4f6"
                     activeColor="#edeff2"
-                    onClick={closeAndAddComment}
+                    onClick={changeStatusAndAddComment}
                   >
                     {issueInfo.status_open_closed == 0 ? (
                       <>Reopen and comment</>
