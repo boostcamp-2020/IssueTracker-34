@@ -20,6 +20,6 @@ router.use('/label', tokenValidator, labelRouter);
 router.use('/comment', tokenValidator, commentRouter);
 router.use('/milestone', tokenValidator, milestoneRouter);
 router.use('/user', userRouter);
-router.use('/assignee', assigneeValidator, assigneeRouter);
+router.use('/assignee', tokenValidator, assigneeValidator, assigneeRouter);
 
 module.exports = router;
