@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import AssigneesSelector from '../components/AssigneesSelector';
 import IssueWriteSection from '../components/IssueWriteSection';
 import LabelsSelector from './../components/LabelsSelector';
+
+export const IssueContext = React.createContext();
 
 const BodyDiv = styled.div`
   display: flex;
@@ -25,16 +27,21 @@ const RightDiv = styled.div`
 `;
 
 const IssueMakePage = () => {
+  const [assignees, setAssignee] = useState();
+  const [labels, setLabel] = useState([]);
+
   return (
-    <BodyDiv>
-      <LeftDiv>
-        <IssueWriteSection />
-      </LeftDiv>
-      <RightDiv>
-        <AssigneesSelector />
-        <LabelsSelector />
-      </RightDiv>
-    </BodyDiv>
+    <IssueContext.Provider value={(assignees, setAssignee, labels, setLabel)}>
+      <BodyDiv>
+        <LeftDiv>
+          <IssueWriteSection />
+        </LeftDiv>
+        <RightDiv>
+          <AssigneesSelector />
+          <LabelsSelector />
+        </RightDiv>
+      </BodyDiv>
+    </IssueContext.Provider>
   );
 };
 
