@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import IssueTitle from '../components/IssueTitle';
 import IssueStatusChangeButton from '../components/IssueStatusChangeButton';
@@ -8,19 +8,26 @@ import AssigneesSelector from '../components/AssigneesSelector';
 import CommentWriteSection from './../components/CommentWriteSection';
 import LabelsSelector from './../components/LabelsSelector';
 
+import axios from 'axios';
 export const IssueContext = React.createContext();
 
-function reducer(state, action) {
+function reducer(issue, action) {
   switch (action.type) {
-    case 'toggle_status':
-      if (state.status == false) {
-        console.log('false to true');
-        return { status: true };
-      }
-      console.log('true to false');
-      return { status: false };
-    default:
-      return state;
+  case 'toggle_status':
+    if (issue.status_open_closed == 0) {
+      console.log('false to true');
+      return { ...issue, status_open_closed: 1 };
+    }
+    console.log('true to false');
+    return { ...issue, status_open_closed: 0 };
+  case 'set_issue':
+    return action.payload;
+  case 'change_title':
+    console.log('title 변경합니다');
+    const newTitle = action.payload.title;
+    return { ...issue, title: newTitle };
+  default:
+    return issue;
   }
 }
 
@@ -54,13 +61,43 @@ const TempDiv = styled.div`
   background-color: grey;
 `;
 
+const getIssues = async () => {
+  const options = {
+    method: 'get',
+    url: '/issue',
+    headers: { accept: 'application/json' },
+  };
+
+  try {
+    const { data } = await axios(options);
+    return data;
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Issues load failed..',
+      text: 'Something went wrong!',
+    });
+    return [];
+  }
+};
+
+const getIssue = (id, issues) => {
+  const issue = issues.find((issue) => {
+    return issue.id === Number(id);
+  });
+  return issue;
+};
+
 const IssueDetailPage = () => {
   const { id } = useParams();
 
-  //params에 따라 들어가는 값이 달라진다.
-  const [issueInfo, dispatch] = useReducer(reducer, { status: true });
+  const [issueInfo, dispatch] = useReducer(reducer, {});
 
-  //TODO: id로 api 호출 후 적절한 렌더링
+  useEffect(async () => {
+    const issues = await getIssues();
+    const issue = getIssue(id, issues);
+    dispatch({ type: 'set_issue', payload: issue });
+  }, []);
 
   return (
     <>
@@ -69,7 +106,7 @@ const IssueDetailPage = () => {
         <IssueTitle />
         <BodyDiv>
           <LeftDiv>
-            <TempDiv>개발중ㅋㅋㅋ</TempDiv>
+            <TempDiv>개발중</TempDiv>
             <CommentWriteSection />
           </LeftDiv>
           <RightDiv>
@@ -77,7 +114,6 @@ const IssueDetailPage = () => {
             <LabelsSelector />
           </RightDiv>
         </BodyDiv>
-        <IssueStatusChangeButton />
       </IssueContext.Provider>
     </>
   );
