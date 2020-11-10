@@ -12,7 +12,7 @@ const IssueInfo = ({ issueId, makeDate, author, commentCount }) => {
   if (agoTime < 1) {
     agoText = 'a few seconds';
   } else if (agoTime < 60) {
-    agoText = `${agoTime} minute`;
+    agoText = `${agoTime} minutes`;
   } else if (agoHour < 24) {
     agoText = `${agoHour} hours`;
   } else if (agoDay < 365) {

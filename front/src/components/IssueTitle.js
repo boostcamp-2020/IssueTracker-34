@@ -110,7 +110,7 @@ const IssueTitle = () => {
   const issueTitle = issueInfo.title;
   const issueNumber = issueInfo.id;
   // setTitle(issueInfo.title);
-  const creator = issueInfo.user ? issueInfo.user.name : ''; //issueInfo.user.name; //
+  const creator = issueInfo.user ? issueInfo.user.name : '';
   const makeDate = issueInfo.date ? issueInfo.date : Date.now();
   const commentCount = '3'; //따로 가져와야겠네.
 
@@ -175,11 +175,6 @@ const IssueTitle = () => {
           author={creator}
           commentCount={commentCount}
         />
-
-        {/* <div>
-          {creator} opened this issue {passedDate} days ago · {commentCount}{' '}
-          comments
-        </div> */}
       </IssueInfoDiv>
     </div>
   );
