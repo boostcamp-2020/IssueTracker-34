@@ -9,6 +9,7 @@ const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
 
 const Box = styled.div`
+  width: 100%;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 14%);
   position: relative;
   border-radius: 2px;
@@ -20,7 +21,7 @@ const Box = styled.div`
     left: -10px;
     top: 10.5px;
     border-top: 4.5px solid transparent;
-    border-right: 10px solid #ffffff4d;
+    border-right: 10px solid #f6f8fa;
     border-bottom: 4.5px solid transparent;
     z-index: 1;
   }
@@ -38,18 +39,24 @@ const Box = styled.div`
 `;
 
 const Header = styled.div`
-  padding: 11px 5px 5px 5px;
+  // padding: 5px;
   border-radius: 1px;
-  background-color: #acc9eaad;
+  background-color: #f6f8fa;
+  height: 40px;
+  position: relative;
 `;
-const Tab = styled.span`
+const Tab = styled.div`
+  position: absolute;
   background-color: white;
   padding: 6px;
-  border: 1px solid transparent;
+  border: 1px solid orange;
   border-color: #e1e4e8;
   border-bottom: none;
   border-radius: 5px 5px 0px 0px;
   font-size: 10px;
+  height: 30px;
+  margin-top: 10px;
+  margin-left: 10px;
 `;
 const TextArea = styled.textarea`
   width: 100%;
@@ -66,10 +73,10 @@ const TextArea = styled.textarea`
 `;
 
 const Img = styled.img`
-  padding-top: 3px;
+  margin-top: 3px;
   height: 30px;
   width: 30px;
-  padding-right: 10px;
+  margin-right: 20px;
 `;
 
 const ButtonBox = styled.div`

@@ -5,6 +5,7 @@ import IssueStatusChangeButton from '../components/IssueStatusChangeButton';
 import { useContext } from 'react';
 import styled from 'styled-components';
 import AssigneesSelector from '../components/AssigneesSelector';
+import IssueDetailContent from '../components/issueDetailContent';
 import CommentWriteSection from './../components/CommentWriteSection';
 import LabelsSelector from './../components/LabelsSelector';
 
@@ -26,6 +27,10 @@ function reducer(issue, action) {
     console.log('title 변경합니다');
     const newTitle = action.payload.title;
     return { ...issue, title: newTitle };
+  case 'edit_issue_content':
+    console.log('content 변경합니다');
+    const newContent = action.payload.content;
+    return { ...issue, content: newContent };
   default:
     return issue;
   }
@@ -42,13 +47,14 @@ const BodyDiv = styled.div`
 const LeftDiv = styled.div`
   display: flex;
   flex-direction: column;
-  /* width: 1500px; */
+  width: 70%;
 `;
 
 const RightDiv = styled.div`
   display: flex;
   flex-direction: column;
-  width: 1500px;
+  width: 28%;
+  margin-left: 2%;
 `;
 
 const TempDiv = styled.div`
@@ -101,12 +107,14 @@ const IssueDetailPage = () => {
 
   return (
     <>
-      <div>Issue detail Page</div>
       <IssueContext.Provider value={{ issueInfo, dispatch }}>
         <IssueTitle />
         <BodyDiv>
           <LeftDiv>
-            <TempDiv>개발중</TempDiv>
+            {/* <TempDiv>
+            </TempDiv> */}
+            <IssueDetailContent />
+
             <CommentWriteSection />
           </LeftDiv>
           <RightDiv>
