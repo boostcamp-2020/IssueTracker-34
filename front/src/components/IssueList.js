@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import IssueContent from './IssueContent';
 import SelectedCount from './SelectedCount';
@@ -7,6 +7,7 @@ import AssigneeFilterButton from './AssigneeFilterButton';
 import LabelFilterButton from './LabelFilterButton';
 import MilestoneFilterButton from './MilestoneFilterButton';
 import MarkAs from './MarkAs';
+import issueAPI from './../apis/issue.api';
 
 const IssueSection = styled.section`
   border: 1px solid #e1e4e8;
@@ -39,66 +40,31 @@ const RightFloatDiv = styled.div`
   width: ${(props) => props.width || 'auto'};
 `;
 
-const tempIssueData = [
-  {
-    title: 'First Issue',
-    id: 1,
-    date: new Date('2020/10/27 11:00'),
-    author: 'rockpell',
-    statusOpenClosed: true,
-    labels: [
-      { name: '이슈 목록 화면', color: '#77b21e' },
-      { name: '이슈 상세 화면', color: '#eccf9e' },
-    ],
-  },
-  {
-    title: 'Second Issue',
-    id: 2,
-    date: new Date('2020/10/28 12:00'),
-    author: 'rockpell',
-    statusOpenClosed: true,
-    labels: [{ name: '이슈 목록 화면', color: '#77b21e' }],
-  },
-  {
-    title: 'Third Issue',
-    id: 3,
-    date: new Date('2020/10/28 14:00'),
-    author: 'rockpell',
-    statusOpenClosed: false,
-    labels: [{ name: '새로운 이슈', color: '#1d76db' }],
-  },
-];
-
 const IssueList = () => {
-  const [checkedState, setCheckedState] = useState(
-    tempIssueData.map((issueData) => {
-      return { id: issueData.id, isChecked: false };
-    })
-  );
+  const [issueList, setIssueList] = useState([]);
 
-  const issueContents = tempIssueData.map((issueData, index) => {
-    return (
-      <IssueContent
-        key={`issue${issueData.id}-${index}`}
-        data={issueData}
-        checkedState={checkedState}
-        setCheckedState={setCheckedState}
-      />
+  useEffect(async () => {
+    const issues = await issueAPI.getIssues();
+    setIssueList(
+      issues
+        .map((issue) => {
+          return { ...issue, isChecked: false };
+        })
+        .sort((a, b) => (a.id > b.id ? -1 : 1))
     );
-  });
+  }, []);
 
   const allCheckHandler = (e) => {
-    setCheckedState(
-      checkedState.map((element) => {
-        element.isChecked = e.target.checked;
-        return element;
+    setIssueList(
+      issueList.map((issue) => {
+        return { ...issue, isChecked: e.target.checked };
       })
     );
   };
 
   const getCountChecked = () => {
-    return checkedState.reduce((count, checked) => {
-      if (checked.isChecked) count++;
+    return issueList.reduce((count, issue) => {
+      if (issue.isChecked) count++;
       return count;
     }, 0);
   };
@@ -139,7 +105,18 @@ const IssueList = () => {
           )}
         </ExtraHeader>
       </Header>
-      <section>{issueContents}</section>
+      <section>
+        {issueList.map((issue, index) => {
+          return (
+            <IssueContent
+              key={`issue${issue.id}-${index}`}
+              data={issue}
+              issueList={issueList}
+              setIssueList={setIssueList}
+            />
+          );
+        })}
+      </section>
     </IssueSection>
   );
 };

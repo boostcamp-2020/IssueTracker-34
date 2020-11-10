@@ -50,21 +50,21 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 
-const checkHandler = (e, checkedState, setCheckedState) => {
-  setCheckedState(
-    checkedState.map((element) => {
-      if (element.id === Number(e.target.value))
-        element.isChecked = e.target.checked;
-      return element;
+const checkHandler = ({ e, issueList, setIssueList }) => {
+  setIssueList(
+    issueList.map((issue) => {
+      return issue.id === Number(e.target.value)
+        ? { ...issue, isChecked: !issue.isChecked }
+        : issue;
     })
   );
 };
 
-const IssueContent = ({ data, checkedState, setCheckedState }) => {
+const IssueContent = ({ data, issueList, setIssueList }) => {
   const issueLabels = data.labels.map((labelData, index) => {
     return (
       <IssueLabel
-        key={`issueLabel${data.id}-${index}`}
+        key={`issueLabel${labelData.id}-${index}`}
         name={labelData.name}
         color={labelData.color}
       />
@@ -78,14 +78,14 @@ const IssueContent = ({ data, checkedState, setCheckedState }) => {
           type="checkbox"
           name={`issue${data.id}`}
           value={data.id}
-          checked={checkedState.find((item) => item.id === data.id).isChecked}
+          checked={data.isChecked}
           onChange={(e) => {
-            checkHandler(e, checkedState, setCheckedState);
+            checkHandler({ e, issueList, setIssueList });
           }}
         />
       </CheckBoxDiv>
       <IconDiv>
-        {data.statusOpenClosed ? (
+        {data.status_open_closed ? (
           <OpenedSvg color={'#28a745'} />
         ) : (
           <ClosedSvg color={'#cb2431'} />
@@ -100,7 +100,7 @@ const IssueContent = ({ data, checkedState, setCheckedState }) => {
           <IssueInfo
             issueId={data.id}
             makeDate={data.date}
-            author={data.author}
+            author={data.user.name}
           />
         </IssueDataDiv>
       </TitleDiv>
