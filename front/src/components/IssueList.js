@@ -7,7 +7,7 @@ import AssigneeFilterButton from './AssigneeFilterButton';
 import LabelFilterButton from './LabelFilterButton';
 import MilestoneFilterButton from './MilestoneFilterButton';
 import MarkAs from './MarkAs';
-import { IssueListContext } from './../pages/IssueListPage';
+import { IssueListContext, AuthorListContext } from './../pages/IssueListPage';
 
 const IssueSection = styled.section`
   border: 1px solid #e1e4e8;
@@ -42,6 +42,8 @@ const RightFloatDiv = styled.div`
 
 const IssueList = () => {
   const { issueList, issueListDispatch } = useContext(IssueListContext);
+  const { authorList } = useContext(AuthorListContext);
+  const [checkedAuthor] = authorList.filter((author) => author.isChecked);
 
   const getCountChecked = () => {
     return issueList.reduce((count, issue) => {
@@ -92,11 +94,16 @@ const IssueList = () => {
         </ExtraHeader>
       </Header>
       <section>
-        {issueList.map((issue, index) => {
-          return (
-            <IssueContent key={`issue${issue.id}-${index}`} data={issue} />
-          );
-        })}
+        {issueList
+          .filter((issue) => {
+            if (checkedAuthor === undefined) return true;
+            return issue.user.id === checkedAuthor.id;
+          })
+          .map((issue, index) => {
+            return (
+              <IssueContent key={`issue${issue.id}-${index}`} data={issue} />
+            );
+          })}
       </section>
     </IssueSection>
   );
