@@ -1,9 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
 
 const IssueInfo = ({ issueId, makeDate, author }) => {
   const nowDate = Date.now();
-  const agoTime = Math.floor((nowDate - makeDate.getTime()) / 1000 / 60);
+  const date = new Date(makeDate);
+  const agoTime = Math.floor((nowDate - date.getTime()) / 1000 / 60);
   const agoHour = Math.floor(agoTime / 60);
   const agoDay = Math.floor(agoTime / 60 / 24);
   let agoText = '';

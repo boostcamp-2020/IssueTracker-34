@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import SettingSvg from '../svgs/SettingSvg';
 import CheckSvg from '../svgs/CheckSvg';
+import axios from 'axios';
 
 const LabelsSelectorDiv = styled.div`
   position: relative;
@@ -107,6 +108,7 @@ const CheckedLabelDiv = styled.div`
   align-items: center;
   height: 34px;
   font-size: 12px;
+  margin-left: 6px;
 `;
 
 const CheckedLabelsDiv = styled.div`
@@ -164,9 +166,34 @@ const tempData = [
   },
 ];
 
+const getLabels = async () => {
+  const options = {
+    method: 'get',
+    url: '/label',
+    headers: { accept: 'application/json' },
+  };
+
+  try {
+    const { data } = await axios(options);
+    return data;
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Labels load failed..',
+      text: 'Something went wrong!',
+    });
+    return [];
+  }
+};
+
 const LabelsSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [labels, setLabel] = useState(tempData);
+  const [labels, setLabel] = useState([]);
+
+  useEffect(async () => {
+    const labelData = await getLabels();
+    setLabel(labelData);
+  }, []);
 
   let checkedLabelsCnt = 0;
   const checkedLabels = labels.map((label, idx) => {
@@ -202,8 +229,8 @@ const LabelsSelector = () => {
             <LabelColorDiv backgroundColor={label.color}></LabelColorDiv>
             <LabelId>{label.name}</LabelId>
           </LabelInnerDiv>
-          {label.description !== '' ? (
-            <LabelDescription>{label.description}</LabelDescription>
+          {label.content !== '' ? (
+            <LabelDescription>{label.content}</LabelDescription>
           ) : (
             <></>
           )}
