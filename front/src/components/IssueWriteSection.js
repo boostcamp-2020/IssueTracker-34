@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import issueAPI from '../apis/issue.api';
 
 const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
@@ -126,18 +127,18 @@ const Button = styled.button`
   }
 `;
 
-const StyledLink = styled(Link)`
-  color: black;
-  font-size: 14px;
-  text-decoration: none;
-  line-height: 24px;
+const CancelButton = styled.button`
+  outline: none;
+  border: none;
+  background: none;
+  cursor: pointer;
 `;
 
 const IssueWriteSection = ({ userProfileURL, status, placeholder }) => {
   // status 로 edit 인지 생성인지 구분
   // placeholder는 edit용 이전 썼던 글
   // userProfileURL 은 현제 로그인 유저의 이미지 주소
-
+  const history = useHistory();
   const [textIsEmpty, setTextIsEmpty] = useState(true);
 
   const imageURL = userProfileURL ? userProfileURL : defaultUserImageUrl;
@@ -152,13 +153,21 @@ const IssueWriteSection = ({ userProfileURL, status, placeholder }) => {
     setTextIsEmpty(false);
   };
 
-  const submitIssue = () => {
+  const submitIssue = async () => {
     const issueTitle = inputTitleRef.current.value;
     const issueText = inputContentRef.current.value;
-    //개발용
-    //TODO: API 호출
-    console.log('issueTitle: ', issueTitle);
-    console.log('issueText: ', issueText);
+    const issue = await issueAPI.createIssue({
+      title: issueTitle,
+      content: issueText,
+      labels: [],
+      assignees: [],
+    });
+
+    history.push(`/issue/${issue.id}`);
+  };
+
+  const cancelIssue = () => {
+    history.push('/issue/list');
   };
 
   return (
@@ -189,7 +198,7 @@ const IssueWriteSection = ({ userProfileURL, status, placeholder }) => {
               placeholder="Leave a comment"
             />
             <ButtonBox>
-              <StyledLink to={`/issue/list`}>Cancel</StyledLink>
+              <CancelButton onClick={cancelIssue}>Cancel</CancelButton>
               {textIsEmpty ? (
                 <>
                   <Button
