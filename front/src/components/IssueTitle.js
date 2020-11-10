@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import OpenedSvg from '../svgs/OpenedSvg';
 import ClosedSvg from '../svgs/ClosedSvg';
 import { IssueContext } from '../pages/IssueDetailPage';
+import IssueInfo from '../components/IssueInfo';
 
 const TitleWrap = styled.div`
   display: flex;
@@ -90,27 +91,28 @@ const IssueStateWrap = styled.div`
   margin-right: 5px;
 `;
 
-const IssueInfo = styled.div`
+const IssueInfoDiv = styled.div`
   display: flex;
   flex-direction: rows;
   align-items: center;
 `;
 
 const IssueTitle = () => {
-  //Todo: id에 맞는 title을 받아와서 useState에 기본값으로 저장한다.
-  //변경된 title 값을 db에 저장한다.
-  //이슈 번호, 이슈 상태, 생성자, 생성일, comment 정보 등을 가져와야 한다.
-
-  const [title, setTitle] = useState('my title');
   const [isEditMode, editTitle] = useState(false);
-  const { issueInfo } = useContext(IssueContext);
+  const { issueInfo, dispatch } = useContext(IssueContext);
+  //const [title, setTitle] = useState('temp');
+
+  // 개발용
+  console.log('issue 정보', issueInfo);
 
   const inputRef = useRef(false);
 
-  const issueNumber = 1;
-  const creator = 'temp';
-  const passedDate = '2';
-  const commentCount = '3';
+  const issueTitle = issueInfo.title;
+  const issueNumber = issueInfo.id;
+  // setTitle(issueInfo.title);
+  const creator = issueInfo.user ? issueInfo.user.name : ''; //issueInfo.user.name; //
+  const makeDate = issueInfo.date ? issueInfo.date : Date.now();
+  const commentCount = '3'; //따로 가져와야겠네.
 
   const editTitle_ = () => {
     editTitle(true);
@@ -126,7 +128,8 @@ const IssueTitle = () => {
 
     //개발용
     console.log(inputRef.current.value, '를 title로 저장했어요.');
-    setTitle(inputRef.current.value);
+
+    dispatch({ type: 'change_title', payload: { title: newTitle } });
     editTitle(false);
   };
 
@@ -141,21 +144,21 @@ const IssueTitle = () => {
       {!isEditMode ? (
         <TitleWrap>
           <Title>
-            <Span>{title}</Span>
+            <Span>{issueTitle}</Span>
             <IssueNumber>#{issueNumber}</IssueNumber>
           </Title>
           <EditButton onClick={editTitle_}>Edit</EditButton>
         </TitleWrap>
       ) : (
         <TitleWrap>
-          <TitleInput type="text" ref={inputRef} defaultValue={title} />
+          <TitleInput type="text" ref={inputRef} defaultValue={issueTitle} />
           <SaveButton onClick={saveTitle}>Save</SaveButton>
           <CancelButton onClick={cancelEdit}>Cancel</CancelButton>
         </TitleWrap>
       )}
 
-      <IssueInfo>
-        {issueInfo.status === true ? (
+      <IssueInfoDiv>
+        {issueInfo.status_open_closed == 1 ? (
           <IssueStateWrap backgroundColor={'#28a745'}>
             <OpenedSvg marginRight={'4px'} /> <div>Open</div>
           </IssueStateWrap>
@@ -166,11 +169,18 @@ const IssueTitle = () => {
             <div>Close</div>
           </IssueStateWrap>
         )}
-        <div>
+
+        <IssueInfo
+          makeDate={makeDate}
+          author={creator}
+          commentCount={commentCount}
+        />
+
+        {/* <div>
           {creator} opened this issue {passedDate} days ago · {commentCount}{' '}
           comments
-        </div>
-      </IssueInfo>
+        </div> */}
+      </IssueInfoDiv>
     </div>
   );
 };
