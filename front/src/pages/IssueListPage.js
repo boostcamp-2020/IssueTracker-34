@@ -6,7 +6,6 @@ import FilterSearchBar from '../components/FilterSearchBar';
 import LabelsButton from '../components/LabelsButton';
 import MilestonesButton from '../components/MilestonesButton';
 import NewIssueButton from '../components/NewIssueButton';
-
 import issueAPI from './../apis/issue.api';
 
 const FilterDiv = styled.div`
@@ -44,7 +43,7 @@ const issueListReducer = (issueList, { type, payload }) => {
   }
 };
 
-export const IssueContext = createContext();
+export const IssueListContext = createContext();
 
 const IssueListPage = () => {
   const [issueList, issueListDispatch] = useReducer(issueListReducer, []);
@@ -63,7 +62,7 @@ const IssueListPage = () => {
 
   return (
     <>
-      <IssueContext.Provider value={{ issueList, issueListDispatch }}>
+      <IssueListContext.Provider value={{ issueList, issueListDispatch }}>
         <div>
           <FilterDiv>
             <InnerFilterDivOne>
@@ -78,7 +77,7 @@ const IssueListPage = () => {
           </FilterDiv>
           <IssueList />
         </div>
-      </IssueContext.Provider>
+      </IssueListContext.Provider>
     </>
   );
 };

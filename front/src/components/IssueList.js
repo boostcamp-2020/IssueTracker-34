@@ -7,7 +7,7 @@ import AssigneeFilterButton from './AssigneeFilterButton';
 import LabelFilterButton from './LabelFilterButton';
 import MilestoneFilterButton from './MilestoneFilterButton';
 import MarkAs from './MarkAs';
-import { IssueContext } from './../pages/IssueListPage';
+import { IssueListContext } from './../pages/IssueListPage';
 
 const IssueSection = styled.section`
   border: 1px solid #e1e4e8;
@@ -41,7 +41,7 @@ const RightFloatDiv = styled.div`
 `;
 
 const IssueList = () => {
-  const { issueList, issueListDispatch } = useContext(IssueContext);
+  const { issueList, issueListDispatch } = useContext(IssueListContext);
 
   const getCountChecked = () => {
     return issueList.reduce((count, issue) => {
