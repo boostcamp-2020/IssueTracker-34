@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import issueAPI from '../apis/issue.api';
+import Swal from 'sweetalert2';
 
 const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
@@ -154,16 +155,24 @@ const IssueWriteSection = ({ userProfileURL, status, placeholder }) => {
   };
 
   const submitIssue = async () => {
-    const issueTitle = inputTitleRef.current.value;
-    const issueText = inputContentRef.current.value;
-    const issue = await issueAPI.createIssue({
-      title: issueTitle,
-      content: issueText,
-      labels: [],
-      assignees: [],
-    });
+    try {
+      const issueTitle = inputTitleRef.current.value;
+      const issueText = inputContentRef.current.value;
+      const issue = await issueAPI.createIssue({
+        title: issueTitle,
+        content: issueText,
+        labels: [],
+        assignees: [],
+      });
 
-    history.push(`/issue/${issue.id}`);
+      history.push(`/issue/${issue.id}`);
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Issue created failed..',
+        text: 'Something went wrong!',
+      });
+    }
   };
 
   const cancelIssue = () => {
