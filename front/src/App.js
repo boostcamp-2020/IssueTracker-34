@@ -10,7 +10,7 @@ import MilestoneListPage from './pages/MilestoneListPage';
 import MilestoneMakePage from './pages/MilestoneMakePage';
 import IssuesHeader from './components/IssuesHeader';
 import styled from 'styled-components';
-
+import queryString from 'query-string'
 import {
   BrowserRouter as Router,
   Switch,
@@ -22,14 +22,18 @@ const StyledDiv = styled.div`
   margin: 4rem;
 `;
 
+
 const App = () => {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const { code } = queryString.parse(window.location.search);
 
   const checkLogin = () => {
     const token = localStorage.getItem('token');
     if (token) {
       setLoggedIn(true);
+      return;
     }
+    setLoggedIn(false);
   };
 
   useEffect(() => {
@@ -39,11 +43,11 @@ const App = () => {
   return (
     <>
       <Router>
-        {loggedIn ? <IssuesHeader loggedIn={loggedIn} setLoggedIn={setLoggedIn}/> : ''}
+        {loggedIn ? <IssuesHeader setLoggedIn={setLoggedIn}/> : ''}
         <StyledDiv>
           <Switch>
             <Route exact path="/">
-              <LoginPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+              <LoginPage setLoggedIn={setLoggedIn}/>
             </Route>
             <Route exact path="/issue/list">
               <IssueListPage />
@@ -68,7 +72,7 @@ const App = () => {
             </Route>
           </Switch>
         </StyledDiv>
-        {!loggedIn ? (
+        {!loggedIn ? (code ? '' :
           <Redirect to="/" />
         ) : (<Redirect to="/issue/list" />)}
       </Router>

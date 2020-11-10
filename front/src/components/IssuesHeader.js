@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import HeaderSvg from '../svgs/HeaderSvg';
 import { Redirect } from 'react-router-dom';
@@ -23,13 +23,12 @@ const LogoutButton = styled.button`
   right: 4rem;
 `
 
-const IssuesHeader = ({ loggedIn, setLoggedIn }) => {
+const IssuesHeader = ({ setLoggedIn }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
     setLoggedIn(false);
-    console.log(loggedIn, "clicked logout", localStorage.getItem('token'));
-    return <Redirect to={`/`}/>
+    return
   }
 
   return (
@@ -41,7 +40,6 @@ const IssuesHeader = ({ loggedIn, setLoggedIn }) => {
       <LogoutButton type='button' onClick={() => {
         logout()
       }}>logout</LogoutButton>
-      {!loggedIn && <Redirect to={`/`}/>}
     </Header>
   );
 };

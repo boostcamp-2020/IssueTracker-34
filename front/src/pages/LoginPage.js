@@ -81,8 +81,6 @@ const Title = styled.span`
 `;
 
 const LoginPage = ({ setLoggedIn }) => {
-  const [token, setToken] = useState('');
-
 
   const auth = async () => {
     const token = localStorage.getItem('token');
@@ -90,14 +88,13 @@ const LoginPage = ({ setLoggedIn }) => {
 
     if (token) {
       setLoggedIn(true);
-      setToken(token);
       return;
     }
     if (!token && code) {
       const token = await Auth.login(code);
       localStorage.setItem('token', token);
-      setToken(token);
       setLoggedIn(true);
+      return;
     }
   }
 
@@ -127,7 +124,6 @@ const LoginPage = ({ setLoggedIn }) => {
           </Content>
         </Shit>
       </Outer>
-      {token && <Redirect to={`/issue/list`}/>}
     </>
   );
 };
