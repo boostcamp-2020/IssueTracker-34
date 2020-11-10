@@ -12,7 +12,7 @@ const commentService = {
     if (result) {
       return result;
     }
-    throw new Error('createComment failed');
+    throw new Error('Bad Request');
   },
 
   async getComments({ issueId }) {
@@ -30,7 +30,7 @@ const commentService = {
       comment,
       date,
     });
-    
+
     if (result) {
       return result;
     }
