@@ -81,13 +81,19 @@ const Title = styled.span`
 `;
 
 const LoginPage = ({ setLoggedIn }) => {
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState('');
 
 
   const auth = async () => {
-    localStorage.removeItem('token');
-    if (!token) {
-      const { code } = queryString.parse(window.location.search);
+    const token = localStorage.getItem('token');
+    const { code } = queryString.parse(window.location.search);
+
+    if (token) {
+      setLoggedIn(true);
+      setToken(token);
+      return;
+    }
+    if (!token && code) {
       const token = await Auth.login(code);
       localStorage.setItem('token', token);
       setToken(token);
