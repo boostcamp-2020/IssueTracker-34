@@ -85,6 +85,47 @@ const issueModel = {
 
     return issueList;
   },
+  async editIssue({
+    issueId,
+    title,
+    content,
+    milestone,
+    statusOpenClosed,
+    labels,
+    assignees,
+  }) {
+    const updateResult = await sequelize.transaction(async (t) => {
+      const result = await Issue.update(
+        {
+          title: title,
+          content: content,
+          milestone_id: milestone,
+          status_open_closed: statusOpenClosed,
+        },
+        { where: { id: issueId } }
+      );
+
+      await IssuesHasLabels.destroy({ where: { issue_id: issueId } });
+
+      await IssuesHasLabels.bulkCreate(
+        labels.map((label) => {
+          return { issue_id: issueId, label_id: label };
+        })
+      );
+
+      await Assignee.destroy({ where: { issue_id: issueId } });
+
+      await Assignee.bulkCreate(
+        assignees.map((assignee) => {
+          return { user_id: assignee, issue_id: issueId };
+        })
+      );
+
+      return result;
+    });
+
+    return updateResult;
+  },
 };
 
 module.exports = issueModel;

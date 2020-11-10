@@ -1,5 +1,22 @@
+const {
+  validateStringOrUndefined,
+  validateBooleanOrUndefined,
+} = require('./validateDatatypes');
+
 const validateCreateIssueInput = (req, res, next) => {
   if (!req.body.title) {
+    return res.status(400).send();
+  }
+  next();
+};
+
+const validateEditIssueInput = (req, res, next) => {
+  const { issueId, title, statusOpenClosed } = req.body;
+  if (
+    !issueId ||
+    !validateStringOrUndefined(title) ||
+    !validateBooleanOrUndefined(statusOpenClosed)
+  ) {
     return res.status(400).send();
   }
   next();
@@ -14,5 +31,6 @@ const validateCreateLabelInput = (req, res, next) => {
 
 module.exports = {
   validateCreateIssueInput,
+  validateEditIssueInput,
   validateCreateLabelInput,
 };
