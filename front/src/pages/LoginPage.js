@@ -1,11 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import GitHubSvg from '../svgs/GitHubSvg';
 import SearchSvg from '../svgs/SearchSvg';
 import PersonSvg from '../svgs/PersonSvg';
+import queryString from 'query-string'
+import Auth from '../apis/Auth.api';
 
-const StyledLink = styled(Link)`
+const GITHUB_AUTHORIZATION_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.HOMEPAGE_URL}`
+
+const StyledLink = styled.a`
   text-decoration: none;
 `;
 
@@ -76,10 +80,24 @@ const Title = styled.span`
   font-size: xx-large;
 `;
 
-const LoginPage = ({ loggedIn, setLoggedIn }) => {
-  const login = () => {
-    setLoggedIn(true);
-  };
+const LoginPage = ({ setLoggedIn }) => {
+  const [token, setToken] = useState(localStorage.getItem('token'));
+
+
+  const auth = async () => {
+    localStorage.removeItem('token');
+    if (!token) {
+      const { code } = queryString.parse(window.location.search);
+      const token = await Auth.login(code);
+      localStorage.setItem('token', token);
+      setToken(token);
+      setLoggedIn(true);
+    }
+  }
+
+  useEffect(() => {
+    auth();
+  }, []);
 
   return (
     <>
@@ -96,14 +114,14 @@ const LoginPage = ({ loggedIn, setLoggedIn }) => {
               <GitHubSvg/>
               <Title>지금 당신 프로젝트에서 무슨 일이 일어나고 있는지 알아보세요</Title>
               <div>오늘 Issue Tracker에 가입하세요.</div>
-              <StyledLink to="/issue/list" onClick={login}>
+              <StyledLink href={GITHUB_AUTHORIZATION_URL}>
                 <LoginButton type='button'><GitHubSvg/> Login With github</LoginButton>
               </StyledLink>
             </Box>
           </Content>
         </Shit>
       </Outer>
-
+      {token && <Redirect to={`/issue/list`}/>}
     </>
   );
 };
