@@ -1,3 +1,8 @@
+const {
+  validateStringOrUndefined,
+  validateBooleanOrUndefined,
+} = require('./validateDatatypes');
+
 const validateCreateIssueInput = (req, res, next) => {
   if (!req.body.title) {
     return res.status(400).send();
@@ -6,15 +11,11 @@ const validateCreateIssueInput = (req, res, next) => {
 };
 
 const validateEditIssueInput = (req, res, next) => {
-  const { title, statusOpenClosed } = req.body;
+  const { issueId, title, statusOpenClosed } = req.body;
   if (
-    !req.body.issueId ||
-    (!title && title !== undefined) ||
-    !(
-      statusOpenClosed === true ||
-      statusOpenClosed === false ||
-      statusOpenClosed === undefined
-    )
+    !issueId ||
+    !validateStringOrUndefined(title) ||
+    !validateBooleanOrUndefined(statusOpenClosed)
   ) {
     return res.status(400).send();
   }
