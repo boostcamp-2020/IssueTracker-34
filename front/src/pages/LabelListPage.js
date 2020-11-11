@@ -118,7 +118,7 @@ const LabelListPage = () => {
           }}>New Label</NewLabelButton>
         </div>
       </LabelHeader>
-      {!modalIsOpened && <LabelModal changeLabelModalStatus={changeLabelModalStatus} getLabels={getLabels}/>}
+      {modalIsOpened && <LabelModal changeLabelModalStatus={changeLabelModalStatus} getLabels={getLabels}/>}
       <div>{labels}</div>
     </>
   );
