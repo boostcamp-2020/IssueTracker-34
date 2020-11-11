@@ -3,9 +3,8 @@ const userService = require('../services/user.service');
 const UserController = {
   async login (req, res) {
     try {
-      const { username, photos, id } = req.user
-      const profile_url = photos[0].value || undefined
-      const github_id = Number(id);
+      const { username, profile_url, github_id } = req.user
+
       const token = await userService.login({ username, profile_url, github_id });
 
       return res.status(200).json(token);

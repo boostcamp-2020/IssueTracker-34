@@ -18,6 +18,10 @@ const User = sequelize.define(
       type: Sequelize.STRING,
       allowNull: true,
     },
+    github_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
   },
   { timestamps: false },
 );

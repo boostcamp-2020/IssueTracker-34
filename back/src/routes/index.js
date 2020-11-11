@@ -8,17 +8,18 @@ const userRouter = require('./user.route');
 const assigneeRouter = require('./assignee.route');
 const assigneeValidator = require('../middleware/assigneeValidator');
 const { testAuth } = require('../middleware/testAuth');
+const tokenValidator = require('../middleware/tokenValidator');
 
 router.get('/', (req, res) => {
   res.send('hello');
 });
 
 router.use(testAuth);
-router.use('/issue', issueRouter);
-router.use('/label', labelRouter);
-router.use('/comment', commentRouter);
-router.use('/milestone', milestoneRouter);
+router.use('/issue', tokenValidator, issueRouter);
+router.use('/label', tokenValidator, labelRouter);
+router.use('/comment', tokenValidator, commentRouter);
+router.use('/milestone', tokenValidator, milestoneRouter);
 router.use('/user', userRouter);
-router.use('/assignee', assigneeValidator, assigneeRouter);
+router.use('/assignee', tokenValidator, assigneeValidator, assigneeRouter);
 
 module.exports = router;
