@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import ClosedSvg from '../svgs/ClosedSvg';
 import OpenedSvg from '../svgs/OpenedSvg';
 import IssueInfo from './IssueInfo';
 import IssueLabel from './IssueLabel';
+import { IssueListContext } from './../pages/IssueListPage';
 
 const OutDiv = styled.div`
   display: flex;
@@ -50,17 +51,9 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 
-const checkHandler = ({ e, issueList, setIssueList }) => {
-  setIssueList(
-    issueList.map((issue) => {
-      return issue.id === Number(e.target.value)
-        ? { ...issue, isChecked: !issue.isChecked }
-        : issue;
-    })
-  );
-};
+const IssueContent = ({ data }) => {
+  const { issueListDispatch } = useContext(IssueListContext);
 
-const IssueContent = ({ data, issueList, setIssueList }) => {
   const issueLabels = data.labels.map((labelData, index) => {
     return (
       <IssueLabel
@@ -79,9 +72,12 @@ const IssueContent = ({ data, issueList, setIssueList }) => {
           name={`issue${data.id}`}
           value={data.id}
           checked={data.isChecked}
-          onChange={(e) => {
-            checkHandler({ e, issueList, setIssueList });
-          }}
+          onChange={(e) =>
+            issueListDispatch({
+              type: 'check',
+              payload: { id: Number(e.target.value) },
+            })
+          }
         />
       </CheckBoxDiv>
       <IconDiv>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import IssueContent from './IssueContent';
 import SelectedCount from './SelectedCount';
@@ -7,7 +7,7 @@ import AssigneeFilterButton from './AssigneeFilterButton';
 import LabelFilterButton from './LabelFilterButton';
 import MilestoneFilterButton from './MilestoneFilterButton';
 import MarkAs from './MarkAs';
-import issueAPI from './../apis/issue.api';
+import { IssueListContext } from './../pages/IssueListPage';
 
 const IssueSection = styled.section`
   border: 1px solid #e1e4e8;
@@ -41,26 +41,7 @@ const RightFloatDiv = styled.div`
 `;
 
 const IssueList = () => {
-  const [issueList, setIssueList] = useState([]);
-
-  useEffect(async () => {
-    const issues = await issueAPI.getIssues();
-    setIssueList(
-      issues
-        .map((issue) => {
-          return { ...issue, isChecked: false };
-        })
-        .sort((a, b) => (a.id > b.id ? -1 : 1))
-    );
-  }, []);
-
-  const allCheckHandler = (e) => {
-    setIssueList(
-      issueList.map((issue) => {
-        return { ...issue, isChecked: e.target.checked };
-      })
-    );
-  };
+  const { issueList, issueListDispatch } = useContext(IssueListContext);
 
   const getCountChecked = () => {
     return issueList.reduce((count, issue) => {
@@ -92,7 +73,12 @@ const IssueList = () => {
             type="checkbox"
             name="all-issue"
             value="all"
-            onChange={(e) => allCheckHandler(e)}
+            onChange={(e) =>
+              issueListDispatch({
+                type: 'checkAll',
+                payload: { isChecked: e.target.checked },
+              })
+            }
           />
         </AllCheckDiv>
         <ExtraHeader>
@@ -108,12 +94,7 @@ const IssueList = () => {
       <section>
         {issueList.map((issue, index) => {
           return (
-            <IssueContent
-              key={`issue${issue.id}-${index}`}
-              data={issue}
-              issueList={issueList}
-              setIssueList={setIssueList}
-            />
+            <IssueContent key={`issue${issue.id}-${index}`} data={issue} />
           );
         })}
       </section>
