@@ -1,5 +1,5 @@
 // src/App.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LoginPage from './pages/LoginPage';
 import IssueListPage from './pages/IssueListPage';
 import IssueMakePage from './pages/IssueMakePage';
@@ -25,22 +25,25 @@ const StyledDiv = styled.div`
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(true);
 
-  const checkLogin = async () => {
-    //TODO: login 확인용 api
+  const checkLogin = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setLoggedIn(true);
+    }
   };
+
+  useEffect(() => {
+    checkLogin();
+  }, []);
 
   return (
     <>
-      {loggedIn ? <IssuesHeader /> : ''}
-      <StyledDiv>
-        <Router>
+      <Router>
+        {loggedIn ? <IssuesHeader loggedIn={loggedIn} setLoggedIn={setLoggedIn}/> : ''}
+        <StyledDiv>
           <Switch>
             <Route exact path="/">
-              {loggedIn ? (
-                <Redirect to="issue/list" />
-              ) : (
-                <LoginPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-              )}
+              <LoginPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
             </Route>
             <Route exact path="/issue/list">
               <IssueListPage />
@@ -64,8 +67,11 @@ const App = () => {
               <MilestoneEditPage />
             </Route>
           </Switch>
-        </Router>
-      </StyledDiv>
+        </StyledDiv>
+        {!loggedIn ? (
+          <Redirect to="/" />
+        ) : (<Redirect to="/issue/list" />)}
+      </Router>
     </>
   );
 };
