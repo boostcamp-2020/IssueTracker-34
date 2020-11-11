@@ -20,17 +20,21 @@ const issueModel = {
 
       const issueId = issue.dataValues.id;
 
-      await IssuesHasLabels.bulkCreate(
-        labels.map((label) => {
-          return { issue_id: issueId, label_id: label };
-        })
-      );
+      if (labels !== undefined) {
+        await IssuesHasLabels.bulkCreate(
+          labels.map((label) => {
+            return { issue_id: issueId, label_id: label };
+          })
+        );
+      }
 
-      await Assignee.bulkCreate(
-        assignees.map((assignee) => {
-          return { user_id: assignee, issue_id: issueId };
-        })
-      );
+      if (assignees !== undefined) {
+        await Assignee.bulkCreate(
+          assignees.map((assignee) => {
+            return { user_id: assignee, issue_id: issueId };
+          })
+        );
+      }
 
       return issue;
     });
@@ -105,21 +109,25 @@ const issueModel = {
         { where: { id: issueId } }
       );
 
-      await IssuesHasLabels.destroy({ where: { issue_id: issueId } });
+      if (labels !== undefined) {
+        await IssuesHasLabels.destroy({ where: { issue_id: issueId } });
 
-      await IssuesHasLabels.bulkCreate(
-        labels.map((label) => {
-          return { issue_id: issueId, label_id: label };
-        })
-      );
+        await IssuesHasLabels.bulkCreate(
+          labels.map((label) => {
+            return { issue_id: issueId, label_id: label };
+          })
+        );
+      }
 
-      await Assignee.destroy({ where: { issue_id: issueId } });
+      if (assignees !== undefined) {
+        await Assignee.destroy({ where: { issue_id: issueId } });
 
-      await Assignee.bulkCreate(
-        assignees.map((assignee) => {
-          return { user_id: assignee, issue_id: issueId };
-        })
-      );
+        await Assignee.bulkCreate(
+          assignees.map((assignee) => {
+            return { user_id: assignee, issue_id: issueId };
+          })
+        );
+      }
 
       return result;
     });
