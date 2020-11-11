@@ -75,6 +75,7 @@ const IssueList = () => {
             type="checkbox"
             name="all-issue"
             value="all"
+            checked={getCountChecked() === issueList.length ? true : false}
             onChange={(e) =>
               issueListDispatch({
                 type: 'checkAll',

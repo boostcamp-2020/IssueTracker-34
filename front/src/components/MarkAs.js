@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
-
+import { IssueListContext } from './../pages/IssueListPage';
+import issueAPI from './../apis/issue.api';
 
 const DropDownIcon = styled.span`
   display: inline-block;
@@ -104,7 +105,6 @@ const DropDownListItem = styled.div`
   }
 `;
 
-
 const MarkItem = styled.span`
   font-size: 12px;
   font-weight: 500;
@@ -112,15 +112,29 @@ const MarkItem = styled.span`
   color: #000;
 `;
 
+const checkedIssueMarkAs = (issueList, issueListDispatch, statusOpenClosed) => {
+  issueList
+    .filter((issue) => issue.isChecked)
+    .forEach((issue) => {
+      issueAPI.editIssue({
+        issueId: issue.id,
+        statusOpenClosed: statusOpenClosed,
+      });
 
-// TODO: setMarkedStatus 받고 바꿔 쓰기
-// const MarkAs = ({ setMarkedStatus }) => {
+      issueListDispatch({
+        type: 'setStatusOpenClosed',
+        payload: {
+          id: issue.id,
+          isChecked: false,
+          statusOpenClosed: statusOpenClosed,
+        },
+      });
+    });
+};
+
 const MarkAs = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const setMarkedStatus = (status) => {
-    // setMarkedStatus(status);
-    setIsOpen(false);
-  }
+  const { issueList, issueListDispatch } = useContext(IssueListContext);
 
   return (
     <MarkAsDiv>
@@ -136,19 +150,25 @@ const MarkAs = () => {
               <span>Action</span>
               <DropDownCloseButton onClick={() => setIsOpen(false)}>
                 ×
-            </DropDownCloseButton>
+              </DropDownCloseButton>
             </Header>
             <Hr />
             <DropDownListWrapper>
-              <DropDownListItem onClick={()=> setMarkedStatus(1)}>
-              <MarkItem >
-                  open
-              </MarkItem>
+              <DropDownListItem
+                onClick={() => {
+                  checkedIssueMarkAs(issueList, issueListDispatch, true);
+                  setIsOpen(false);
+                }}
+              >
+                <MarkItem>open</MarkItem>
               </DropDownListItem>
-                <DropDownListItem onClick={()=> setMarkedStatus(0)}>
-                <MarkItem >
-                  closed
-              </MarkItem>
+              <DropDownListItem
+                onClick={() => {
+                  checkedIssueMarkAs(issueList, issueListDispatch, false);
+                  setIsOpen(false);
+                }}
+              >
+                <MarkItem>closed</MarkItem>
               </DropDownListItem>
             </DropDownListWrapper>
           </DropdownMenu>
@@ -156,8 +176,6 @@ const MarkAs = () => {
       )}
     </MarkAsDiv>
   );
-
-}
-
+};
 
 export default MarkAs;
