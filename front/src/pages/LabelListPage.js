@@ -50,7 +50,6 @@ const NewLabelButton = styled.button`
   height: 100%;
   color: white;
   background:-webkit-gradient(linear, left top, left bottom, from(#31c854), to(#26973f));
-  /* background-color: #28a745; */
   border: none;
   border-radius: 5px;
   outline: none;
@@ -77,8 +76,7 @@ const LabelListPage = () => {
     setLabels(parsedLabels);
   }
 
-  const openLabelModal = async() => {
-    console.log('opened');
+  const changeLabelModalStatus = async() => {
     setModalIsOpened(!modalIsOpened);
   }
 
@@ -116,11 +114,11 @@ const LabelListPage = () => {
           marginLeft: 'auto',
         }}>
           <NewLabelButton type='button' onClick={() => {
-            openLabelModal()
+            changeLabelModalStatus()
           }}>New Label</NewLabelButton>
         </div>
       </LabelHeader>
-      {!modalIsOpened && <LabelModal openLabelModal={openLabelModal} />}
+      {!modalIsOpened && <LabelModal changeLabelModalStatus={changeLabelModalStatus} getLabels={getLabels}/>}
       <div>{labels}</div>
     </>
   );
