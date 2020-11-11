@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
-import queryString from 'query-string';
 import Check from '../svgs/CheckSvg';
+import { AuthorListContext } from './../pages/IssueListPage';
 
 const DropDownIcon = styled.span`
   display: inline-block;
@@ -23,7 +22,6 @@ const Button = styled.button`
   outline: 0;
   background-color: transparent;
   font-size: 14px;
-  // position: relative;
   cursor: pointer;
 `;
 
@@ -54,7 +52,6 @@ const DropdownMenu = styled.div`
   right: 0;
   bottom: auto;
   left: auto;
-  // transform: translate(-180px, 10px);
   width: 230px;
   padding: 0;
   z-index: 99;
@@ -100,6 +97,7 @@ const DropDownListItem = styled.div`
   display: flex;
   align-items: center;
   padding: 7px 16px;
+  cursor: pointer;
 `;
 
 const Avatar = styled.img`
@@ -110,20 +108,11 @@ const Avatar = styled.img`
   margin-right: 8px;
 `;
 
-const AuthorId = styled.span`
+const AuthorName = styled.span`
   font-size: 12px;
   font-weight: 500;
   margin-right: 8px;
   color: #000;
-`;
-
-const AuthorName = styled.span`
-  font-size: 12px;
-  color: #6a737d;
-`;
-
-const FilterLink = styled(Link)`
-  text-decoration: none;
 `;
 
 const Unchecked = styled.div`
@@ -131,46 +120,27 @@ const Unchecked = styled.div`
   height: 16px;
 `;
 
-// 개발용 임시 데이터
-const tempAuthors = [
-  {
-    id: 'apple',
-    name: 'app',
-    profileUrl: 'https://avatars2.githubusercontent.com/u/59037261?s=40&v=4',
-  },
-  { id: 'banana' },
-  { id: 'chocolate', name: 'cho' },
-];
-
 const AuthorFilterButton = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const parsed = queryString.parse(window.location.search);
-  const checkedAuthor = parsed.author;
+  const { authorList, authorListDispatch } = useContext(AuthorListContext);
 
-  const authorList = tempAuthors
-    .sort((a, b) => {
-      if (a.id === checkedAuthor) return -1;
-      if (b.id === checkedAuthor) return 1;
-      return a.id > b.id ? 1 : -1;
-    })
-    .map((author) => {
-      const isSelected = checkedAuthor == author.id;
-      const query = queryString.stringify({
-        ...parsed,
-        author: isSelected ? undefined : author.id,
-      });
-      return (
-        <FilterLink to={`/issue/list?${query}`} key={author.id}>
-          <DropDownListItem onClick={() => setIsOpen(false)}>
-            {isSelected ? <Check /> : <Unchecked />}
-            <Avatar src={author.profileUrl}></Avatar>
-            <AuthorId>{author.id}</AuthorId>
-            {author.name && <AuthorName>{author.name}</AuthorName>}
-          </DropDownListItem>
-          <Hr />
-        </FilterLink>
-      );
-    });
+  const authorFilterList = authorList.map((author) => {
+    return (
+      <>
+        <DropDownListItem
+          onClick={() => {
+            authorListDispatch({ type: 'check', payload: { id: author.id } });
+            setIsOpen(false);
+          }}
+        >
+          {author.isChecked ? <Check /> : <Unchecked />}
+          <Avatar src={author.profile_url}></Avatar>
+          <AuthorName>{author.name}</AuthorName>
+        </DropDownListItem>
+        <Hr />
+      </>
+    );
+  });
 
   return (
     <AuthorFilterDiv>
@@ -189,7 +159,7 @@ const AuthorFilterButton = () => {
               </DropDownCloseButton>
             </Header>
             <Hr />
-            <DropDownListWrapper>{authorList}</DropDownListWrapper>
+            <DropDownListWrapper>{authorFilterList}</DropDownListWrapper>
           </DropdownMenu>
         </>
       )}
