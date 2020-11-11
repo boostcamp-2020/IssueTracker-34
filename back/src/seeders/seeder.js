@@ -12,21 +12,25 @@ module.exports = async () => {
       name: 'profornnan',
       profile_url:
         'https://avatars2.githubusercontent.com/u/59037261?s=460&u=7b7a0a2f151c1f49c5bc8068d4d6a5bf50c94c7b&v=4',
+      github_id: 1,
     },
     {
       name: 'rockpell',
       profile_url:
         'https://avatars1.githubusercontent.com/u/8137615?s=460&u=3cbc84a925ac49ae3603adbcff8b24b444e478da&v=4',
+      github_id: 2,
     },
     {
       name: 'pieisland',
       profile_url:
         'https://avatars2.githubusercontent.com/u/35261724?s=460&u=514bbf937b4638c75c39ea1c89b13f42241001da&v=4',
+      github_id: 3,
     },
     {
       name: 'gyim1345',
       profile_url:
         'https://avatars2.githubusercontent.com/u/57941049?s=460&u=b20800e6bc681bf4c683143cbcf11b9aa7dcf50c&v=4',
+      github_id: 4,
     },
   ]);
 
