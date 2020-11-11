@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const LabelsSelectorDiv = styled.div`
   position: relative;
-  width: 20%;
+  width: 100%;
 `;
 
 const LabelsButton = styled.button`

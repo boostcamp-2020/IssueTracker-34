@@ -1,6 +1,6 @@
 import React from 'react';
 
-const IssueInfo = ({ issueId, makeDate, author }) => {
+const IssueInfo = ({ issueId, makeDate, author, commentCount }) => {
   const nowDate = Date.now();
   const date = new Date(makeDate);
   const agoTime = Math.floor((nowDate - date.getTime()) / 1000 / 60);
@@ -11,7 +11,7 @@ const IssueInfo = ({ issueId, makeDate, author }) => {
   if (agoTime < 1) {
     agoText = 'a few seconds';
   } else if (agoTime < 60) {
-    agoText = `${agoTime} minute`;
+    agoText = `${agoTime} minutes`;
   } else if (agoHour < 24) {
     agoText = `${agoHour} hours`;
   } else if (agoDay < 365) {
@@ -22,7 +22,15 @@ const IssueInfo = ({ issueId, makeDate, author }) => {
 
   return (
     <span>
-      #{issueId} opened {agoText} ago by {author}
+      {issueId ? (
+        <>
+          #{issueId} opened {agoText} ago by {author}
+        </>
+      ) : (
+        <>
+          {author} opened this issue {agoText} ago · {commentCount} comments
+        </>
+      )}
     </span>
   );
 };

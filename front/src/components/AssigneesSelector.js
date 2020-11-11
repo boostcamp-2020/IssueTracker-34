@@ -5,10 +5,10 @@ import CheckSvg from '../svgs/CheckSvg';
 
 const AssigneesSelectorDiv = styled.div`
   position: relative;
-  width: 20%;
+  width: 100%;
 `;
 
-const AssinessButton = styled.button`
+const AssigneesButton = styled.button`
   display: flex;
   background-color: white;
   border: 0;
@@ -129,30 +129,28 @@ const Span = styled.span`
   cursor: pointer;
 `;
 
-const tempData = [
-  {
-    id: 'pieisland',
-    checked: true,
-    name: 'ryu',
-    profileUrl:
-      'https://avatars2.githubusercontent.com/u/35261724?s=80&amp;v=4',
-  },
-  { id: 'comi', checked: false },
-  { id: 'remi', checked: true },
-  { id: 'comi2', checked: false },
-  { id: 'remi2', checked: false },
-  { id: 'comi3', checked: false },
-  { id: 'remi3', checked: false },
-  { id: 'comi4', checked: false },
-  { id: 'remi4', checked: false },
-  { id: 'comi5', checked: false },
-  { id: 'remi5', checked: false },
-  { id: 'comi6', checked: false },
-];
-
 const AssigneesSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [assignees, setAssignee] = useState(tempData);
+  const [assignees, setAssignee] = useState([
+    {
+      id: 'pieisland',
+      checked: true,
+      name: 'ryu',
+      profileUrl:
+        'https://avatars2.githubusercontent.com/u/35261724?s=80&amp;v=4',
+    },
+    { id: 'comi', checked: false },
+    { id: 'remi', checked: true },
+    { id: 'comi2', checked: false },
+    { id: 'remi2', checked: false },
+    { id: 'comi3', checked: false },
+    { id: 'remi3', checked: false },
+    { id: 'comi4', checked: false },
+    { id: 'remi4', checked: false },
+    { id: 'comi5', checked: false },
+    { id: 'remi5', checked: false },
+    { id: 'comi6', checked: false },
+  ]);
 
   const loginedUser = 'pieisland';
 
@@ -169,8 +167,7 @@ const AssigneesSelector = () => {
     }
   });
 
-  // TODO: api 호출로 데이터베이스 값 변경.
-  // depth 깊어서 refactor 필요
+  //TODO: api 호출로 데이터베이스 값 변경.
   const selectAssignee = (id) => {
     const newAssignees = assignees.map((assignee) => {
       if (assignee.id === id) {
@@ -185,9 +182,9 @@ const AssigneesSelector = () => {
     setAssignee(newAssignees);
   };
 
-  const allAssignees = assignees.map((assignee) => {
+  const allAssignees = assignees.map((assignee, idx) => {
     return (
-      <div key={assignee.id} onClick={() => selectAssignee(assignee.id)}>
+      <div key={idx} onClick={() => selectAssignee(assignee.id)}>
         <AssigneeDiv>
           {assignee.checked ? <CheckSvg /> : <Unchecked />}
           <Avatar src={assignee.profileUrl}></Avatar>
@@ -201,10 +198,10 @@ const AssigneesSelector = () => {
 
   return (
     <AssigneesSelectorDiv>
-      <AssinessButton onClick={() => setIsOpen(true)}>
+      <AssigneesButton onClick={() => setIsOpen(true)}>
         <div>Assignees</div>
         <SettingSvg />
-      </AssinessButton>
+      </AssigneesButton>
       {checkedAssigneesCnt === 0 ? (
         <CheckedAssigneeDiv>
           No one—
