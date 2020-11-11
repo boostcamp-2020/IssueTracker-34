@@ -112,6 +112,7 @@ const IssueContent = ({ data }) => {
             issueId={data.id}
             makeDate={data.date}
             author={data.user.name}
+            milestone={data.milestone}
           />
         </IssueDataDiv>
       </TitleDiv>
