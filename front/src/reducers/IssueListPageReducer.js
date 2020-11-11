@@ -29,10 +29,11 @@ const IssueListPageReducer = {
           .sort((a, b) => (a.name > b.name ? 1 : -1));
       case 'check':
         const [checkedAuthor] = authorList.filter((author) => author.isChecked);
-        if (checkedAuthor !== undefined && checkedAuthor.id === payload.id)
+        if (checkedAuthor !== undefined && checkedAuthor.id === payload.id) {
           return authorList.map((author) => {
             return { ...author, isChecked: false };
           });
+        }
         return authorList
           .map((author) => {
             return {
@@ -41,6 +42,46 @@ const IssueListPageReducer = {
             };
           })
           .sort((a, b) => {
+            if (a.isChecked) return -1;
+            if (b.isChecked) return 1;
+            return a.name > b.name ? 1 : -1;
+          });
+    }
+  },
+  assigneeListReducer(assigneeList, { type, payload }) {
+    switch (type) {
+      case 'setInitial':
+        return [{ id: null }, ...payload]
+          .map((assignee) => {
+            return { ...assignee, isChecked: false };
+          })
+          .sort((a, b) => {
+            if (a.id === null) return -1;
+            if (b.id === null) return 1;
+            return a.name > b.name ? 1 : -1;
+          });
+      case 'check':
+        const [checkedAssignee] = assigneeList.filter(
+          (assignee) => assignee.isChecked
+        );
+        if (
+          checkedAssignee !== undefined &&
+          checkedAssignee.id === payload.id
+        ) {
+          return assigneeList.map((assignee) => {
+            return { ...assignee, isChecked: false };
+          });
+        }
+        return assigneeList
+          .map((assignee) => {
+            return {
+              ...assignee,
+              isChecked: assignee.id === payload.id ? true : false,
+            };
+          })
+          .sort((a, b) => {
+            if (a.id === null) return -1;
+            if (b.id === null) return 1;
             if (a.isChecked) return -1;
             if (b.isChecked) return 1;
             return a.name > b.name ? 1 : -1;
