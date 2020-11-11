@@ -5,7 +5,7 @@ import ClosedSvg from '../svgs/ClosedSvg';
 import OpenedSvg from '../svgs/OpenedSvg';
 import IssueInfo from './IssueInfo';
 import IssueLabel from './IssueLabel';
-import { IssueListContext } from './../pages/IssueListPage';
+import { IssueListPageContext } from './../pages/IssueListPage';
 
 const OutDiv = styled.div`
   display: flex;
@@ -52,7 +52,7 @@ const StyledLink = styled(Link)`
 `;
 
 const IssueContent = ({ data }) => {
-  const { issueListDispatch } = useContext(IssueListContext);
+  const { issueListDispatch } = useContext(IssueListPageContext);
 
   const issueLabels = data.labels.map((labelData, index) => {
     return (
