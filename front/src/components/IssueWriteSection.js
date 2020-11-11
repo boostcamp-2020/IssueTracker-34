@@ -5,6 +5,7 @@ import issueAPI from '../apis/issue.api';
 import Swal from 'sweetalert2';
 import Box from './boxes/SpeechBox';
 import Img from './boxes/ProfileBox';
+import TextAreaBox from './boxes/TextAreaBox';
 
 const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
@@ -166,11 +167,7 @@ const IssueWriteSection = ({ userProfileURL, status, placeholder }) => {
             <Tab>Write</Tab>
           </Header>
           <LowerContainer>
-            <TextArea
-              type="text"
-              ref={inputContentRef}
-              placeholder="Leave a comment"
-            />
+            <TextAreaBox inputContentRef={inputContentRef} />
             <ButtonBox>
               <CancelButton onClick={cancelIssue}>Cancel</CancelButton>
               {textIsEmpty ? (
