@@ -27,21 +27,38 @@ const RightDiv = styled.div`
 `;
 
 const IssueMakePage = () => {
-  const [assignees, setAssignee] = useState();
+  const [assignees, setAssignee] = useState([
+    {
+      id: 'pieisland',
+      checked: true,
+      name: 'ryu',
+      profileUrl:
+        'https://avatars2.githubusercontent.com/u/35261724?s=80&amp;v=4',
+    },
+    { id: 'comi', checked: false },
+    { id: 'remi', checked: true },
+    { id: 'comi2', checked: false },
+    { id: 'remi2', checked: false },
+    { id: 'comi3', checked: false },
+    { id: 'remi3', checked: false },
+    { id: 'comi4', checked: false },
+    { id: 'remi4', checked: false },
+    { id: 'comi5', checked: false },
+    { id: 'remi5', checked: false },
+    { id: 'comi6', checked: false },
+  ]);
   const [labels, setLabel] = useState([]);
 
   return (
-    <IssueContext.Provider value={(assignees, setAssignee, labels, setLabel)}>
-      <BodyDiv>
-        <LeftDiv>
-          <IssueWriteSection />
-        </LeftDiv>
-        <RightDiv>
-          <AssigneesSelector />
-          <LabelsSelector />
-        </RightDiv>
-      </BodyDiv>
-    </IssueContext.Provider>
+    <BodyDiv>
+      <LeftDiv>
+        <IssueWriteSection assignees={assignees} labels={labels} />
+      </LeftDiv>
+      <RightDiv>
+        <AssigneesSelector assignees={assignees} setAssignee={setAssignee} />
+        <LabelsSelector labels={labels} setLabel={setLabel} />
+      </RightDiv>
+    </BodyDiv>
   );
 };
 

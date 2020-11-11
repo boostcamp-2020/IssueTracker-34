@@ -101,7 +101,11 @@ const CancelButton = styled.button`
   cursor: pointer;
 `;
 
-const IssueWriteSection = ({ userProfileURL, status, placeholder }) => {
+const getIds = (arr) => {
+  return arr.filter((item) => item.checked).map((item) => item.id);
+};
+
+const IssueWriteSection = ({ userProfileURL, assignees, labels }) => {
   // status 로 edit 인지 생성인지 구분
   // placeholder는 edit용 이전 썼던 글
   // userProfileURL 은 현제 로그인 유저의 이미지 주소
@@ -127,8 +131,8 @@ const IssueWriteSection = ({ userProfileURL, status, placeholder }) => {
       const issue = await issueAPI.createIssue({
         title: issueTitle,
         content: issueText,
-        labels: [],
-        assignees: [],
+        labels: getIds(labels),
+        assignees: getIds(assignees),
       });
 
       history.push(`/issue/${issue.id}`);
