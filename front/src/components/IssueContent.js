@@ -27,6 +27,7 @@ const IconDiv = styled.div`
 const TitleDiv = styled.div`
   box-sizing: border-box;
   padding: 8px;
+  width: 81%;
 `;
 
 const IssueTitle = styled.span`
@@ -49,6 +50,20 @@ const IssueDataDiv = styled.div`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
+`;
+
+const Avatar = styled.img`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  position: absolute;
+  margin-left: ${(props) => props.marginLeft || 0};
+`;
+
+const AvatarDiv = styled.div`
+  box-sizing: border-box;
+  padding: 8px;
+  position: relative;
 `;
 
 const IssueContent = ({ data }) => {
@@ -100,6 +115,11 @@ const IssueContent = ({ data }) => {
           />
         </IssueDataDiv>
       </TitleDiv>
+      <AvatarDiv>
+        {data.assignees.map((assignee, index) => (
+          <Avatar src={assignee.profile_url} marginLeft={index * 8}></Avatar>
+        ))}
+      </AvatarDiv>
     </OutDiv>
   );
 };
