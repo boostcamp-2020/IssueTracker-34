@@ -3,6 +3,8 @@ import styled, { keyframes } from 'styled-components';
 import SettingSvg from '../svgs/SettingSvg';
 import CheckSvg from '../svgs/CheckSvg';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import labelApi from '../apis/Labels.api';
 
 const LabelsSelectorDiv = styled.div`
   position: relative;
@@ -167,14 +169,8 @@ const tempData = [
 ];
 
 const getLabels = async () => {
-  const options = {
-    method: 'get',
-    url: '/label',
-    headers: { accept: 'application/json' },
-  };
-
   try {
-    const { data } = await axios(options);
+    const data = await labelApi.getLabels();
     return data;
   } catch (err) {
     Swal.fire({
@@ -186,9 +182,8 @@ const getLabels = async () => {
   }
 };
 
-const LabelsSelector = () => {
+const LabelsSelector = ({ labels, setLabel }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [labels, setLabel] = useState([]);
 
   useEffect(async () => {
     const labelData = await getLabels();
