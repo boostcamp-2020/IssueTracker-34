@@ -7,6 +7,41 @@ const issueAPI = {
     const { data } = await axios.get(API_URL + '/issue');
     return data;
   },
+
+  async editIssueStatus(id, status) {
+    await axios.patch(API_URL + '/issue', {
+      issueId: id,
+      statusOpenClosed: status,
+    });
+  },
+
+  async editIssueTitle(id, title) {
+    await axios.patch(API_URL + '/issue', {
+      issueId: id,
+      title: title,
+    });
+  },
+
+  async editIssueContent(id, content) {
+    await axios.patch(API_URL + '/issue', {
+      issueId: id,
+      content: content,
+    });
+  },
+
+  async editIssueLabels(id, labels) {
+    await axios.patch(API_URL + '/issue', {
+      issueId: id,
+      labels: labels,
+    });
+  },
+
+  async editIssueAssignees(id, assignees) {
+    await axios.patch(API_URL + '/issue', {
+      issueId: id,
+      assignees: assignees,
+    });
+  },
 };
 
 export default issueAPI;
