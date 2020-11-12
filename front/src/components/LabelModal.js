@@ -96,7 +96,7 @@ const LabelModal = ({ changeLabelModalStatus, getLabels }) => {
     if (e.target.value[0] !== '#') {
       e.target.value = '#' + e.target.value.replace(/#/, '');
     }
-    if (isColor16Bit(e.target.value)) {
+    if (isColorHex(e.target.value)) {
       setColor('black');
       changePreviewLayout(e.target.value);
       return;
@@ -131,8 +131,8 @@ const LabelModal = ({ changeLabelModalStatus, getLabels }) => {
     }
   }
 
-  const isColor16Bit = (bit) => {
-    return /^#(?:[a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/.test(bit);
+  const isColorHex = (hex) => {
+    return /^#(?:[a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/.test(hex);
   }
 
   const setRandomBackgroundColor = () => {
