@@ -23,6 +23,16 @@ const Label = {
     return data;
   },
 
+  async updateLabel(labelInfo) {
+    const token = localStorage.getItem('token');
+    const { data } = await axios.patch(API_URL + '/label', labelInfo, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  },
+
   async deleteLabel(labelId) {
     const token = localStorage.getItem('token');
     const { data } = await axios.delete(

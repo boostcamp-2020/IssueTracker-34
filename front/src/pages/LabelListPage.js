@@ -3,7 +3,9 @@ import Label from '../apis/Labels.api';
 import styled from 'styled-components';
 import LabelsButton from '../components/LabelsButton';
 import MilestonesButton from '../components/MilestonesButton';
-import LabelAPI from '../apis/Labels.api';
+import LabelModal from '../components/LabelModal';
+
+import LabelListTemplate from '../components/LabelListTemplate';
 
 const Header = styled.header`
   width: 100%;
@@ -12,38 +14,6 @@ const Header = styled.header`
   padding: 16px;
   background-color: #f6f8fa;
   border: 1px solid #e1e4e8;
-`;
-
-const LabelContent = styled.div`
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  padding: 16px;
-  background-color: #ffffff;
-  border: 1px solid #e1e4e8;
-`;
-
-const LeftDiv = styled.div`
-  width: 30%;
-`;
-const Box = styled.div`
-  width: fit-content;
-  box-sizing: border-box;
-  padding: 8px;
-  border-radius: 5px;
-  color: white;
-  background-color: ${(props) => props.backgroundColor || 'white'};
-`;
-
-const MiddleDiv = styled.div`
-  width: 60%;
-`;
-
-const RightDiv = styled.div`
-  display: flex;
-  & > * {
-    margin-left: 10px;
-  }
 `;
 
 const NewLabelButton = styled.button`
@@ -56,7 +26,6 @@ const NewLabelButton = styled.button`
     from(#31c854),
     to(#26973f)
   );
-  /* background-color: #28a745; */
   border: none;
   border-radius: 5px;
   outline: none;
@@ -82,16 +51,8 @@ const LabelListPage = () => {
     setLabels(parsedLabels);
   };
 
-
-  const changeLabelModalStatus = async() => {
+  const changeLabelModalStatus = async () => {
     setModalIsOpened(!modalIsOpened);
-  };
-
-  const deleteLabel = async (e) => {
-    const deleteL = await LabelAPI.deleteLabel({
-      labelId: e.target.parentNode.dataset.id,
-    });
-    await getLabels();
   };
 
   const parseLabel = (labels, labelCount) => {
@@ -101,17 +62,14 @@ const LabelListPage = () => {
 
     const labelListTemplate = labels.map((label, i) => {
       return (
-        <LabelContent key={`${label}${i}`}>
-          <LeftDiv>
-            <Box backgroundColor={label.color}>{label.name}</Box>
-          </LeftDiv>
-
-          <MiddleDiv>{label.content}</MiddleDiv>
-          <RightDiv data-id={label.id}>
-            <div>Edit</div>
-            <div onClick={deleteLabel}>Delete</div>
-          </RightDiv>
-        </LabelContent>
+        <div key={`${label}${i}`}>
+          <LabelListTemplate
+            changeLabelModalStatus={changeLabelModalStatus}
+            getLabels={getLabels}
+            label={label}
+            i={i}
+          />
+        </div>
       );
     });
     return [labelCountTemplate, ...labelListTemplate];
@@ -134,15 +92,19 @@ const LabelListPage = () => {
           <NewLabelButton
             type="button"
             onClick={() => {
-              openLabelModal();
+              changeLabelModalStatus();
             }}
           >
             New Label
           </NewLabelButton>
         </div>
       </LabelHeader>
-      {/* {!modalIsOpened && <LabelModal openLabelModal={openLabelModal} />} */}
-
+      {modalIsOpened && (
+        <LabelModal
+          changeLabelModalStatus={changeLabelModalStatus}
+          getLabels={getLabels}
+        />
+      )}
       <div>{labels}</div>
     </>
   );
