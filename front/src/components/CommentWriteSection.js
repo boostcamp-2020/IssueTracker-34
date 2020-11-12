@@ -1,7 +1,9 @@
 import React, { useRef, useState, useContext } from 'react';
 import styled from 'styled-components';
 import ClosedSvg from '../svgs/ClosedSvg';
-import { IssueContext } from '../pages/IssueDetailPage';
+import { IssueContext, CommentContext } from '../pages/IssueDetailPage';
+import IssueAPI from '../apis/issue.api';
+import CommentAPI from '../apis/comment.api';
 
 import axios from 'axios';
 
@@ -77,6 +79,7 @@ const Img = styled.img`
   height: 30px;
   width: 30px;
   margin-right: 20px;
+  border-radius: 50%;
 `;
 
 const ButtonBox = styled.div`
@@ -110,9 +113,11 @@ const Button = styled.button`
 `;
 
 const createComment = async (userId, issueId, commentText) => {
+  const API_URL = process.env.API_URL;
+
   const options = {
     method: 'post',
-    url: '/comment',
+    url: API_URL + '/comment',
     headers: { accept: 'application/json' },
     data: {
       userId: userId,
@@ -143,11 +148,19 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
   // userProfileURL 은 현제 로그인 유저의 이미지 주소
 
   const { issueInfo, dispatch } = useContext(IssueContext);
+  const {
+    commentInfo,
+    commentCount,
+    commentDispatch,
+    commentCountDispatch,
+  } = useContext(CommentContext);
+
   const issueId = issueInfo.id;
   const userId = 1; //로그인 후에 받아와야 함.
 
   const [textIsEmpty, setTextIsEmpty] = useState(true);
 
+  //로그인한 사용자의 프로필 사진을 가져와야 합니다.
   const imageURL = userProfileURL ? userProfileURL : defaultUserImageUrl;
   const inputRef = useRef();
 
@@ -162,13 +175,29 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
   const changeIssueStatus = () => {
     //개발용
     dispatch({ type: 'toggle_status' });
+    IssueAPI.editIssueStatus(issueId, !issueInfo.status_open_closed);
     console.log('close');
   };
 
   const addComment = () => {
     const commentText = inputRef.current.value;
 
-    createComment(userId, issueId, commentText);
+    commentDispatch({
+      type: 'add_comment',
+      payload: {
+        id: commentCount + 1,
+        comment: commentText,
+        date: Date.now(),
+        issue_id: issueId,
+        user: { id: userId, name: 'profornnan', profile_url: imageURL },
+        user_id: userId,
+      },
+    });
+
+    commentCountDispatch({
+      type: 'plus_commnet_count',
+    });
+    CommentAPI.createComment(userId, issueId, commentText);
   };
 
   const changeStatusAndAddComment = () => {
@@ -238,9 +267,6 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
                         Close with comment
                       </>
                     )}
-
-                    {/* <ClosedSvg color={'red'} marginRight={'4px'} />
-                    Close with comment */}
                   </Button>
                   <Button
                     background="#2c974b"

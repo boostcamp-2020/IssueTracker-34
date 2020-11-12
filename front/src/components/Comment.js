@@ -1,7 +1,8 @@
 import React, { useRef, useState, useContext } from 'react';
 import styled from 'styled-components';
-import { IssueContext } from '../pages/IssueDetailPage';
+import { CommentContext } from '../pages/IssueDetailPage';
 import IssueAPI from '../apis/issue.api';
+import CommentAPI from '../apis/comment.api';
 
 const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
@@ -139,29 +140,25 @@ const CancelButton = styled.button`
   }
 `;
 
-const IssueDetailContent = ({ userProfileURL, status, placeholder }) => {
-  // status 로 edit 인지 생성인지 구분
-  // placeholder는 edit용 이전 썼던 글
-  // userProfileURL 은 현제 로그인 유저의 이미지 주소
+const CommentWrap = styled.div`
+  margin: 20px 0;
+`;
+
+const Comment = ({ data }) => {
   const [isEditMode, editMode] = useState(false);
-
-  const { issueInfo, dispatch } = useContext(IssueContext);
-
-  const issueId = issueInfo.id;
+  const { commentDispatch } = useContext(CommentContext);
   const userId = 1; //로그인 후에 받아와야 함.
-  const userName = issueInfo.user ? issueInfo.user.name : '';
+  const userName = data.user ? data.user.name : '';
+
+  //   console.log('comment info', data);
 
   const authorizedUserId = 1;
   const authorColor =
-    issueInfo.user && issueInfo.user.id === authorizedUserId
-      ? '#acc9eaad'
-      : '#F6F8FA';
+    data.user && data.user.id === authorizedUserId ? '#acc9eaad' : '#F6F8FA';
   const checkAuthor =
-    issueInfo.user && issueInfo.user.id === authorizedUserId ? true : false;
+    data.user && data.user.id === authorizedUserId ? true : false;
 
-  const imageURL = issueInfo.user
-    ? issueInfo.user.profile_url
-    : defaultUserImageUrl;
+  const imageURL = data.user ? data.user.profile_url : defaultUserImageUrl;
 
   const inputRef = useRef();
 
@@ -172,21 +169,22 @@ const IssueDetailContent = ({ userProfileURL, status, placeholder }) => {
     editMode(false);
   };
 
-  const updateIssue = () => {
+  const updateComment = () => {
     console.log('update');
 
-    const newIssueContent = inputRef.current.value;
-    dispatch({
-      type: 'edit_issue_content',
-      payload: { content: newIssueContent },
+    const newCommentContent = inputRef.current.value;
+    commentDispatch({
+      type: 'edit_comment_content',
+      payload: { content: newCommentContent, commentId: data.id },
     });
-    IssueAPI.editIssueContent(issueId, newIssueContent);
+    console.log(data.id);
+    CommentAPI.editComment(data.id, newCommentContent);
     editMode(false);
   };
 
   return (
     <>
-      <div
+      <CommentWrap
         style={{
           display: 'flex',
           flexDirection: 'row',
@@ -214,13 +212,13 @@ const IssueDetailContent = ({ userProfileURL, status, placeholder }) => {
 
           <LowerContainer>
             {!isEditMode ? (
-              <>{issueInfo.content}</>
+              <>{data.comment}</>
             ) : (
               <>
                 <TextArea
                   type="text"
                   ref={inputRef}
-                  defaultValue={issueInfo.content}
+                  defaultValue={data.comment}
                   placeholder="Leave a comment"
                   // onChange={handleTextInputChange}
                 />
@@ -232,7 +230,7 @@ const IssueDetailContent = ({ userProfileURL, status, placeholder }) => {
                     background="#2c974b"
                     color="#ffffff"
                     border="1px solid #2c974b"
-                    onClick={updateIssue}
+                    onClick={updateComment}
                   >
                     Update comment
                   </Button>
@@ -241,9 +239,9 @@ const IssueDetailContent = ({ userProfileURL, status, placeholder }) => {
             )}
           </LowerContainer>
         </Box>
-      </div>
+      </CommentWrap>
     </>
   );
 };
 
-export default IssueDetailContent;
+export default Comment;

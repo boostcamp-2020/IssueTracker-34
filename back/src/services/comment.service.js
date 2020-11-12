@@ -15,6 +15,13 @@ const commentService = {
     throw new Error('Bad Request');
   },
 
+  async getAllComments() {
+    const result = await commentModel.getAllComments();
+    if (result) {
+      return result;
+    }
+    throw new Error('Bad Request');
+  },
   async getComments({ issueId }) {
     const result = await commentModel.getComments({ issueId });
 

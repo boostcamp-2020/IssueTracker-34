@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
 import SettingSvg from '../svgs/SettingSvg';
 import CheckSvg from '../svgs/CheckSvg';
+import { IssueContext } from '../pages/IssueDetailPage';
+import userAPI from '../apis/user.api';
+import issueAPI from '../apis/issue.api';
 
 const AssigneesSelectorDiv = styled.div`
   position: relative;
@@ -95,6 +98,8 @@ const CheckedAssigneeDiv = styled.div`
   display: flex;
   align-items: center;
   height: 34px;
+  font-size: 12px;
+  margin-left: 6px;
 `;
 
 const Unchecked = styled.div`
@@ -132,7 +137,18 @@ const Span = styled.span`
 const AssigneesSelector = ({ assignees, setAssignee }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const loginedUser = 'pieisland';
+  const [assignees, setAssignee] = useState([]);
+
+  const { issueInfo, dispatch } = useContext(IssueContext);
+  const issueId = issueInfo.id;
+
+  const loginedUser = 1;
+
+  useEffect(async () => {
+    let users = await userAPI.getUsers();
+
+    setAssignee(users);
+  }, []);
 
   let checkedAssigneesCnt = 0;
   const checkedAssignees = assignees.map((assignee, idx) => {
@@ -140,14 +156,15 @@ const AssigneesSelector = ({ assignees, setAssignee }) => {
       checkedAssigneesCnt++;
       return (
         <CheckedAssigneeDiv key={idx}>
-          <Avatar src={assignee.profileUrl}></Avatar>
-          <AssigneeId>{assignee.id}</AssigneeId>
+          <Avatar src={assignee.profile_url}></Avatar>
+          <AssigneeId>{assignee.name}</AssigneeId>
         </CheckedAssigneeDiv>
       );
     }
   });
 
   //TODO: api 호출로 데이터베이스 값 변경.
+  //db에 저장된 id로 확인을 하고 있어서 나중에 수정이 필요하지 않을까 싶음.
   const selectAssignee = (id) => {
     const newAssignees = assignees.map((assignee) => {
       if (assignee.id === id) {
@@ -164,17 +181,28 @@ const AssigneesSelector = ({ assignees, setAssignee }) => {
 
   const allAssignees = assignees.map((assignee, idx) => {
     return (
-      <div key={idx} onClick={() => selectAssignee(assignee.id)}>
+      <div key={`assignee-selector-${idx}`} onClick={() => selectAssignee(assignee.id)}>
         <AssigneeDiv>
           {assignee.checked ? <CheckSvg /> : <Unchecked />}
-          <Avatar src={assignee.profileUrl}></Avatar>
-          <AssigneeId>{assignee.id}</AssigneeId>
-          {assignee.name && <AssigneeName>{assignee.name}</AssigneeName>}
+          <Avatar src={assignee.profile_url}></Avatar>
+          <AssigneeId>{assignee.name}</AssigneeId>
+          {/* {assignee.name && <AssigneeName>{assignee.name}</AssigneeName>} */}
         </AssigneeDiv>
         <Hr />
       </div>
     );
   });
+
+  const editIssueAssignees = () => {
+    setIsOpen(false);
+    let assigneeIdList = [];
+    assignees.forEach((assignee) => {
+      if (assignee.checked) {
+        assigneeIdList.push(assignee.id);
+      }
+    });
+    issueAPI.editIssueAssignees(issueId, assigneeIdList);
+  };
 
   return (
     <AssigneesSelectorDiv>
@@ -195,7 +223,7 @@ const AssigneesSelector = ({ assignees, setAssignee }) => {
 
       {isOpen && (
         <>
-          <DropDownOverlay onClick={() => setIsOpen(false)} />
+          <DropDownOverlay onClick={editIssueAssignees} />
           <DropdownMenu>
             <Header>
               <span>Assign up to 10 people to this issue</span>
