@@ -134,8 +134,9 @@ const Span = styled.span`
   cursor: pointer;
 `;
 
-const AssigneesSelector = () => {
+const AssigneesSelector = ({ assignees, setAssignee }) => {
   const [isOpen, setIsOpen] = useState(false);
+
   const [assignees, setAssignee] = useState([]);
 
   const { issueInfo, dispatch } = useContext(IssueContext);
@@ -180,7 +181,7 @@ const AssigneesSelector = () => {
 
   const allAssignees = assignees.map((assignee, idx) => {
     return (
-      <div key={idx} onClick={() => selectAssignee(assignee.id)}>
+      <div key={`assignee-selector-${idx}`} onClick={() => selectAssignee(assignee.id)}>
         <AssigneeDiv>
           {assignee.checked ? <CheckSvg /> : <Unchecked />}
           <Avatar src={assignee.profile_url}></Avatar>

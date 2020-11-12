@@ -168,9 +168,8 @@ const tempData = [
   },
 ];
 
-const LabelsSelector = () => {
+const LabelsSelector = ({ labels, setLabel }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [labels, setLabel] = useState([]);
 
   const { issueInfo, dispatch } = useContext(IssueContext);
   const issueId = issueInfo.id;
