@@ -7,7 +7,7 @@ const UserController = {
 
       const token = await userService.login({ username, profile_url, github_id });
 
-      return res.status(200).json(token);
+      return res.status(200).json({ token, authorizedUserId: github_id, authorizedUsername: username, authorizedProfileURL: profile_url });
     } catch (err) {
       return res.status(500).send();
     }
@@ -25,8 +25,8 @@ const UserController = {
 
   async getUserInfo(req, res) {
     try {
-      const { authorizedUsername, authorizedUserId } = req.body;
-      return res.status(200).json({ authorizedUsername, authorizedUserId });
+      const { authorizedUsername, authorizedUserId, authorizedProfileURL } = req.body;
+      return res.status(200).json({ authorizedUsername, authorizedUserId, authorizedProfileURL });
     } catch (err) {
       return res.status(500).send();
     }

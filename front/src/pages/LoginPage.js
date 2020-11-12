@@ -84,7 +84,6 @@ const Title = styled.span`
 
 const LoginPage = ({ setLoggedIn }) => {
   const { userInfoDispatch } = useContext(UserInfoContext);
-
   const auth = async () => {
     const token = localStorage.getItem('token');
     const { code } = queryString.parse(window.location.search);
@@ -96,18 +95,18 @@ const LoginPage = ({ setLoggedIn }) => {
     }
 
     if (!token && code) {
-      const newToken = await Auth.login(code);
 
-      localStorage.setItem('token', newToken);
-      const userInfo = await userAPI.getUserInfo(newToken);
+      const { token, authorizedUserId, authorizedUsername, authorizedProfileURL } = await Auth.login(code);
+      localStorage.setItem('token', token);
+      const userInfo = { 'authorizedUserId': authorizedUserId, 'authorizedUsername': authorizedUsername, 'authorizedProfileURL': authorizedProfileURL };
       userInfoDispatch({ type: 'setInitial', payload: userInfo });
       setLoggedIn(true);
       return;
     }
   };
 
-  useEffect(() => {
-    auth();
+  useEffect(async () => {
+    await auth();
   }, []);
 
   return (

@@ -7,14 +7,12 @@ const milestoneRouter = require('./milestone.route');
 const userRouter = require('./user.route');
 const assigneeRouter = require('./assignee.route');
 const assigneeValidator = require('../middleware/assigneeValidator');
-const { testAuth } = require('../middleware/testAuth');
 const tokenValidator = require('../middleware/tokenValidator');
 
 router.get('/', (req, res) => {
   res.send('hello');
 });
 
-router.use(testAuth);
 router.use('/issue', tokenValidator, issueRouter);
 router.use('/label', tokenValidator, labelRouter);
 router.use('/comment', tokenValidator, commentRouter);
