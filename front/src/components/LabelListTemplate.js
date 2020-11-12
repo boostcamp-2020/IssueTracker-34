@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LabelModalEdit from '../components/LabelModalEdit';
 import styled from 'styled-components';
+import LabelAPI from '../apis/Labels.api';
 
 const LabelContent = styled.div`  
   width: 100%;
@@ -43,9 +44,7 @@ const LabelListTemplate = ({ label, getLabels }) => {
   }
 
   const deleteLabel = async(e) => {
-    console.log("delete", e.target.parentNode.dataset.id);
-    const deleteL = await LabelAPI.deleteLabel({ labelId: e.target.parentNode.dataset.id })
-    console.log("asd", deleteL);
+    await LabelAPI.deleteLabel({ labelId: e.target.parentNode.dataset.id })
     await getLabels();
   }
 
