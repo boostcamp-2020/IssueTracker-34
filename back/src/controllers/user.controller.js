@@ -22,6 +22,15 @@ const UserController = {
       return res.status(500).send();
     }
   },
+
+  async getUserInfo(req, res) {
+    try {
+      const { authorizedUsername, authorizedUserId } = req.body;
+      return res.status(200).json({ authorizedUsername, authorizedUserId });
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
 }
 
 module.exports = UserController;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import GitHubSvg from '../svgs/GitHubSvg';
@@ -6,6 +6,8 @@ import SearchSvg from '../svgs/SearchSvg';
 import PersonSvg from '../svgs/PersonSvg';
 import queryString from 'query-string'
 import Auth from '../apis/Auth.api';
+import userAPI from '../apis/user.api';
+import { UserInfoContext } from '../App';
 
 const GITHUB_AUTHORIZATION_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.HOMEPAGE_URL}`
 
@@ -81,18 +83,25 @@ const Title = styled.span`
 `;
 
 const LoginPage = ({ setLoggedIn }) => {
+  const { userInfoDispatch } = useContext(UserInfoContext)
 
   const auth = async () => {
     const token = localStorage.getItem('token');
     const { code } = queryString.parse(window.location.search);
 
     if (token) {
+      const userInfo = await userAPI.getUserInfo(token);
+      console.log(userInfo);
+      userInfoDispatch({ type: 'setInitial', payload: userInfo })
       setLoggedIn(true);
       return;
     }
+
     if (!token && code) {
-      const token = await Auth.login(code);
-      localStorage.setItem('token', token);
+      const newToken = await Auth.login(code);
+      localStorage.setItem('token', newToken);
+      const userInfo = await userAPI.getUserInfo(newToken);
+      userInfoDispatch({ type: 'setInitial', payload: userInfo })
       setLoggedIn(true);
       return;
     }
