@@ -6,12 +6,21 @@ const API_URL = process.env.API_URL;
 const commentAPI = {
   async createComment(userId, issueId, commentText) {
     try {
-      await axios.post(API_URL + '/comment', {
-        userId: userId,
-        issueId: issueId,
-        comment: commentText,
-        date: Date.now(),
-      });
+      const token = localStorage.getItem('token');
+      await axios.post(
+        API_URL + '/comment',
+        {
+          userId: userId,
+          issueId: issueId,
+          comment: commentText,
+          date: Date.now(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     } catch (err) {
       Swal.fire({
         icon: 'error',
@@ -24,7 +33,12 @@ const commentAPI = {
   //data id 때문에 필요해서 추가로 적음.
   async getAllComments() {
     try {
-      const { data } = await axios.get(API_URL + '/comment');
+      const token = localStorage.getItem('token');
+      const { data } = await axios.get(API_URL + '/comment', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return data;
     } catch (err) {
       Swal.fire({
@@ -38,9 +52,18 @@ const commentAPI = {
 
   async getComments(issueId) {
     try {
-      const { data } = await axios.get(API_URL + '/comment', {
-        params: { issueId: issueId },
-      });
+      const token = localStorage.getItem('token');
+      const { data } = await axios.get(
+        API_URL + '/comment',
+        {
+          params: { issueId: issueId },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return data;
     } catch (err) {
       Swal.fire({
@@ -54,11 +77,20 @@ const commentAPI = {
 
   async editComment(commentId, comment) {
     try {
-      await axios.patch(API_URL + '/comment', {
-        commentId: commentId,
-        comment: comment,
-        date: Date.now(),
-      });
+      const token = localStorage.getItem('token');
+      await axios.patch(
+        API_URL + '/comment',
+        {
+          commentId: commentId,
+          comment: comment,
+          date: Date.now(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     } catch (err) {
       Swal.fire({
         icon: 'error',
