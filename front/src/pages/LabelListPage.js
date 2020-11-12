@@ -3,6 +3,7 @@ import Label from '../apis/Labels.api';
 import styled from 'styled-components';
 import LabelsButton from '../components/LabelsButton';
 import MilestonesButton from '../components/MilestonesButton';
+import LabelAPI from '../apis/Labels.api';
 import LabelModal from '../components/LabelModal';
 
 const Header = styled.header`
@@ -66,11 +67,12 @@ const LabelHeader = styled.div`
 
 const LabelListPage = () => {
 
-  const [labels, setLabels] = useState('');
+  const [labels, setLabels] = useState([]);
   const [modalIsOpened, setModalIsOpened] = useState(false);
 
   const getLabels = async() => {
     const labels1 = await Label.getLabels('');
+    console.log(labels1)
     const labelCount = labels1.length;
     const parsedLabels = parseLabel(labels1, labelCount);
     setLabels(parsedLabels);
@@ -78,6 +80,13 @@ const LabelListPage = () => {
 
   const changeLabelModalStatus = async() => {
     setModalIsOpened(!modalIsOpened);
+  }
+
+  const deleteLabel = async(e) => {
+    console.log("delete", e.target.parentNode.dataset.id);
+    const deleteL = await LabelAPI.deleteLabel({ labelId: e.target.parentNode.dataset.id })
+    console.log("asd", deleteL);
+    await getLabels();
   }
 
   const parseLabel = (labels, labelCount) => {
@@ -92,8 +101,12 @@ const LabelListPage = () => {
 
           <MiddleDiv>{label.content}</MiddleDiv>
           <RightDiv>
+
+          <RightDiv data-id={label.id}>
             <div>Edit</div>
+            <div onClick={deleteLabel} >Delete</div>
             <div>Delete</div>
+
           </RightDiv>
         </LabelContent>)
 
@@ -103,8 +116,10 @@ const LabelListPage = () => {
 
   useEffect(() => {
     getLabels();
+    console.log("label page useeffect", labels);
   }, []);
 
+  console.log("label page", labels);
   return (
     <>
       <LabelHeader>
