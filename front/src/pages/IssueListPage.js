@@ -28,8 +28,7 @@ const InnerFilterDiv = styled.div`
   flex-direction: row;
 `;
 
-export const IssueListContext = createContext();
-export const AuthorListContext = createContext();
+export const IssueListPageContext = createContext();
 
 const IssueListPage = () => {
   const [issueList, issueListDispatch] = useReducer(
@@ -40,6 +39,10 @@ const IssueListPage = () => {
     IssueListPageReducer.authorListReducer,
     []
   );
+  const [assigneeList, assigneeListDispatch] = useReducer(
+    IssueListPageReducer.assigneeListReducer,
+    []
+  );
 
   useEffect(async () => {
     const issues = await issueAPI.getIssues();
@@ -47,28 +50,38 @@ const IssueListPage = () => {
 
     const authors = await userAPI.getUsers();
     authorListDispatch({ type: 'setInitial', payload: authors });
+
+    const assignees = await userAPI.getUsers();
+    assigneeListDispatch({ type: 'setInitial', payload: assignees });
   }, []);
 
   return (
     <>
-      <IssueListContext.Provider value={{ issueList, issueListDispatch }}>
-        <AuthorListContext.Provider value={{ authorList, authorListDispatch }}>
-          <div>
-            <FilterDiv>
-              <InnerFilterDivOne>
-                <FilterButton />
-                <FilterSearchBar />
-              </InnerFilterDivOne>
-              <InnerFilterDiv>
-                <LabelsButton />
-                <MilestonesButton />
-              </InnerFilterDiv>
-              <NewIssueButton />
-            </FilterDiv>
-            <IssueList />
-          </div>
-        </AuthorListContext.Provider>
-      </IssueListContext.Provider>
+      <IssueListPageContext.Provider
+        value={{
+          issueList,
+          issueListDispatch,
+          authorList,
+          authorListDispatch,
+          assigneeList,
+          assigneeListDispatch,
+        }}
+      >
+        <div>
+          <FilterDiv>
+            <InnerFilterDivOne>
+              <FilterButton />
+              <FilterSearchBar />
+            </InnerFilterDivOne>
+            <InnerFilterDiv>
+              <LabelsButton />
+              <MilestonesButton />
+            </InnerFilterDiv>
+            <NewIssueButton />
+          </FilterDiv>
+          <IssueList />
+        </div>
+      </IssueListPageContext.Provider>
     </>
   );
 };

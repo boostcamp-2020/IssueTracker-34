@@ -82,7 +82,8 @@ const LabelListPage = () => {
     setLabels(parsedLabels);
   };
 
-  const openLabelModal = async () => {
+
+  const changeLabelModalStatus = async() => {
     setModalIsOpened(!modalIsOpened);
   };
 
@@ -141,6 +142,7 @@ const LabelListPage = () => {
         </div>
       </LabelHeader>
       {/* {!modalIsOpened && <LabelModal openLabelModal={openLabelModal} />} */}
+
       <div>{labels}</div>
     </>
   );
