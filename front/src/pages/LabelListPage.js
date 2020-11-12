@@ -100,13 +100,9 @@ const LabelListPage = () => {
           </LeftDiv>
 
           <MiddleDiv>{label.content}</MiddleDiv>
-          <RightDiv>
-
           <RightDiv data-id={label.id}>
             <div>Edit</div>
             <div onClick={deleteLabel} >Delete</div>
-            <div>Delete</div>
-
           </RightDiv>
         </LabelContent>)
 
