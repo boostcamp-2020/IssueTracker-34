@@ -1,6 +1,6 @@
 import React, { useRef, useState, useContext } from 'react';
 import styled from 'styled-components';
-import { IssueContext } from '../pages/IssueDetailPage';
+import { IssueContext } from '../App';
 import IssueAPI from '../apis/issue.api';
 
 const defaultUserImageUrl =
@@ -139,7 +139,12 @@ const CancelButton = styled.button`
   }
 `;
 
-const IssueDetailContent = ({ userProfileURL, status, placeholder }) => {
+const IssueDetailContent = ({
+  userProfileURL,
+  status,
+  placeholder,
+  issueId,
+}) => {
   // status 로 edit 인지 생성인지 구분
   // placeholder는 edit용 이전 썼던 글
   // userProfileURL 은 현제 로그인 유저의 이미지 주소
@@ -147,7 +152,6 @@ const IssueDetailContent = ({ userProfileURL, status, placeholder }) => {
 
   const { issueInfo, dispatch } = useContext(IssueContext);
 
-  const issueId = issueInfo.id;
   const userId = 1; //로그인 후에 받아와야 함.
   const userName = issueInfo.user ? issueInfo.user.name : '';
 
@@ -173,8 +177,6 @@ const IssueDetailContent = ({ userProfileURL, status, placeholder }) => {
   };
 
   const updateIssue = () => {
-    console.log('update');
-
     const newIssueContent = inputRef.current.value;
     dispatch({
       type: 'edit_issue_content',

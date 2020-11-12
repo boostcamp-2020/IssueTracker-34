@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
 import SettingSvg from '../svgs/SettingSvg';
 import CheckSvg from '../svgs/CheckSvg';
-import { IssueContext } from '../pages/IssueDetailPage';
+import { IssueContext } from '../App';
 import userAPI from '../apis/user.api';
 import issueAPI from '../apis/issue.api';
 
@@ -134,14 +134,8 @@ const Span = styled.span`
   cursor: pointer;
 `;
 
-const AssigneesSelector = ({ assignees, setAssignee }) => {
+const AssigneesSelector = ({ status, assignees, setAssignee, issueId }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const [assignees, setAssignee] = useState([]);
-
-  const { issueInfo, dispatch } = useContext(IssueContext);
-  const issueId = issueInfo.id;
-
   const loginedUser = 1;
 
   useEffect(async () => {
@@ -181,7 +175,10 @@ const AssigneesSelector = ({ assignees, setAssignee }) => {
 
   const allAssignees = assignees.map((assignee, idx) => {
     return (
-      <div key={`assignee-selector-${idx}`} onClick={() => selectAssignee(assignee.id)}>
+      <div
+        key={`assignee-selector-${idx}`}
+        onClick={() => selectAssignee(assignee.id)}
+      >
         <AssigneeDiv>
           {assignee.checked ? <CheckSvg /> : <Unchecked />}
           <Avatar src={assignee.profile_url}></Avatar>
@@ -195,6 +192,8 @@ const AssigneesSelector = ({ assignees, setAssignee }) => {
 
   const editIssueAssignees = () => {
     setIsOpen(false);
+    if (status === 'MakePage') return;
+
     let assigneeIdList = [];
     assignees.forEach((assignee) => {
       if (assignee.checked) {

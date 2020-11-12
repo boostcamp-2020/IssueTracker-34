@@ -2,9 +2,11 @@ import React, { useState, useRef, useContext } from 'react';
 import styled from 'styled-components';
 import OpenedSvg from '../svgs/OpenedSvg';
 import ClosedSvg from '../svgs/ClosedSvg';
-import { IssueContext, CommentContext } from '../pages/IssueDetailPage';
+import { CommentContext } from '../pages/IssueDetailPage';
+import { IssueContext } from '../App';
 import IssueInfo from '../components/IssueInfo';
 import IssueAPI from '../apis/issue.api';
+import IssuesHeader from './IssuesHeader';
 
 const TitleWrap = styled.div`
   display: flex;
@@ -98,45 +100,32 @@ const IssueInfoDiv = styled.div`
   align-items: center;
 `;
 
-const IssueTitle = () => {
+const IssueTitle = ({ issues, setIssues, syncIssues }) => {
   const [isEditMode, editTitle] = useState(false);
-  const { issueInfo, dispatch } = useContext(IssueContext);
   const { commentInfo } = useContext(CommentContext);
-
-  // 개발용
-  // console.log('issue 정보', issueInfo);
 
   const inputRef = useRef(false);
 
-  const issueTitle = issueInfo.title;
-  const issueNumber = issueInfo.id;
-  // setTitle(issueInfo.title);
-  const creator = issueInfo.user ? issueInfo.user.name : '';
-  const makeDate = issueInfo.date ? issueInfo.date : Date.now();
+  const issueTitle = issues.title;
+  const issueNumber = issues.id;
+  const creator = issues.user ? issues.user.name : '';
+  const makeDate = issues.date ? issues.date : Date.now();
   const commentCount = commentInfo ? commentInfo.length : 0;
   const editTitle_ = () => {
     editTitle(true);
   };
 
-  const saveTitle = () => {
+  const saveTitle = async () => {
     const newTitle = inputRef.current.value;
     if (newTitle === '') {
-      //개발용
-      console.log('빈 제목은 save 불가.');
       return;
     }
-
-    //개발용
-    console.log(inputRef.current.value, '를 title로 저장했어요.');
-
-    dispatch({ type: 'change_title', payload: { title: newTitle } });
-    IssueAPI.editIssueTitle(issueNumber, newTitle);
+    setIssues({ ...issues, title: newTitle });
+    await IssueAPI.editIssueTitle(issueNumber, newTitle);
     editTitle(false);
   };
 
   const cancelEdit = () => {
-    //개발용
-    console.log('취소합니다.');
     editTitle(false);
   };
 
@@ -159,7 +148,7 @@ const IssueTitle = () => {
       )}
 
       <IssueInfoDiv>
-        {issueInfo.status_open_closed == 1 ? (
+        {issues.status_open_closed == 1 ? (
           <IssueStateWrap backgroundColor={'#28a745'}>
             <OpenedSvg marginRight={'4px'} /> <div>Open</div>
           </IssueStateWrap>

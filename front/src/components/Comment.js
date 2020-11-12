@@ -1,7 +1,7 @@
 import React, { useRef, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { CommentContext } from '../pages/IssueDetailPage';
-import IssueAPI from '../apis/issue.api';
+import { UserInfoContext } from './../App';
 import CommentAPI from '../apis/comment.api';
 
 const defaultUserImageUrl =
@@ -147,12 +147,9 @@ const CommentWrap = styled.div`
 const Comment = ({ data }) => {
   const [isEditMode, editMode] = useState(false);
   const { commentDispatch } = useContext(CommentContext);
-  const userId = 1; //로그인 후에 받아와야 함.
+  const { userInfo } = useContext(UserInfoContext);
+  const authorizedUserId = userInfo.authorizedUserId;
   const userName = data.user ? data.user.name : '';
-
-  //   console.log('comment info', data);
-
-  const authorizedUserId = 1;
   const authorColor =
     data.user && data.user.id === authorizedUserId ? '#acc9eaad' : '#F6F8FA';
   const checkAuthor =
@@ -170,14 +167,11 @@ const Comment = ({ data }) => {
   };
 
   const updateComment = () => {
-    console.log('update');
-
     const newCommentContent = inputRef.current.value;
     commentDispatch({
       type: 'edit_comment_content',
       payload: { content: newCommentContent, commentId: data.id },
     });
-    console.log(data.id);
     CommentAPI.editComment(data.id, newCommentContent);
     editMode(false);
   };

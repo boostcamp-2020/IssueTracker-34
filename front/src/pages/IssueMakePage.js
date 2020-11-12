@@ -29,15 +29,19 @@ const RightDiv = styled.div`
 const IssueMakePage = () => {
   const [assignees, setAssignee] = useState([]);
   const [labels, setLabel] = useState([]);
-
+  const status = 'MakePage';
   return (
     <BodyDiv>
       <LeftDiv>
         <IssueWriteSection assignees={assignees} labels={labels} />
       </LeftDiv>
       <RightDiv>
-        <AssigneesSelector assignees={assignees} setAssignee={setAssignee} />
-        <LabelsSelector labels={labels} setLabel={setLabel} />
+        <AssigneesSelector
+          status={status}
+          assignees={assignees}
+          setAssignee={setAssignee}
+        />
+        <LabelsSelector status={status} labels={labels} setLabel={setLabel} />
       </RightDiv>
     </BodyDiv>
   );

@@ -1,7 +1,8 @@
 import React, { useRef, useState, useContext } from 'react';
 import styled from 'styled-components';
 import ClosedSvg from '../svgs/ClosedSvg';
-import { IssueContext, CommentContext } from '../pages/IssueDetailPage';
+import { CommentContext } from '../pages/IssueDetailPage';
+import { IssueContext } from '../App';
 import IssueAPI from '../apis/issue.api';
 import CommentAPI from '../apis/comment.api';
 
@@ -130,7 +131,6 @@ const createComment = async (userId, issueId, commentText) => {
   try {
     const { data } = await axios(options);
     // 개발용. 데이터베이스에 잘 들어가면 나옴.
-    console.log(data, '입력 완료');
     return data;
   } catch (err) {
     Swal.fire({
@@ -142,7 +142,14 @@ const createComment = async (userId, issueId, commentText) => {
   }
 };
 
-const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
+const CommentWriteSection = ({
+  userProfileURL,
+  status,
+  placeholder,
+  issueId,
+  issues,
+  setIssues,
+}) => {
   // status 로 edit 인지 생성인지 구분
   // placeholder는 edit용 이전 썼던 글
   // userProfileURL 은 현제 로그인 유저의 이미지 주소
@@ -155,7 +162,6 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
     commentCountDispatch,
   } = useContext(CommentContext);
 
-  const issueId = issueInfo.id;
   const userId = 1; //로그인 후에 받아와야 함.
 
   const [textIsEmpty, setTextIsEmpty] = useState(true);
@@ -173,10 +179,8 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
   };
 
   const changeIssueStatus = () => {
-    //개발용
-    dispatch({ type: 'toggle_status' });
-    IssueAPI.editIssueStatus(issueId, !issueInfo.status_open_closed);
-    console.log('close');
+    setIssues({ ...issues, status_open_closed: !issues.status_open_closed });
+    IssueAPI.editIssueStatus(issueId, !issues.status_open_closed);
   };
 
   const addComment = () => {
@@ -234,7 +238,7 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
                     activeColor="#edeff2"
                     onClick={changeIssueStatus}
                   >
-                    {issueInfo.status_open_closed == 0 ? (
+                    {issues && issues.status_open_closed == 0 ? (
                       <>Reopen issue</>
                     ) : (
                       <>

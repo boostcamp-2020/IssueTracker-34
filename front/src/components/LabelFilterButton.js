@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import queryString from 'query-string';
 import Check from '../svgs/CheckSvg';
-
+import labelAPI from '../apis/Labels.api';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -171,26 +171,6 @@ const tempLabel = [
   },
 ];
 
-const getLabels = async () => {
-  const options = {
-    method: 'get',
-    url: '/label',
-    headers: { accept: 'application/json' },
-  };
-
-  try {
-    const { data } = await axios(options);
-    return data;
-  } catch (err) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Labels load failed..',
-      text: 'Something went wrong!',
-    });
-    return [];
-  }
-};
-
 const LabelFilterButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const parsed = queryString.parse(window.location.search);
@@ -199,7 +179,7 @@ const LabelFilterButton = () => {
   const [labels, setLabels] = useState([]);
 
   useEffect(async () => {
-    const labelData = await getLabels();
+    const labelData = await labelAPI.getLabels();
     setLabels(labelData);
   }, []);
 

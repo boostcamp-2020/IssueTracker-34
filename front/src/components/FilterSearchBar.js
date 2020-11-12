@@ -33,8 +33,6 @@ const FilterSearchBar = () => {
   const searchIssues = (e) => {
     e.preventDefault();
     const content = inputRef.current.value;
-    //개발용
-    console.log('submit ', content);
   };
 
   return (

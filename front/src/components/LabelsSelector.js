@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
 import SettingSvg from '../svgs/SettingSvg';
 import CheckSvg from '../svgs/CheckSvg';
-import { IssueContext } from '../pages/IssueDetailPage';
+import { IssueContext } from '../App';
 import issueAPI from '../apis/issue.api';
 import LabelAPI from '../apis/Labels.api';
 
@@ -168,11 +168,10 @@ const tempData = [
   },
 ];
 
-const LabelsSelector = ({ labels, setLabel }) => {
+const LabelsSelector = ({ status, labels, setLabel, issueId }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { issueInfo, dispatch } = useContext(IssueContext);
-  const issueId = issueInfo.id;
 
   //맨 처음에 label의 데이터를 받아온다 -> checked 없는 상태
   //초기 setLabel이 된다.
@@ -201,11 +200,6 @@ const LabelsSelector = ({ labels, setLabel }) => {
   useEffect(async () => {
     let labelData = await LabelAPI.getLabels();
     setLabel(labelData);
-
-    if (issueInfo.labels) {
-      //issueInfo를 늦게 받아와서 안뜸.
-      console.log('라벨정보있음');
-    }
   }, []);
 
   let checkedLabelsCnt = 0;
@@ -213,7 +207,7 @@ const LabelsSelector = ({ labels, setLabel }) => {
     if (label.checked) {
       checkedLabelsCnt++;
       return (
-        <CheckedLabelsDiv key={idx}>
+        <CheckedLabelsDiv key={`checked-label-${idx}`}>
           <CheckedLabelInnerDiv backgroundColor={label.color}>
             {label.name}
           </CheckedLabelInnerDiv>
@@ -256,6 +250,8 @@ const LabelsSelector = ({ labels, setLabel }) => {
   // label 화면을 닫아줄 때 api 호출을 한다.
   const editIssueLabels = () => {
     setIsOpen(false);
+    if (status == 'MakePage') return;
+
     let labelIdList = [];
     labels.forEach((label) => {
       if (label.checked) {

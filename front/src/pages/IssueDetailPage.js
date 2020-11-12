@@ -1,7 +1,6 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import IssueTitle from '../components/IssueTitle';
-import { useContext } from 'react';
 import styled from 'styled-components';
 import AssigneesSelector from '../components/AssigneesSelector';
 import IssueDetailContent from '../components/issueDetailContent';
@@ -10,63 +9,39 @@ import CommentWriteSection from './../components/CommentWriteSection';
 import LabelsSelector from './../components/LabelsSelector';
 import IssueAPI from '../apis/issue.api';
 import CommentAPI from '../apis/comment.api';
+import { IssueContext } from '../App';
 
 // import axios from 'axios';
-export const IssueContext = React.createContext();
 export const CommentContext = React.createContext();
-
-function reducer(issue, action) {
-  switch (action.type) {
-  case 'toggle_status':
-    if (issue.status_open_closed == 0) {
-      console.log('false to true');
-      return { ...issue, status_open_closed: 1 };
-    }
-    console.log('true to false');
-    return { ...issue, status_open_closed: 0 };
-  case 'set_issue':
-    return action.payload;
-  case 'change_title':
-    console.log('title 변경합니다');
-    const newTitle = action.payload.title;
-    return { ...issue, title: newTitle };
-  case 'edit_issue_content':
-    console.log('content 변경합니다');
-    const newContent = action.payload.content;
-    return { ...issue, content: newContent };
-  default:
-    return issue;
-  }
-}
 
 function commentReducer(comments, action) {
   switch (action.type) {
-  case 'set_comments':
-    return action.payload;
-  case 'edit_comment_content':
-    const newComments = comments.map((comment) => {
-      if (comment.id === action.payload.commentId) {
-        comment.comment = action.payload.content;
+    case 'set_comments':
+      return action.payload;
+    case 'edit_comment_content':
+      const newComments = comments.map((comment) => {
+        if (comment.id === action.payload.commentId) {
+          comment.comment = action.payload.content;
+          return comment;
+        }
         return comment;
-      }
-      return comment;
-    });
-    return newComments;
-  case 'add_comment':
-    return [...comments, action.payload];
-  default:
-    return comments;
+      });
+      return newComments;
+    case 'add_comment':
+      return [...comments, action.payload];
+    default:
+      return comments;
   }
 }
 
 function commentCountReducer(commentCount, action) {
   switch (action.type) {
-  case 'set_comment_count':
-    return action.payload;
-  case 'plus_commnet_count':
-    return commentCount + 1;
-  default:
-    return commentCount;
+    case 'set_comment_count':
+      return action.payload;
+    case 'plus_commnet_count':
+      return commentCount + 1;
+    default:
+      return commentCount;
   }
 }
 
@@ -113,32 +88,43 @@ const RightDiv = styled.div`
   }
 };*/
 
-const getIssue = (id, issues) => {
-  const issue = issues.find((issue) => {
-    return issue.id === Number(id);
-  });
-  return issue;
-};
+// const getIssue = (id, issues) => {
+//   const issue = issues.find((issue) => {
+//     return issue.id === Number(id);
+//   });
+//   return issue;
+// };
 
 const IssueDetailPage = () => {
   const { id } = useParams();
+  const status = 'DetailPage';
 
-  const [issueInfo, dispatch] = useReducer(reducer, {});
+  const [assignees, setAssignee] = useState([]);
+  const [labels, setLabel] = useState([]);
+  const [issues, setIssues] = useState();
   const [commentInfo, commentDispatch] = useReducer(commentReducer, []);
   const [commentCount, commentCountDispatch] = useReducer(
     commentCountReducer,
-    0,
+    0
   );
+  const { issueInfo, dispatch } = useContext(IssueContext);
 
-  useEffect(async () => {
+  const syncIssues = async () => {
     const issues = await IssueAPI.getIssues();
-    const issue = getIssue(id, issues);
-    dispatch({ type: 'set_issue', payload: issue });
-  }, []);
+    const [issue] = issueInfo.filter((issue) => {
+      return issue.id == id;
+    });
+    setIssues(issue);
+    dispatch({ type: 'set_issue', payload: issues });
+  };
 
   useEffect(async () => {
     const comments = await CommentAPI.getComments(id);
     commentDispatch({ type: 'set_comments', payload: comments });
+
+    if (!issues) {
+      await syncIssues();
+    }
   }, []);
 
   useEffect(async () => {
@@ -151,29 +137,47 @@ const IssueDetailPage = () => {
 
   return (
     <>
-      <IssueContext.Provider value={{ issueInfo, dispatch }}>
-        <CommentContext.Provider
-          value={{
-            commentInfo,
-            commentCount,
-            commentDispatch,
-            commentCountDispatch,
-          }}
-        >
-          <IssueTitle />
-          <BodyDiv>
-            <LeftDiv>
-              <IssueDetailContent />
-              <CommentList />
-              <CommentWriteSection />
-            </LeftDiv>
-            <RightDiv>
-              <AssigneesSelector />
-              <LabelsSelector />
-            </RightDiv>
-          </BodyDiv>
-        </CommentContext.Provider>
-      </IssueContext.Provider>
+      <CommentContext.Provider
+        value={{
+          commentInfo,
+          commentCount,
+          commentDispatch,
+          commentCountDispatch,
+        }}
+      >
+        {issues && (
+          <IssueTitle
+            issues={issues}
+            setIssues={setIssues}
+            syncIssues={syncIssues}
+          />
+        )}
+        <BodyDiv>
+          <LeftDiv>
+            <IssueDetailContent issueId={id} />
+            <CommentList />
+            <CommentWriteSection
+              issueId={id}
+              issues={issues}
+              setIssues={setIssues}
+            />
+          </LeftDiv>
+          <RightDiv>
+            <AssigneesSelector
+              status={status}
+              assignees={assignees}
+              setAssignee={setAssignee}
+              issueId={id}
+            />
+            <LabelsSelector
+              status={status}
+              labels={labels}
+              setLabel={setLabel}
+              issueId={id}
+            />
+          </RightDiv>
+        </BodyDiv>
+      </CommentContext.Provider>
     </>
   );
 };

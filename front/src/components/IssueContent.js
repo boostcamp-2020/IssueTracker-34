@@ -118,7 +118,11 @@ const IssueContent = ({ data }) => {
       </TitleDiv>
       <AvatarDiv>
         {data.assignees.map((assignee, index) => (
-          <Avatar src={assignee.profile_url} marginLeft={index * 8}></Avatar>
+          <Avatar
+            key={`assignee-avatar-${assignee.id}`}
+            src={assignee.profile_url}
+            marginLeft={index * 8}
+          ></Avatar>
         ))}
       </AvatarDiv>
     </OutDiv>

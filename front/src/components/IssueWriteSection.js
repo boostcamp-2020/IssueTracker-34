@@ -135,7 +135,7 @@ const IssueWriteSection = ({ userProfileURL, assignees, labels }) => {
         assignees: getIds(assignees),
       });
 
-      history.push(`/issue/${issue.id}`);
+      history.push(`/issue/list`);
     } catch (err) {
       Swal.fire({
         icon: 'error',
