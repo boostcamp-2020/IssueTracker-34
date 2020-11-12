@@ -7,6 +7,8 @@ import LabelsButton from '../components/LabelsButton';
 import MilestonesButton from '../components/MilestonesButton';
 import NewIssueButton from '../components/NewIssueButton';
 import issueAPI from './../apis/issue.api';
+import userAPI from './../apis/user.api';
+import IssueListPageReducer from './../reducers/IssueListPageReducer';
 
 const FilterDiv = styled.div`
   display: flex;
@@ -26,43 +28,45 @@ const InnerFilterDiv = styled.div`
   flex-direction: row;
 `;
 
-const issueListReducer = (issueList, { type, payload }) => {
-  switch (type) {
-    case 'setInitial':
-      return payload;
-    case 'checkAll':
-      return issueList.map((issue) => {
-        return { ...issue, isChecked: payload.isChecked };
-      });
-    case 'check':
-      return issueList.map((issue) => {
-        return issue.id === payload.id
-          ? { ...issue, isChecked: !issue.isChecked }
-          : issue;
-      });
-  }
-};
-
-export const IssueListContext = createContext();
+export const IssueListPageContext = createContext();
 
 const IssueListPage = () => {
-  const [issueList, issueListDispatch] = useReducer(issueListReducer, []);
+  const [issueList, issueListDispatch] = useReducer(
+    IssueListPageReducer.issueListReducer,
+    []
+  );
+  const [authorList, authorListDispatch] = useReducer(
+    IssueListPageReducer.authorListReducer,
+    []
+  );
+  const [assigneeList, assigneeListDispatch] = useReducer(
+    IssueListPageReducer.assigneeListReducer,
+    []
+  );
 
   useEffect(async () => {
     const issues = await issueAPI.getIssues();
+    issueListDispatch({ type: 'setInitial', payload: issues });
 
-    const orderedIssues = issues
-      .map((issue) => {
-        return { ...issue, isChecked: false };
-      })
-      .sort((a, b) => (a.id > b.id ? -1 : 1));
+    const authors = await userAPI.getUsers();
+    authorListDispatch({ type: 'setInitial', payload: authors });
 
-    issueListDispatch({ type: 'setInitial', payload: orderedIssues });
+    const assignees = await userAPI.getUsers();
+    assigneeListDispatch({ type: 'setInitial', payload: assignees });
   }, []);
 
   return (
     <>
-      <IssueListContext.Provider value={{ issueList, issueListDispatch }}>
+      <IssueListPageContext.Provider
+        value={{
+          issueList,
+          issueListDispatch,
+          authorList,
+          authorListDispatch,
+          assigneeList,
+          assigneeListDispatch,
+        }}
+      >
         <div>
           <FilterDiv>
             <InnerFilterDivOne>
@@ -77,7 +81,7 @@ const IssueListPage = () => {
           </FilterDiv>
           <IssueList />
         </div>
-      </IssueListContext.Provider>
+      </IssueListPageContext.Provider>
     </>
   );
 };

@@ -1,6 +1,19 @@
 import React from 'react';
+import styled from 'styled-components';
+import MilestoneSvg from '../svgs/MilestoneSvg';
 
-const IssueInfo = ({ issueId, makeDate, author, commentCount }) => {
+const IssueInfoDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const MilestoneDiv = styled.div`
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+`;
+
+const IssueInfo = ({ issueId, makeDate, author, commentCount, milestone }) => {
   const nowDate = Date.now();
   const date = new Date(makeDate);
   const agoTime = Math.floor((nowDate - date.getTime()) / 1000 / 60);
@@ -23,9 +36,17 @@ const IssueInfo = ({ issueId, makeDate, author, commentCount }) => {
   return (
     <span>
       {issueId ? (
-        <>
-          #{issueId} opened {agoText} ago by {author}
-        </>
+        <IssueInfoDiv>
+          <span>
+            #{issueId} opened {agoText} ago by {author}
+          </span>
+          {milestone && (
+            <MilestoneDiv>
+              <MilestoneSvg color="#C0C0C0" marginRight="5px" />
+              <span>{milestone.title}</span>
+            </MilestoneDiv>
+          )}
+        </IssueInfoDiv>
       ) : (
         <>
           {author} opened this issue {agoText} ago · {commentCount} comments
