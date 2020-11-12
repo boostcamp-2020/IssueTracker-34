@@ -17,6 +17,16 @@ const IssueListPageReducer = {
             ? { ...issue, isChecked: !issue.isChecked }
             : issue;
         });
+      case 'setStatusOpenClosed':
+        return issueList.map((issue) => {
+          return issue.id === payload.id
+            ? {
+                ...issue,
+                isChecked: payload.isChecked,
+                status_open_closed: payload.statusOpenClosed,
+              }
+            : issue;
+        });
     }
   },
   authorListReducer(authorList, { type, payload }) {
