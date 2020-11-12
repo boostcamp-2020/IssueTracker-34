@@ -9,8 +9,8 @@ const CommentList = () => {
 
   return (
     <>
-      {commentInfo.map((comment) => {
-        return <Comment key={`comment${comment.id}`} data={comment} />;
+      {commentInfo.map((comment, i) => {
+        return <Comment key={`comment${comment.id}${i}`} data={comment} />;
       })}
     </>
   );
