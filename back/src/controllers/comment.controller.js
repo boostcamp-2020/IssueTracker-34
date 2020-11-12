@@ -23,6 +23,12 @@ const commentController = {
   async getComments(req, res) {
     try {
       const { issueId } = req.query;
+
+      if (!issueId) {
+        const result = await commentService.getAllComments();
+        return res.status(200).json(result);
+      }
+
       const result = await commentService.getComments({ issueId });
       return res.status(200).json(result);
     } catch (err) {

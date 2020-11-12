@@ -23,13 +23,13 @@ const issueModel = {
       await IssuesHasLabels.bulkCreate(
         labels.map((label) => {
           return { issue_id: issueId, label_id: label };
-        })
+        }),
       );
 
       await Assignee.bulkCreate(
         assignees.map((assignee) => {
           return { user_id: assignee, issue_id: issueId };
-        })
+        }),
       );
 
       return issue;
@@ -80,7 +80,7 @@ const issueModel = {
         delete issue.dataValues.users;
 
         return issue;
-      })
+      }),
     );
 
     return issueList;
@@ -94,7 +94,7 @@ const issueModel = {
     labels,
     assignees,
   }) {
-    const updateResult = await sequelize.transaction(async (t) => {
+    const updateResult = await sequelize.transaction(async () => {
       const result = await Issue.update(
         {
           title: title,
@@ -102,24 +102,28 @@ const issueModel = {
           milestone_id: milestone,
           status_open_closed: statusOpenClosed,
         },
-        { where: { id: issueId } }
+        { where: { id: issueId } },
       );
 
-      await IssuesHasLabels.destroy({ where: { issue_id: issueId } });
+      if (labels) {
+        await IssuesHasLabels.destroy({ where: { issue_id: issueId } });
 
-      await IssuesHasLabels.bulkCreate(
-        labels.map((label) => {
-          return { issue_id: issueId, label_id: label };
-        })
-      );
+        await IssuesHasLabels.bulkCreate(
+          labels.map((label) => {
+            return { issue_id: issueId, label_id: label };
+          }),
+        );
+      }
 
-      await Assignee.destroy({ where: { issue_id: issueId } });
+      if (assignees) {
+        await Assignee.destroy({ where: { issue_id: issueId } });
 
-      await Assignee.bulkCreate(
-        assignees.map((assignee) => {
-          return { user_id: assignee, issue_id: issueId };
-        })
-      );
+        await Assignee.bulkCreate(
+          assignees.map((assignee) => {
+            return { user_id: assignee, issue_id: issueId };
+          }),
+        );
+      }
 
       return result;
     });

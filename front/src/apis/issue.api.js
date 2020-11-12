@@ -21,28 +21,39 @@ const issueAPI = {
     return data;
   },
 
-  async editIssue(param) {
-    const {
-      issueId,
-      title,
-      content,
-      milestone,
-      statusOpenClosed,
-      assignees,
-      labels,
-    } = param;
-
-    const { data } = await axios.patch(API_URL + '/issue', {
-      issueId,
-      title,
-      content,
-      milestone,
-      statusOpenClosed,
-      assignees,
-      labels,
+  async editIssueStatus(id, status) {
+    await axios.patch(API_URL + '/issue', {
+      issueId: id,
+      statusOpenClosed: status,
     });
+  },
 
-    return data;
+  async editIssueTitle(id, title) {
+    await axios.patch(API_URL + '/issue', {
+      issueId: id,
+      title: title,
+    });
+  },
+
+  async editIssueContent(id, content) {
+    await axios.patch(API_URL + '/issue', {
+      issueId: id,
+      content: content,
+    });
+  },
+
+  async editIssueLabels(id, labels) {
+    await axios.patch(API_URL + '/issue', {
+      issueId: id,
+      labels: labels,
+    });
+  },
+
+  async editIssueAssignees(id, assignees) {
+    await axios.patch(API_URL + '/issue', {
+      issueId: id,
+      assignees: assignees,
+    });
   },
 };
 
