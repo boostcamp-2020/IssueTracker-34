@@ -2,6 +2,7 @@ import React, { useRef, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { IssueContext } from '../App';
 import IssueAPI from '../apis/issue.api';
+import { UserInfoContext } from './../App';
 
 const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
@@ -149,13 +150,12 @@ const IssueDetailContent = ({
   // placeholder는 edit용 이전 썼던 글
   // userProfileURL 은 현제 로그인 유저의 이미지 주소
   const [isEditMode, editMode] = useState(false);
-
+  const { userInfo } = useContext(UserInfoContext);
   const { issueInfo, dispatch } = useContext(IssueContext);
 
-  const userId = 1; //로그인 후에 받아와야 함.
-  const userName = issueInfo.user ? issueInfo.user.name : '';
 
-  const authorizedUserId = 1;
+  const authorizedUserId = userInfo.authorizedUserId;
+  const userName = issueInfo.authorizedUsername ? issueInfo.authorizedUsername : 'unnamed';
   const authorColor =
     issueInfo.user && issueInfo.user.id === authorizedUserId
       ? '#acc9eaad'
@@ -164,7 +164,7 @@ const IssueDetailContent = ({
     issueInfo.user && issueInfo.user.id === authorizedUserId ? true : false;
 
   const imageURL = issueInfo.user
-    ? issueInfo.user.profile_url
+    ? issueInfo.authorizedProfileURL
     : defaultUserImageUrl;
 
   const inputRef = useRef();

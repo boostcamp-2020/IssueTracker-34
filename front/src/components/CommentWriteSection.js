@@ -5,6 +5,7 @@ import { CommentContext } from '../pages/IssueDetailPage';
 import { IssueContext } from '../App';
 import IssueAPI from '../apis/issue.api';
 import CommentAPI from '../apis/comment.api';
+import { UserInfoContext } from './../App';
 
 import axios from 'axios';
 
@@ -113,39 +114,10 @@ const Button = styled.button`
   }
 `;
 
-const createComment = async (userId, issueId, commentText) => {
-  const API_URL = process.env.API_URL;
 
-  const options = {
-    method: 'post',
-    url: API_URL + '/comment',
-    headers: { accept: 'application/json' },
-    data: {
-      userId: userId,
-      issueId: issueId,
-      comment: commentText,
-      date: Date.now(),
-    },
-  };
-
-  try {
-    const { data } = await axios(options);
-    // 개발용. 데이터베이스에 잘 들어가면 나옴.
-    return data;
-  } catch (err) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Comment created failed..',
-      text: 'Something went wrong!',
-    });
-    return [];
-  }
-};
 
 const CommentWriteSection = ({
-  userProfileURL,
-  status,
-  placeholder,
+
   issueId,
   issues,
   setIssues,
@@ -162,12 +134,13 @@ const CommentWriteSection = ({
     commentCountDispatch,
   } = useContext(CommentContext);
 
-  const userId = 1; //로그인 후에 받아와야 함.
-
+  const { userInfo } = useContext(UserInfoContext);
+  const { authorizedUserId, authorizedUsername, authorizedProfileURL } = userInfo;
   const [textIsEmpty, setTextIsEmpty] = useState(true);
 
+  const userId = 1; //로그인 후에 받아와야 함.
   //로그인한 사용자의 프로필 사진을 가져와야 합니다.
-  const imageURL = userProfileURL ? userProfileURL : defaultUserImageUrl;
+  const imageURL = authorizedProfileURL ? authorizedProfileURL : defaultUserImageUrl;
   const inputRef = useRef();
 
   const handleTextInputChange = (e) => {
@@ -183,7 +156,7 @@ const CommentWriteSection = ({
     IssueAPI.editIssueStatus(issueId, !issues.status_open_closed);
   };
 
-  const addComment = () => {
+  const addComment = async () => {
     const commentText = inputRef.current.value;
 
     commentDispatch({
@@ -193,7 +166,7 @@ const CommentWriteSection = ({
         comment: commentText,
         date: Date.now(),
         issue_id: issueId,
-        user: { id: userId, name: 'profornnan', profile_url: imageURL },
+        user: { id: authorizedUserId, name: authorizedUsername, profile_url: authorizedProfileURL },
         user_id: userId,
       },
     });
@@ -201,7 +174,7 @@ const CommentWriteSection = ({
     commentCountDispatch({
       type: 'plus_commnet_count',
     });
-    CommentAPI.createComment(userId, issueId, commentText);
+    await CommentAPI.createComment(authorizedUserId, issueId, commentText);
   };
 
   const changeStatusAndAddComment = () => {
