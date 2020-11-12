@@ -58,13 +58,6 @@ function issueReducer(issue, action) {
   }
 }
 
-const getIssue = (id, issues) => {
-  const issue = issues.find((issue) => {
-    return issue.id === Number(id);
-  });
-  return issue;
-};
-
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const { code } = queryString.parse(window.location.search);
