@@ -27,21 +27,19 @@ const RightDiv = styled.div`
 `;
 
 const IssueMakePage = () => {
-  const [assignees, setAssignee] = useState();
+  const [assignees, setAssignee] = useState([]);
   const [labels, setLabel] = useState([]);
 
   return (
-    <IssueContext.Provider value={(assignees, setAssignee, labels, setLabel)}>
-      <BodyDiv>
-        <LeftDiv>
-          <IssueWriteSection />
-        </LeftDiv>
-        <RightDiv>
-          <AssigneesSelector />
-          <LabelsSelector />
-        </RightDiv>
-      </BodyDiv>
-    </IssueContext.Provider>
+    <BodyDiv>
+      <LeftDiv>
+        <IssueWriteSection assignees={assignees} labels={labels} />
+      </LeftDiv>
+      <RightDiv>
+        <AssigneesSelector assignees={assignees} setAssignee={setAssignee} />
+        <LabelsSelector labels={labels} setLabel={setLabel} />
+      </RightDiv>
+    </BodyDiv>
   );
 };
 

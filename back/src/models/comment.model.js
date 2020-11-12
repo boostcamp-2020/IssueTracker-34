@@ -11,7 +11,12 @@ const commentModel = {
       issue_id: issueId,
     });
   },
-  
+
+  //전체 코멘트의 개수를 알아야 해서 필요합니다.
+  async getAllComments() {
+    return await Comment.findAll();
+  },
+
   async getComments({ issueId }) {
     return await Comment.findAll({
       include: [{ model: Users, required: true }],
@@ -24,7 +29,7 @@ const commentModel = {
   async editComment({ commentId, comment, date }) {
     return await Comment.update(
       { comment: comment, date: date },
-      { where: { id: commentId } }
+      { where: { id: commentId } },
     );
   },
 
