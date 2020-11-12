@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import HeaderSvg from '../svgs/HeaderSvg';
-import { Redirect } from 'react-router-dom';
-
-const StyledA = styled.a`
-  text-decoration: none;
-  color: white;
-`;
+import { useHistory } from 'react-router-dom';
 
 const Header = styled.div`
   height: 50px;
@@ -18,28 +13,40 @@ const Header = styled.div`
   color: white;
 `;
 
+const HomeDiv = styled.div`
+  cursor: pointer;
+`;
+
 const LogoutButton = styled.button`
   position: fixed;
   right: 4rem;
-`
+`;
 
 const IssuesHeader = ({ setLoggedIn }) => {
-
+  const history = useHistory();
   const logout = () => {
     localStorage.removeItem('token');
     setLoggedIn(false);
-    return
-  }
+    return;
+  };
+  const gotoHomePage = () => {
+    history.push('/issue/list');
+  };
 
   return (
     <Header>
-      <StyledA href={`/issue/list`}>
+      <HomeDiv onClick={gotoHomePage}>
         <HeaderSvg />
         <span>ISSUES</span>
-      </StyledA>
-      <LogoutButton type='button' onClick={() => {
-        logout()
-      }}>logout</LogoutButton>
+      </HomeDiv>
+      <LogoutButton
+        type="button"
+        onClick={() => {
+          logout();
+        }}
+      >
+        logout
+      </LogoutButton>
     </Header>
   );
 };
