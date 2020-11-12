@@ -166,8 +166,8 @@ const CommentWriteSection = ({
         comment: commentText,
         date: Date.now(),
         issue_id: issueId,
-        user: { id: authorizedUserId, name: authorizedUsername, profile_url: authorizedProfileURL },
-        user_id: userId,
+        user: { github_id: authorizedUserId, name: authorizedUsername, profile_url: authorizedProfileURL },
+        user_id: authorizedUserId,
       },
     });
 
