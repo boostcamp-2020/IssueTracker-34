@@ -1,8 +1,7 @@
 import React, { useRef, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { IssueContext } from '../pages/IssueDetailPage';
-
-import axios from 'axios';
+import IssueAPI from '../apis/issue.api';
 
 const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
@@ -77,6 +76,7 @@ const Img = styled.img`
   height: 30px;
   width: 30px;
   margin-right: 20px;
+  border-radius: 50%;
 `;
 
 const ButtonBox = styled.div`
@@ -180,7 +180,7 @@ const IssueDetailContent = ({ userProfileURL, status, placeholder }) => {
       type: 'edit_issue_content',
       payload: { content: newIssueContent },
     });
-
+    IssueAPI.editIssueContent(issueId, newIssueContent);
     editMode(false);
   };
 
