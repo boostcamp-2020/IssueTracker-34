@@ -1,3 +1,4 @@
+const { getAllComments } = require('../models/comment.model');
 const commentModel = require('../models/comment.model');
 
 const commentService = {
@@ -15,6 +16,13 @@ const commentService = {
     throw new Error('Bad Request');
   },
 
+  async getAllComments() {
+    const result = await commentModel.getAllComments();
+    if (result) {
+      return result;
+    }
+    throw new Error('Bad Request');
+  },
   async getComments({ issueId }) {
     const result = await commentModel.getComments({ issueId });
 
@@ -25,6 +33,7 @@ const commentService = {
   },
 
   async editComment({ commentId, comment, date }) {
+    console.log(commentId, comment, date);
     const result = await commentModel.editComment({
       commentId,
       comment,
@@ -32,6 +41,7 @@ const commentService = {
     });
 
     if (result) {
+      console.log(result);
       return result;
     }
     throw new Error('Bad Request');
