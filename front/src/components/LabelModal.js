@@ -104,14 +104,31 @@ const LabelModal = ({ changeLabelModalStatus, getLabels }) => {
     setColor('red');
   }
 
-  const changePreviewTextColor = (bit) => {
-    const FirstHexBit = bit[1];
-    if (Number(FirstHexBit) >= 8 || isNaN(Number(FirstHexBit))) {
+  const hexToRgb = (hex) => {
+    return hex ? {
+      r: parseInt(hex[1], 16),
+      g: parseInt(hex[2], 16),
+      b: parseInt(hex[3], 16),
+    } : null;
+  }
+
+  const changePreviewTextColor = (hex) => {
+    const color = ContrastColor(hexToRgb(hex));
+    if (color == 0) {
       setPreviewColor('black');
       return;
     }
     setPreviewColor('white');
 
+  }
+
+  const ContrastColor = (color) => {
+    let luminance = (0.299 * color.r + 0.587 * color.g + 0.114 * color.b) / 255;
+    if (luminance > 0.05) {
+      return 0;
+    } else {
+      return 255;
+    }
   }
 
   const isColor16Bit = (bit) => {
@@ -130,7 +147,7 @@ const LabelModal = ({ changeLabelModalStatus, getLabels }) => {
   }
 
   const getRandomHex = () => {
-    return `${Math.floor(Math.random() * 16777215).toString(16)}`;
+    return `${Math.floor(Math.random() * 16777215).toString(16)}`.padStart(6, 0);
   }
 
   const addLabel = async(e) => {
