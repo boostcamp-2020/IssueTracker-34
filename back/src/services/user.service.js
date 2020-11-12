@@ -7,7 +7,7 @@ const userService = {
 
     if (user && (user.profile_url !== profile_url || user.username !== username)) {
       user.profile_url = profile_url;
-      user.username = username;
+      user.name = username;
       await user.save();
     }
     if (!user) {

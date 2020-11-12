@@ -10,7 +10,7 @@ const UserModel = {
   },
 
   async createUser ({ username, profile_url, github_id }) {
-    return await User.create({ username, profile_url, github_id })
+    return await User.create({ name: username, profile_url, github_id })
   },
 }
 

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import HeaderSvg from '../svgs/HeaderSvg';
+import { useHistory } from 'react-router-dom';
 
 const Header = styled.div`
   height: 50px;
@@ -12,11 +13,40 @@ const Header = styled.div`
   color: white;
 `;
 
-const IssuesHeader = () => {
+const HomeDiv = styled.div`
+  cursor: pointer;
+`;
+
+const LogoutButton = styled.button`
+  position: fixed;
+  right: 4rem;
+`;
+
+const IssuesHeader = ({ setLoggedIn }) => {
+  const history = useHistory();
+  const logout = () => {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    return;
+  };
+  const gotoHomePage = () => {
+    history.push('/issue/list');
+  };
+
   return (
     <Header>
-      <HeaderSvg />
-      <span>ISSUES</span>
+      <HomeDiv onClick={gotoHomePage}>
+        <HeaderSvg />
+        <span>ISSUES</span>
+      </HomeDiv>
+      <LogoutButton
+        type="button"
+        onClick={() => {
+          logout();
+        }}
+      >
+        logout
+      </LogoutButton>
     </Header>
   );
 };

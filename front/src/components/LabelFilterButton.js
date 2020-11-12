@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import queryString from 'query-string';
 import Check from '../svgs/CheckSvg';
+import labelAPI from '../apis/Labels.api';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const DropDownIcon = styled.span`
   display: inline-block;
@@ -173,12 +176,27 @@ const LabelFilterButton = () => {
   const parsed = queryString.parse(window.location.search);
   const checkedLabel = parsed.label !== null ? Number(parsed.label) : null;
 
-  const labelList = [{ id: null }, ...tempLabel]
+  const [labels, setLabels] = useState([]);
+
+  useEffect(async () => {
+    const labelData = await labelAPI.getLabels();
+    setLabels(labelData);
+  }, []);
+
+  const labelList = [{ id: null }, ...labels]
     .sort((a, b) => {
-      if (a.id === null) return -1;
-      if (b.id === null) return 1;
-      if (a.id === checkedLabel) return -1;
-      if (b.id === checkedLabel) return 1;
+      if (a.id === null) {
+        return -1;
+      }
+      if (b.id === null) {
+        return 1;
+      }
+      if (a.id === checkedLabel) {
+        return -1;
+      }
+      if (b.id === checkedLabel) {
+        return 1;
+      }
       return a.id > b.id ? 1 : -1;
     })
     .map((label) => {
@@ -199,8 +217,8 @@ const LabelFilterButton = () => {
                 </LabelInfoDiv>
                 <LabelInfoDiv>
                   <LabelName>{label.name}</LabelName>
-                  {label.description && (
-                    <LabelDescription>{label.description}</LabelDescription>
+                  {label.content && (
+                    <LabelDescription>{label.content}</LabelDescription>
                   )}
                 </LabelInfoDiv>
               </>

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import ClosedSvg from '../svgs/ClosedSvg';
 import OpenedSvg from '../svgs/OpenedSvg';
 import IssueInfo from './IssueInfo';
 import IssueLabel from './IssueLabel';
+import { IssueListPageContext } from './../pages/IssueListPage';
 
 const OutDiv = styled.div`
   display: flex;
@@ -26,6 +27,7 @@ const IconDiv = styled.div`
 const TitleDiv = styled.div`
   box-sizing: border-box;
   padding: 8px;
+  width: 81%;
 `;
 
 const IssueTitle = styled.span`
@@ -50,21 +52,27 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 
-const checkHandler = (e, checkedState, setCheckedState) => {
-  setCheckedState(
-    checkedState.map((element) => {
-      if (element.id === Number(e.target.value))
-        element.isChecked = e.target.checked;
-      return element;
-    })
-  );
-};
+const Avatar = styled.img`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  position: absolute;
+  margin-left: ${(props) => props.marginLeft || 0};
+`;
 
-const IssueContent = ({ data, checkedState, setCheckedState }) => {
+const AvatarDiv = styled.div`
+  box-sizing: border-box;
+  padding: 8px;
+  position: relative;
+`;
+
+const IssueContent = ({ data }) => {
+  const { issueListDispatch } = useContext(IssueListPageContext);
+
   const issueLabels = data.labels.map((labelData, index) => {
     return (
       <IssueLabel
-        key={`issueLabel${data.id}-${index}`}
+        key={`issueLabel${labelData.id}-${index}`}
         name={labelData.name}
         color={labelData.color}
       />
@@ -78,14 +86,17 @@ const IssueContent = ({ data, checkedState, setCheckedState }) => {
           type="checkbox"
           name={`issue${data.id}`}
           value={data.id}
-          checked={checkedState.find((item) => item.id === data.id).isChecked}
-          onChange={(e) => {
-            checkHandler(e, checkedState, setCheckedState);
-          }}
+          checked={data.isChecked}
+          onChange={(e) =>
+            issueListDispatch({
+              type: 'check',
+              payload: { id: Number(e.target.value) },
+            })
+          }
         />
       </CheckBoxDiv>
       <IconDiv>
-        {data.statusOpenClosed ? (
+        {data.status_open_closed ? (
           <OpenedSvg color={'#28a745'} />
         ) : (
           <ClosedSvg color={'#cb2431'} />
@@ -100,10 +111,20 @@ const IssueContent = ({ data, checkedState, setCheckedState }) => {
           <IssueInfo
             issueId={data.id}
             makeDate={data.date}
-            author={data.author}
+            author={data.user.name}
+            milestone={data.milestone}
           />
         </IssueDataDiv>
       </TitleDiv>
+      <AvatarDiv>
+        {data.assignees.map((assignee, index) => (
+          <Avatar
+            key={`assignee-avatar-${assignee.id}`}
+            src={assignee.profile_url}
+            marginLeft={index * 8}
+          ></Avatar>
+        ))}
+      </AvatarDiv>
     </OutDiv>
   );
 };

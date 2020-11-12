@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
 import SettingSvg from '../svgs/SettingSvg';
 import CheckSvg from '../svgs/CheckSvg';
+import { IssueContext } from '../App';
+import userAPI from '../apis/user.api';
+import issueAPI from '../apis/issue.api';
 
 const AssigneesSelectorDiv = styled.div`
   position: relative;
-  width: 20%;
+  width: 100%;
 `;
 
-const AssinessButton = styled.button`
+const AssigneesButton = styled.button`
   display: flex;
   background-color: white;
   border: 0;
@@ -95,6 +98,8 @@ const CheckedAssigneeDiv = styled.div`
   display: flex;
   align-items: center;
   height: 34px;
+  font-size: 12px;
+  margin-left: 6px;
 `;
 
 const Unchecked = styled.div`
@@ -129,32 +134,15 @@ const Span = styled.span`
   cursor: pointer;
 `;
 
-const tempData = [
-  {
-    id: 'pieisland',
-    checked: true,
-    name: 'ryu',
-    profileUrl:
-      'https://avatars2.githubusercontent.com/u/35261724?s=80&amp;v=4',
-  },
-  { id: 'comi', checked: false },
-  { id: 'remi', checked: true },
-  { id: 'comi2', checked: false },
-  { id: 'remi2', checked: false },
-  { id: 'comi3', checked: false },
-  { id: 'remi3', checked: false },
-  { id: 'comi4', checked: false },
-  { id: 'remi4', checked: false },
-  { id: 'comi5', checked: false },
-  { id: 'remi5', checked: false },
-  { id: 'comi6', checked: false },
-];
-
-const AssigneesSelector = () => {
+const AssigneesSelector = ({ status, assignees, setAssignee, issueId }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [assignees, setAssignee] = useState(tempData);
+  const loginedUser = 1;
 
-  const loginedUser = 'pieisland';
+  useEffect(async () => {
+    let users = await userAPI.getUsers();
+
+    setAssignee(users);
+  }, []);
 
   let checkedAssigneesCnt = 0;
   const checkedAssignees = assignees.map((assignee, idx) => {
@@ -162,15 +150,15 @@ const AssigneesSelector = () => {
       checkedAssigneesCnt++;
       return (
         <CheckedAssigneeDiv key={idx}>
-          <Avatar src={assignee.profileUrl}></Avatar>
-          <AssigneeId>{assignee.id}</AssigneeId>
+          <Avatar src={assignee.profile_url}></Avatar>
+          <AssigneeId>{assignee.name}</AssigneeId>
         </CheckedAssigneeDiv>
       );
     }
   });
 
-  // TODO: api 호출로 데이터베이스 값 변경.
-  // depth 깊어서 refactor 필요
+  //TODO: api 호출로 데이터베이스 값 변경.
+  //db에 저장된 id로 확인을 하고 있어서 나중에 수정이 필요하지 않을까 싶음.
   const selectAssignee = (id) => {
     const newAssignees = assignees.map((assignee) => {
       if (assignee.id === id) {
@@ -185,26 +173,42 @@ const AssigneesSelector = () => {
     setAssignee(newAssignees);
   };
 
-  const allAssignees = assignees.map((assignee) => {
+  const allAssignees = assignees.map((assignee, idx) => {
     return (
-      <div key={assignee.id} onClick={() => selectAssignee(assignee.id)}>
+      <div
+        key={`assignee-selector-${idx}`}
+        onClick={() => selectAssignee(assignee.id)}
+      >
         <AssigneeDiv>
           {assignee.checked ? <CheckSvg /> : <Unchecked />}
-          <Avatar src={assignee.profileUrl}></Avatar>
-          <AssigneeId>{assignee.id}</AssigneeId>
-          {assignee.name && <AssigneeName>{assignee.name}</AssigneeName>}
+          <Avatar src={assignee.profile_url}></Avatar>
+          <AssigneeId>{assignee.name}</AssigneeId>
+          {/* {assignee.name && <AssigneeName>{assignee.name}</AssigneeName>} */}
         </AssigneeDiv>
         <Hr />
       </div>
     );
   });
 
+  const editIssueAssignees = () => {
+    setIsOpen(false);
+    if (status === 'MakePage') return;
+
+    let assigneeIdList = [];
+    assignees.forEach((assignee) => {
+      if (assignee.checked) {
+        assigneeIdList.push(assignee.id);
+      }
+    });
+    issueAPI.editIssueAssignees(issueId, assigneeIdList);
+  };
+
   return (
     <AssigneesSelectorDiv>
-      <AssinessButton onClick={() => setIsOpen(true)}>
+      <AssigneesButton onClick={() => setIsOpen(true)}>
         <div>Assignees</div>
         <SettingSvg />
-      </AssinessButton>
+      </AssigneesButton>
       {checkedAssigneesCnt === 0 ? (
         <CheckedAssigneeDiv>
           No one—
@@ -218,7 +222,7 @@ const AssigneesSelector = () => {
 
       {isOpen && (
         <>
-          <DropDownOverlay onClick={() => setIsOpen(false)} />
+          <DropDownOverlay onClick={editIssueAssignees} />
           <DropdownMenu>
             <Header>
               <span>Assign up to 10 people to this issue</span>

@@ -1,9 +1,46 @@
+const sequelize = require('../sequelizeModels/config.sequelizeModels');
 const Issue = require('../sequelizeModels/issue.sequelizeModel');
+const IssuesHasLabels = require('../sequelizeModels/issues_has_labels.sequelizeModel');
+const Assignee = require('../sequelizeModels/assignee.sequelizeModel');
 const User = require('../sequelizeModels/user.sequelizeModel');
 const Milestone = require('../sequelizeModels/milestone.sequelizeModel');
 const Label = require('../sequelizeModels/label.sequelizeModel');
 
 const issueModel = {
+  async createIssue({ userId, title, content, milestone, labels, assignees }) {
+    const createResult = await sequelize.transaction(async (t) => {
+      const issue = await Issue.create({
+        user_id: userId,
+        milestone_id: milestone,
+        date: Date(),
+        title: title,
+        status_open_closed: true,
+        content: content,
+      });
+
+      const issueId = issue.dataValues.id;
+
+      if (labels !== undefined) {
+        await IssuesHasLabels.bulkCreate(
+          labels.map((label) => {
+            return { issue_id: issueId, label_id: label };
+          })
+        );
+      }
+
+      if (assignees !== undefined) {
+        await Assignee.bulkCreate(
+          assignees.map((assignee) => {
+            return { user_id: assignee, issue_id: issueId };
+          })
+        );
+      }
+
+      return issue;
+    });
+
+    return createResult;
+  },
   async getIssues() {
     const issues = await Issue.findAll({
       attributes: [
@@ -51,6 +88,51 @@ const issueModel = {
     );
 
     return issueList;
+  },
+  async editIssue({
+    issueId,
+    title,
+    content,
+    milestone,
+    statusOpenClosed,
+    labels,
+    assignees,
+  }) {
+    const updateResult = await sequelize.transaction(async () => {
+      const result = await Issue.update(
+        {
+          title: title,
+          content: content,
+          milestone_id: milestone,
+          status_open_closed: statusOpenClosed,
+        },
+        { where: { id: issueId } }
+      );
+
+      if (labels !== undefined) {
+        await IssuesHasLabels.destroy({ where: { issue_id: issueId } });
+
+        await IssuesHasLabels.bulkCreate(
+          labels.map((label) => {
+            return { issue_id: issueId, label_id: label };
+          })
+        );
+      }
+
+      if (assignees !== undefined) {
+        await Assignee.destroy({ where: { issue_id: issueId } });
+
+        await Assignee.bulkCreate(
+          assignees.map((assignee) => {
+            return { user_id: assignee, issue_id: issueId };
+          })
+        );
+      }
+
+      return result;
+    });
+
+    return updateResult;
   },
 };
 

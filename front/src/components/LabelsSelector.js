@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
 import SettingSvg from '../svgs/SettingSvg';
 import CheckSvg from '../svgs/CheckSvg';
+import { IssueContext } from '../App';
+import issueAPI from '../apis/issue.api';
+import LabelAPI from '../apis/Labels.api';
 
 const LabelsSelectorDiv = styled.div`
   position: relative;
-  width: 20%;
+  width: 100%;
 `;
 
 const LabelsButton = styled.button`
@@ -107,6 +110,7 @@ const CheckedLabelDiv = styled.div`
   align-items: center;
   height: 34px;
   font-size: 12px;
+  margin-left: 6px;
 `;
 
 const CheckedLabelsDiv = styled.div`
@@ -164,16 +168,46 @@ const tempData = [
   },
 ];
 
-const LabelsSelector = () => {
+const LabelsSelector = ({ status, labels, setLabel, issueId }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [labels, setLabel] = useState(tempData);
+
+  const { issueInfo, dispatch } = useContext(IssueContext);
+
+  //맨 처음에 label의 데이터를 받아온다 -> checked 없는 상태
+  //초기 setLabel이 된다.
+  //issueInfo에서 데이터를 받아온다 -> 이 이슈의 label들이 뭐가 있는지 볼 수 있다.
+  //라벨 리스트를 뽑는다.
+  //그리고 맨 처음 화면에 보여주려하는데 렌더링이 너무 많이 돼서 안보인다.
+
+  //제일 늦게 가져와집니다.
+  let issueLabels = [];
+  if (issueInfo.labels) {
+    issueInfo.labels.forEach((label) => {
+      issueLabels.push(label.id);
+    });
+
+    /*const newLabels = labels.map((label) => {
+      if (issueLabels.includes(label.id)) {
+        const tmp = label;
+        tmp.checked = true;
+        return tmp;
+      }
+      return label;
+    });*/
+    // setLabel(newLabels);
+  }
+
+  useEffect(async () => {
+    let labelData = await LabelAPI.getLabels();
+    setLabel(labelData);
+  }, []);
 
   let checkedLabelsCnt = 0;
   const checkedLabels = labels.map((label, idx) => {
     if (label.checked) {
       checkedLabelsCnt++;
       return (
-        <CheckedLabelsDiv key={idx}>
+        <CheckedLabelsDiv key={`checked-label-${idx}`}>
           <CheckedLabelInnerDiv backgroundColor={label.color}>
             {label.name}
           </CheckedLabelInnerDiv>
@@ -202,8 +236,8 @@ const LabelsSelector = () => {
             <LabelColorDiv backgroundColor={label.color}></LabelColorDiv>
             <LabelId>{label.name}</LabelId>
           </LabelInnerDiv>
-          {label.description !== '' ? (
-            <LabelDescription>{label.description}</LabelDescription>
+          {label.content !== '' ? (
+            <LabelDescription>{label.content}</LabelDescription>
           ) : (
             <></>
           )}
@@ -212,6 +246,20 @@ const LabelsSelector = () => {
       </div>
     );
   });
+
+  // label 화면을 닫아줄 때 api 호출을 한다.
+  const editIssueLabels = () => {
+    setIsOpen(false);
+    if (status == 'MakePage') return;
+
+    let labelIdList = [];
+    labels.forEach((label) => {
+      if (label.checked) {
+        labelIdList.push(label.id);
+      }
+    });
+    issueAPI.editIssueLabels(issueId, labelIdList);
+  };
 
   return (
     <LabelsSelectorDiv>
@@ -227,7 +275,7 @@ const LabelsSelector = () => {
 
       {isOpen && (
         <>
-          <DropDownOverlay onClick={() => setIsOpen(false)} />
+          <DropDownOverlay onClick={editIssueLabels} />
           <DropdownMenu>
             <Header>
               <span>Apply labels to this issue</span>

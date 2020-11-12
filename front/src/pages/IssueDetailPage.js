@@ -1,26 +1,47 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import IssueTitle from '../components/IssueTitle';
-import IssueStatusChangeButton from '../components/IssueStatusChangeButton';
-import { useContext } from 'react';
 import styled from 'styled-components';
 import AssigneesSelector from '../components/AssigneesSelector';
+import IssueDetailContent from '../components/issueDetailContent';
+import CommentList from '../components/CommentList';
 import CommentWriteSection from './../components/CommentWriteSection';
 import LabelsSelector from './../components/LabelsSelector';
+import IssueAPI from '../apis/issue.api';
+import CommentAPI from '../apis/comment.api';
+import { IssueContext } from '../App';
 
-export const IssueContext = React.createContext();
+// import axios from 'axios';
+export const CommentContext = React.createContext();
 
-function reducer(state, action) {
+function commentReducer(comments, action) {
   switch (action.type) {
-    case 'toggle_status':
-      if (state.status == false) {
-        console.log('false to true');
-        return { status: true };
-      }
-      console.log('true to false');
-      return { status: false };
+    case 'set_comments':
+      return action.payload;
+    case 'edit_comment_content':
+      const newComments = comments.map((comment) => {
+        if (comment.id === action.payload.commentId) {
+          comment.comment = action.payload.content;
+          return comment;
+        }
+        return comment;
+      });
+      return newComments;
+    case 'add_comment':
+      return [...comments, action.payload];
     default:
-      return state;
+      return comments;
+  }
+}
+
+function commentCountReducer(commentCount, action) {
+  switch (action.type) {
+    case 'set_comment_count':
+      return action.payload;
+    case 'plus_commnet_count':
+      return commentCount + 1;
+    default:
+      return commentCount;
   }
 }
 
@@ -35,50 +56,128 @@ const BodyDiv = styled.div`
 const LeftDiv = styled.div`
   display: flex;
   flex-direction: column;
-  /* width: 1500px; */
+  width: 70%;
 `;
 
 const RightDiv = styled.div`
   display: flex;
   flex-direction: column;
-  width: 1500px;
+  width: 28%;
+  margin-left: 2%;
 `;
 
-const TempDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-  height: 100px;
-  margin-bottom: 10px;
-  background-color: grey;
-`;
+/*const getIssues = async () => {
+  const API_URL = process.env.API_URL;
+
+  const options = {
+    method: 'get',
+    url: API_URL + '/issue',
+    headers: { accept: 'application/json' },
+  };
+
+  try {
+    const { data } = await axios(options);
+    return data;
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Issues load failed..',
+      text: 'Something went wrong!',
+    });
+    return [];
+  }
+};*/
+
+// const getIssue = (id, issues) => {
+//   const issue = issues.find((issue) => {
+//     return issue.id === Number(id);
+//   });
+//   return issue;
+// };
 
 const IssueDetailPage = () => {
   const { id } = useParams();
+  const status = 'DetailPage';
 
-  //params에 따라 들어가는 값이 달라진다.
-  const [issueInfo, dispatch] = useReducer(reducer, { status: true });
+  const [assignees, setAssignee] = useState([]);
+  const [labels, setLabel] = useState([]);
+  const [issues, setIssues] = useState();
+  const [commentInfo, commentDispatch] = useReducer(commentReducer, []);
+  const [commentCount, commentCountDispatch] = useReducer(
+    commentCountReducer,
+    0
+  );
+  const { issueInfo, dispatch } = useContext(IssueContext);
 
-  //TODO: id로 api 호출 후 적절한 렌더링
+  const syncIssues = async () => {
+    const issues = await IssueAPI.getIssues();
+    const [issue] = issueInfo.filter((issue) => {
+      return issue.id == id;
+    });
+    setIssues(issue);
+    dispatch({ type: 'set_issue', payload: issues });
+  };
+
+  useEffect(async () => {
+    const comments = await CommentAPI.getComments(id);
+    commentDispatch({ type: 'set_comments', payload: comments });
+
+    if (!issues) {
+      await syncIssues();
+    }
+  }, []);
+
+  useEffect(async () => {
+    const allComment = await CommentAPI.getAllComments();
+    commentCountDispatch({
+      type: 'set_comment_count',
+      payload: allComment.length,
+    });
+  });
 
   return (
     <>
-      <div>Issue detail Page</div>
-      <IssueContext.Provider value={{ issueInfo, dispatch }}>
-        <IssueTitle />
+      <CommentContext.Provider
+        value={{
+          commentInfo,
+          commentCount,
+          commentDispatch,
+          commentCountDispatch,
+        }}
+      >
+        {issues && (
+          <IssueTitle
+            issues={issues}
+            setIssues={setIssues}
+            syncIssues={syncIssues}
+          />
+        )}
         <BodyDiv>
           <LeftDiv>
-            <TempDiv>개발중ㅋㅋㅋ</TempDiv>
-            <CommentWriteSection />
+            <IssueDetailContent issueId={id} />
+            <CommentList />
+            <CommentWriteSection
+              issueId={id}
+              issues={issues}
+              setIssues={setIssues}
+            />
           </LeftDiv>
           <RightDiv>
-            <AssigneesSelector />
-            <LabelsSelector />
+            <AssigneesSelector
+              status={status}
+              assignees={assignees}
+              setAssignee={setAssignee}
+              issueId={id}
+            />
+            <LabelsSelector
+              status={status}
+              labels={labels}
+              setLabel={setLabel}
+              issueId={id}
+            />
           </RightDiv>
         </BodyDiv>
-        <IssueStatusChangeButton />
-      </IssueContext.Provider>
+      </CommentContext.Provider>
     </>
   );
 };

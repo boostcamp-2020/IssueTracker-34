@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext, Fragment } from 'react';
 import styled, { keyframes } from 'styled-components';
-import queryString from 'query-string';
 import Check from '../svgs/CheckSvg';
+import { IssueListPageContext } from './../pages/IssueListPage';
 
 const DropDownIcon = styled.span`
   display: inline-block;
@@ -49,12 +48,10 @@ const slideDownAnimation = keyframes`{
 
 const DropdownMenu = styled.div`
   position: absolute;
-  // top: auto;
   margin-top: 8px;
   right: 0;
   bottom: auto;
   left: auto;
-  /* transform: translate(30px, 10px); */
   width: 230px;
   padding: 0;
   z-index: 99;
@@ -100,6 +97,7 @@ const DropDownListItem = styled.div`
   display: flex;
   align-items: center;
   padding: 7px 16px;
+  cursor: pointer;
 `;
 
 const Avatar = styled.img`
@@ -110,16 +108,11 @@ const Avatar = styled.img`
   margin-right: 8px;
 `;
 
-const AssigneeId = styled.span`
+const AssigneeName = styled.span`
   font-size: 12px;
   font-weight: 500;
   margin-right: 8px;
   color: #000;
-`;
-
-const AssigneeName = styled.span`
-  font-size: 12px;
-  color: #6a737d;
 `;
 
 const AssignedNobody = styled.span`
@@ -129,64 +122,43 @@ const AssignedNobody = styled.span`
   color: #000;
 `;
 
-const FilterLink = styled(Link)`
-  text-decoration: none;
-`;
-
 const Unchecked = styled.div`
   width: 16px;
   height: 16px;
 `;
 
-// 개발용 임시 데이터
-const tempAssignee = [
-  {
-    id: 'apple',
-    name: 'app',
-    profileUrl: 'https://avatars2.githubusercontent.com/u/59037261?s=40&v=4',
-  },
-  { id: 'banana' },
-  { id: 'chocolate', name: 'cho' },
-];
-
 const AssigneeFilterButton = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const parsed = queryString.parse(window.location.search);
-  const checkedAssignee = parsed.assignee;
+  const { assigneeList, assigneeListDispatch } = useContext(
+    IssueListPageContext
+  );
 
-  const assigneeList = [{ id: null }, ...tempAssignee]
-    .sort((a, b) => {
-      if (a.id === null) return -1;
-      if (b.id === null) return 1;
-      if (a.id === checkedAssignee) return -1;
-      if (b.id === checkedAssignee) return 1;
-      return a.id > b.id ? 1 : -1;
-    })
-    .map((assignee) => {
-      const isSelected = checkedAssignee === assignee.id;
-      const query = queryString.stringify({
-        ...parsed,
-        assignee: isSelected ? undefined : assignee.id,
-      });
-
-      return (
-        <FilterLink to={`/issue/list?${query}`} key={assignee.id}>
-          <DropDownListItem onClick={() => setIsOpen(false)}>
-            {isSelected ? <Check /> : <Unchecked />}
-            {assignee.id ? (
-              <>
-                <Avatar src={assignee.profileUrl}></Avatar>
-                <AssigneeId>{assignee.id}</AssigneeId>
-                {assignee.name && <AssigneeName>{assignee.name}</AssigneeName>}
-              </>
-            ) : (
-              <AssignedNobody>Assigned to nobody</AssignedNobody>
-            )}
-          </DropDownListItem>
-          <Hr />
-        </FilterLink>
-      );
-    });
+  const assigneeFilterList = assigneeList.map((assignee) => {
+    return (
+      <Fragment key={`assignee-filter-${assignee.id}`}>
+        <DropDownListItem
+          onClick={() => {
+            assigneeListDispatch({
+              type: 'check',
+              payload: { id: assignee.id },
+            });
+            setIsOpen(false);
+          }}
+        >
+          {assignee.isChecked ? <Check /> : <Unchecked />}
+          {assignee.id ? (
+            <>
+              <Avatar src={assignee.profile_url}></Avatar>
+              <AssigneeName>{assignee.name}</AssigneeName>
+            </>
+          ) : (
+            <AssignedNobody>Assigned to nobody</AssignedNobody>
+          )}
+        </DropDownListItem>
+        <Hr />
+      </Fragment>
+    );
+  });
 
   return (
     <AssigneeFilterDiv>
@@ -205,7 +177,7 @@ const AssigneeFilterButton = () => {
               </DropDownCloseButton>
             </Header>
             <Hr />
-            <DropDownListWrapper>{assigneeList}</DropDownListWrapper>
+            <DropDownListWrapper>{assigneeFilterList}</DropDownListWrapper>
           </DropdownMenu>
         </>
       )}

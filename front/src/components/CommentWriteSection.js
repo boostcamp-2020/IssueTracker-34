@@ -1,11 +1,18 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import styled from 'styled-components';
 import ClosedSvg from '../svgs/ClosedSvg';
+import { CommentContext } from '../pages/IssueDetailPage';
+import { IssueContext } from '../App';
+import IssueAPI from '../apis/issue.api';
+import CommentAPI from '../apis/comment.api';
+
+import axios from 'axios';
 
 const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
 
 const Box = styled.div`
+  width: 100%;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 14%);
   position: relative;
   border-radius: 2px;
@@ -17,7 +24,7 @@ const Box = styled.div`
     left: -10px;
     top: 10.5px;
     border-top: 4.5px solid transparent;
-    border-right: 10px solid #ffffff4d;
+    border-right: 10px solid #f6f8fa;
     border-bottom: 4.5px solid transparent;
     z-index: 1;
   }
@@ -35,18 +42,24 @@ const Box = styled.div`
 `;
 
 const Header = styled.div`
-  padding: 11px 5px 5px 5px;
+  // padding: 5px;
   border-radius: 1px;
-  background-color: #acc9eaad;
+  background-color: #f6f8fa;
+  height: 40px;
+  position: relative;
 `;
-const Tab = styled.span`
+const Tab = styled.div`
+  position: absolute;
   background-color: white;
   padding: 6px;
-  border: 1px solid transparent;
+  border: 1px solid orange;
   border-color: #e1e4e8;
   border-bottom: none;
   border-radius: 5px 5px 0px 0px;
   font-size: 10px;
+  height: 30px;
+  margin-top: 10px;
+  margin-left: 10px;
 `;
 const TextArea = styled.textarea`
   width: 100%;
@@ -63,10 +76,11 @@ const TextArea = styled.textarea`
 `;
 
 const Img = styled.img`
-  padding-top: 3px;
+  margin-top: 3px;
   height: 30px;
   width: 30px;
-  padding-right: 10px;
+  margin-right: 20px;
+  border-radius: 50%;
 `;
 
 const ButtonBox = styled.div`
@@ -99,13 +113,60 @@ const Button = styled.button`
   }
 `;
 
-const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
+const createComment = async (userId, issueId, commentText) => {
+  const API_URL = process.env.API_URL;
+
+  const options = {
+    method: 'post',
+    url: API_URL + '/comment',
+    headers: { accept: 'application/json' },
+    data: {
+      userId: userId,
+      issueId: issueId,
+      comment: commentText,
+      date: Date.now(),
+    },
+  };
+
+  try {
+    const { data } = await axios(options);
+    // 개발용. 데이터베이스에 잘 들어가면 나옴.
+    return data;
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Comment created failed..',
+      text: 'Something went wrong!',
+    });
+    return [];
+  }
+};
+
+const CommentWriteSection = ({
+  userProfileURL,
+  status,
+  placeholder,
+  issueId,
+  issues,
+  setIssues,
+}) => {
   // status 로 edit 인지 생성인지 구분
   // placeholder는 edit용 이전 썼던 글
   // userProfileURL 은 현제 로그인 유저의 이미지 주소
 
+  const { issueInfo, dispatch } = useContext(IssueContext);
+  const {
+    commentInfo,
+    commentCount,
+    commentDispatch,
+    commentCountDispatch,
+  } = useContext(CommentContext);
+
+  const userId = 1; //로그인 후에 받아와야 함.
+
   const [textIsEmpty, setTextIsEmpty] = useState(true);
 
+  //로그인한 사용자의 프로필 사진을 가져와야 합니다.
   const imageURL = userProfileURL ? userProfileURL : defaultUserImageUrl;
   const inputRef = useRef();
 
@@ -117,19 +178,34 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
     setTextIsEmpty(false);
   };
 
-  const closeIssue = () => {
-    //개발용
-    console.log('close');
+  const changeIssueStatus = () => {
+    setIssues({ ...issues, status_open_closed: !issues.status_open_closed });
+    IssueAPI.editIssueStatus(issueId, !issues.status_open_closed);
   };
 
   const addComment = () => {
     const commentText = inputRef.current.value;
-    //개발용
-    //TODO: comment추가 API 호출
+
+    commentDispatch({
+      type: 'add_comment',
+      payload: {
+        id: commentCount + 1,
+        comment: commentText,
+        date: Date.now(),
+        issue_id: issueId,
+        user: { id: userId, name: 'profornnan', profile_url: imageURL },
+        user_id: userId,
+      },
+    });
+
+    commentCountDispatch({
+      type: 'plus_commnet_count',
+    });
+    CommentAPI.createComment(userId, issueId, commentText);
   };
 
-  const closeAndAddComment = () => {
-    closeIssue();
+  const changeStatusAndAddComment = () => {
+    changeIssueStatus();
     //TODO: issue status 변화 API 호출
     addComment();
   };
@@ -160,11 +236,18 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
                   <Button
                     hoverColor="#f3f4f6"
                     activeColor="#edeff2"
-                    onClick={closeIssue}
+                    onClick={changeIssueStatus}
                   >
-                    <ClosedSvg color={'red'} marginRight={'4px'} />
-                    Close issue
+                    {issues && issues.status_open_closed == 0 ? (
+                      <>Reopen issue</>
+                    ) : (
+                      <>
+                        <ClosedSvg color={'red'} marginRight={'4px'} />
+                        Close issue
+                      </>
+                    )}
                   </Button>
+
                   <Button
                     background="#94d3a2"
                     color="#ffffffcc"
@@ -178,10 +261,16 @@ const CommentWriteSection = ({ userProfileURL, status, placeholder }) => {
                   <Button
                     hoverColor="#f3f4f6"
                     activeColor="#edeff2"
-                    onClick={closeAndAddComment}
+                    onClick={changeStatusAndAddComment}
                   >
-                    <ClosedSvg color={'red'} marginRight={'4px'} />
-                    Close with comment
+                    {issueInfo.status_open_closed == 0 ? (
+                      <>Reopen and comment</>
+                    ) : (
+                      <>
+                        <ClosedSvg color={'red'} marginRight={'4px'} />
+                        Close with comment
+                      </>
+                    )}
                   </Button>
                   <Button
                     background="#2c974b"
