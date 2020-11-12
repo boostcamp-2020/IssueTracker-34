@@ -7,9 +7,6 @@ import Comment from '../components/Comment';
 const CommentList = () => {
   const { commentInfo } = useContext(CommentContext);
 
-  // 개발용
-  // console.log(commentInfo);
-
   return (
     <>
       {commentInfo.map((comment) => {

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { IssueListContext } from './../pages/IssueListPage';
+import { IssueListPageContext } from './../pages/IssueListPage';
 import issueAPI from './../apis/issue.api';
 
 const DropDownIcon = styled.span`
@@ -116,7 +116,7 @@ const checkedIssueMarkAs = (issueList, issueListDispatch, statusOpenClosed) => {
   issueList
     .filter((issue) => issue.isChecked)
     .forEach((issue) => {
-      issueAPI.editIssue({
+      issueAPI.editIssueStatus({
         issueId: issue.id,
         statusOpenClosed: statusOpenClosed,
       });
@@ -134,7 +134,7 @@ const checkedIssueMarkAs = (issueList, issueListDispatch, statusOpenClosed) => {
 
 const MarkAs = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { issueList, issueListDispatch } = useContext(IssueListContext);
+  const { issueList, issueListDispatch } = useContext(IssueListPageContext);
 
   return (
     <MarkAsDiv>
