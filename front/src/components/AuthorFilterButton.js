@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, Fragment } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Check from '../svgs/CheckSvg';
-import { AuthorListContext } from './../pages/IssueListPage';
+import { IssueListPageContext } from './../pages/IssueListPage';
 
 const DropDownIcon = styled.span`
   display: inline-block;
@@ -122,11 +122,11 @@ const Unchecked = styled.div`
 
 const AuthorFilterButton = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { authorList, authorListDispatch } = useContext(AuthorListContext);
+  const { authorList, authorListDispatch } = useContext(IssueListPageContext);
 
   const authorFilterList = authorList.map((author) => {
     return (
-      <>
+      <Fragment key={`author-filter-${author.id}`}>
         <DropDownListItem
           onClick={() => {
             authorListDispatch({ type: 'check', payload: { id: author.id } });
@@ -138,7 +138,7 @@ const AuthorFilterButton = () => {
           <AuthorName>{author.name}</AuthorName>
         </DropDownListItem>
         <Hr />
-      </>
+      </Fragment>
     );
   });
 
