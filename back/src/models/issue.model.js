@@ -98,7 +98,7 @@ const issueModel = {
     labels,
     assignees,
   }) {
-    const updateResult = await sequelize.transaction(async (t) => {
+    const updateResult = await sequelize.transaction(async () => {
       const result = await Issue.update(
         {
           title: title,

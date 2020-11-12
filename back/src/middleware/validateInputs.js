@@ -14,8 +14,10 @@ const validateEditIssueInput = (req, res, next) => {
   const { issueId, title, statusOpenClosed } = req.body;
   if (
     !issueId ||
-    !validateStringOrUndefined(title) ||
-    !validateBooleanOrUndefined(statusOpenClosed)
+    !(
+      validateStringOrUndefined(title) ||
+      validateBooleanOrUndefined(statusOpenClosed)
+    )
   ) {
     return res.status(400).send();
   }

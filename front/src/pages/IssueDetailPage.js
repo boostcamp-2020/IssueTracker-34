@@ -1,16 +1,19 @@
 import React, { useReducer, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import IssueTitle from '../components/IssueTitle';
-import IssueStatusChangeButton from '../components/IssueStatusChangeButton';
 import { useContext } from 'react';
 import styled from 'styled-components';
 import AssigneesSelector from '../components/AssigneesSelector';
 import IssueDetailContent from '../components/issueDetailContent';
+import CommentList from '../components/CommentList';
 import CommentWriteSection from './../components/CommentWriteSection';
 import LabelsSelector from './../components/LabelsSelector';
+import IssueAPI from '../apis/issue.api';
+import CommentAPI from '../apis/comment.api';
 
-import axios from 'axios';
+// import axios from 'axios';
 export const IssueContext = React.createContext();
+export const CommentContext = React.createContext();
 
 function reducer(issue, action) {
   switch (action.type) {
@@ -36,6 +39,37 @@ function reducer(issue, action) {
   }
 }
 
+function commentReducer(comments, action) {
+  switch (action.type) {
+  case 'set_comments':
+    return action.payload;
+  case 'edit_comment_content':
+    const newComments = comments.map((comment) => {
+      if (comment.id === action.payload.commentId) {
+        comment.comment = action.payload.content;
+        return comment;
+      }
+      return comment;
+    });
+    return newComments;
+  case 'add_comment':
+    return [...comments, action.payload];
+  default:
+    return comments;
+  }
+}
+
+function commentCountReducer(commentCount, action) {
+  switch (action.type) {
+  case 'set_comment_count':
+    return action.payload;
+  case 'plus_commnet_count':
+    return commentCount + 1;
+  default:
+    return commentCount;
+  }
+}
+
 const tempData = {};
 
 const BodyDiv = styled.div`
@@ -57,20 +91,12 @@ const RightDiv = styled.div`
   margin-left: 2%;
 `;
 
-const TempDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-  height: 100px;
-  margin-bottom: 10px;
-  background-color: grey;
-`;
+/*const getIssues = async () => {
+  const API_URL = process.env.API_URL;
 
-const getIssues = async () => {
   const options = {
     method: 'get',
-    url: '/issue',
+    url: API_URL + '/issue',
     headers: { accept: 'application/json' },
   };
 
@@ -85,7 +111,7 @@ const getIssues = async () => {
     });
     return [];
   }
-};
+};*/
 
 const getIssue = (id, issues) => {
   const issue = issues.find((issue) => {
@@ -98,30 +124,55 @@ const IssueDetailPage = () => {
   const { id } = useParams();
 
   const [issueInfo, dispatch] = useReducer(reducer, {});
+  const [commentInfo, commentDispatch] = useReducer(commentReducer, []);
+  const [commentCount, commentCountDispatch] = useReducer(
+    commentCountReducer,
+    0,
+  );
 
   useEffect(async () => {
-    const issues = await getIssues();
+    const issues = await IssueAPI.getIssues();
     const issue = getIssue(id, issues);
     dispatch({ type: 'set_issue', payload: issue });
   }, []);
 
+  useEffect(async () => {
+    const comments = await CommentAPI.getComments(id);
+    commentDispatch({ type: 'set_comments', payload: comments });
+  }, []);
+
+  useEffect(async () => {
+    const allComment = await CommentAPI.getAllComments();
+    commentCountDispatch({
+      type: 'set_comment_count',
+      payload: allComment.length,
+    });
+  });
+
   return (
     <>
       <IssueContext.Provider value={{ issueInfo, dispatch }}>
-        <IssueTitle />
-        <BodyDiv>
-          <LeftDiv>
-            {/* <TempDiv>
-            </TempDiv> */}
-            <IssueDetailContent />
-
-            <CommentWriteSection />
-          </LeftDiv>
-          <RightDiv>
-            <AssigneesSelector />
-            <LabelsSelector />
-          </RightDiv>
-        </BodyDiv>
+        <CommentContext.Provider
+          value={{
+            commentInfo,
+            commentCount,
+            commentDispatch,
+            commentCountDispatch,
+          }}
+        >
+          <IssueTitle />
+          <BodyDiv>
+            <LeftDiv>
+              <IssueDetailContent />
+              <CommentList />
+              <CommentWriteSection />
+            </LeftDiv>
+            <RightDiv>
+              <AssigneesSelector />
+              <LabelsSelector />
+            </RightDiv>
+          </BodyDiv>
+        </CommentContext.Provider>
       </IssueContext.Provider>
     </>
   );

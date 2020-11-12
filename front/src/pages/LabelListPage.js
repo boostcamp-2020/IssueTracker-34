@@ -5,6 +5,8 @@ import LabelsButton from '../components/LabelsButton';
 import MilestonesButton from '../components/MilestonesButton';
 import LabelModal from '../components/LabelModal';
 
+import LabelListTemplate from '../components/LabelListTemplate';
+
 const Header = styled.header`
   width: 100%;
   box-sizing: border-box;
@@ -14,49 +16,22 @@ const Header = styled.header`
   border: 1px solid #e1e4e8;
 `;
 
-const LabelContent = styled.div`  
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  padding: 16px;
-  background-color: #ffffff;
-  border: 1px solid #e1e4e8;
-`;
-
-const LeftDiv = styled.div`
-  width: 30%;
-`;
-const Box = styled.div`
-  width: fit-content;
-  box-sizing: border-box;
-  padding: 8px;
-  border-radius: 5px;
-  color: white;
-  background-color:  ${(props) => props.backgroundColor || 'white'};
-`;
-
-const MiddleDiv = styled.div`
-  width: 60%;
-`;
-
-const RightDiv = styled.div`
-  display:flex;
-  & > * {
-    margin-left: 10px;
-  }
-`;
-
 const NewLabelButton = styled.button`
   height: 100%;
   color: white;
-  background:-webkit-gradient(linear, left top, left bottom, from(#31c854), to(#26973f));
-  /* background-color: #28a745; */
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#31c854),
+    to(#26973f)
+  );
   border: none;
   border-radius: 5px;
   outline: none;
 
   :hover {
-    cursor:pointer;
+    cursor: pointer;
   }
 `;
 
@@ -66,42 +41,39 @@ const LabelHeader = styled.div`
 `;
 
 const LabelListPage = () => {
-
-  const [labels, setLabels] = useState('');
+  const [labels, setLabels] = useState([]);
   const [modalIsOpened, setModalIsOpened] = useState(false);
 
-  const getLabels = async() => {
+  const getLabels = async () => {
     const labels1 = await Label.getLabels('');
     const labelCount = labels1.length;
     const parsedLabels = parseLabel(labels1, labelCount);
     setLabels(parsedLabels);
-  }
+  };
 
-  const openLabelModal = async() => {
-    console.log('opened');
+  const changeLabelModalStatus = async () => {
     setModalIsOpened(!modalIsOpened);
-  }
+  };
 
   const parseLabel = (labels, labelCount) => {
-    const labelCountTemplate = <Header key={`labelCount${labelCount}`}>{labelCount} labels</Header>;
+    const labelCountTemplate = (
+      <Header key={`labelCount${labelCount}`}>{labelCount} labels</Header>
+    );
 
     const labelListTemplate = labels.map((label, i) => {
       return (
-        <LabelContent key={`${label}${i}`}>
-          <LeftDiv >
-            <Box backgroundColor={label.color}>{label.name}</Box>
-          </LeftDiv>
-
-          <MiddleDiv>{label.content}</MiddleDiv>
-          <RightDiv>
-            <div>Edit</div>
-            <div>Delete</div>
-          </RightDiv>
-        </LabelContent>)
-
-    })
+        <div key={`${label}${i}`}>
+          <LabelListTemplate
+            changeLabelModalStatus={changeLabelModalStatus}
+            getLabels={getLabels}
+            label={label}
+            i={i}
+          />
+        </div>
+      );
+    });
     return [labelCountTemplate, ...labelListTemplate];
-  }
+  };
 
   useEffect(() => {
     getLabels();
@@ -112,15 +84,27 @@ const LabelListPage = () => {
       <LabelHeader>
         <LabelsButton />
         <MilestonesButton />
-        <div style={{
-          marginLeft: 'auto',
-        }}>
-          <NewLabelButton type='button' onClick={() => {
-            openLabelModal()
-          }}>New Label</NewLabelButton>
+        <div
+          style={{
+            marginLeft: 'auto',
+          }}
+        >
+          <NewLabelButton
+            type="button"
+            onClick={() => {
+              changeLabelModalStatus();
+            }}
+          >
+            New Label
+          </NewLabelButton>
         </div>
       </LabelHeader>
-      {!modalIsOpened && <LabelModal openLabelModal={openLabelModal} />}
+      {modalIsOpened && (
+        <LabelModal
+          changeLabelModalStatus={changeLabelModalStatus}
+          getLabels={getLabels}
+        />
+      )}
       <div>{labels}</div>
     </>
   );
