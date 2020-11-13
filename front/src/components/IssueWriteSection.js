@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import issueAPI from '../apis/issue.api';
@@ -6,6 +6,8 @@ import Swal from 'sweetalert2';
 import Box from './boxes/SpeechBox';
 import Img from './boxes/ProfileBox';
 import TextAreaBox from './boxes/TextAreaBox';
+import { UserInfoContext } from './../App';
+
 
 const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
@@ -111,8 +113,10 @@ const IssueWriteSection = ({ userProfileURL, assignees, labels }) => {
   // userProfileURL 은 현제 로그인 유저의 이미지 주소
   const history = useHistory();
   const [textIsEmpty, setTextIsEmpty] = useState(true);
+  const { userInfo } = useContext(UserInfoContext);
+  const { authorizedUserId, authorizedUsername, authorizedProfileURL } = userInfo;
 
-  const imageURL = userProfileURL ? userProfileURL : defaultUserImageUrl;
+  const imageURL = authorizedProfileURL ? authorizedProfileURL : defaultUserImageUrl;
   const inputTitleRef = useRef();
   const inputContentRef = useRef();
 

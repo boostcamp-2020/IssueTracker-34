@@ -16,32 +16,32 @@ export const CommentContext = React.createContext();
 
 function commentReducer(comments, action) {
   switch (action.type) {
-    case 'set_comments':
-      return action.payload;
-    case 'edit_comment_content':
-      const newComments = comments.map((comment) => {
-        if (comment.id === action.payload.commentId) {
-          comment.comment = action.payload.content;
-          return comment;
-        }
+  case 'set_comments':
+    return action.payload;
+  case 'edit_comment_content':
+    const newComments = comments.map((comment) => {
+      if (comment.id === action.payload.commentId) {
+        comment.comment = action.payload.content;
         return comment;
-      });
-      return newComments;
-    case 'add_comment':
-      return [...comments, action.payload];
-    default:
-      return comments;
+      }
+      return comment;
+    });
+    return newComments;
+  case 'add_comment':
+    return [...comments, action.payload];
+  default:
+    return comments;
   }
 }
 
 function commentCountReducer(commentCount, action) {
   switch (action.type) {
-    case 'set_comment_count':
-      return action.payload;
-    case 'plus_commnet_count':
-      return commentCount + 1;
-    default:
-      return commentCount;
+  case 'set_comment_count':
+    return action.payload;
+  case 'plus_commnet_count':
+    return commentCount + 1;
+  default:
+    return commentCount;
   }
 }
 
@@ -105,35 +105,44 @@ const IssueDetailPage = () => {
   const [commentInfo, commentDispatch] = useReducer(commentReducer, []);
   const [commentCount, commentCountDispatch] = useReducer(
     commentCountReducer,
-    0
+    0,
   );
   const { issueInfo, dispatch } = useContext(IssueContext);
 
   const syncIssues = async () => {
     const issues = await IssueAPI.getIssues();
-    const [issue] = issueInfo.filter((issue) => {
+    const [issue] = issues.filter((issue) => {
       return issue.id == id;
     });
     setIssues(issue);
     dispatch({ type: 'set_issue', payload: issues });
   };
 
-  useEffect(async () => {
+  const getCommentsUseEffect = async() => {
     const comments = await CommentAPI.getComments(id);
     commentDispatch({ type: 'set_comments', payload: comments });
 
     if (!issues) {
       await syncIssues();
     }
+  }
+
+  useEffect(() => {
+    getCommentsUseEffect();
+    getAllCommentsUseEffect();
+
   }, []);
 
-  useEffect(async () => {
+  const getAllCommentsUseEffect = async() => {
     const allComment = await CommentAPI.getAllComments();
     commentCountDispatch({
       type: 'set_comment_count',
       payload: allComment.length,
     });
-  });
+  }
+
+
+
 
   return (
     <>

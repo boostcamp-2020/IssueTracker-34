@@ -19,7 +19,7 @@ const commentAPI = {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
     } catch (err) {
       Swal.fire({
@@ -57,12 +57,10 @@ const commentAPI = {
         API_URL + '/comment',
         {
           params: { issueId: issueId },
-        },
-        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       return data;
     } catch (err) {
@@ -89,7 +87,7 @@ const commentAPI = {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
     } catch (err) {
       Swal.fire({
