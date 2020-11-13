@@ -147,19 +147,14 @@ const IssueDetailContent = ({
   placeholder,
   issueId,
 }) => {
-  // status 로 edit 인지 생성인지 구분
-  // placeholder는 edit용 이전 썼던 글
-  // userProfileURL 은 현제 로그인 유저의 이미지 주소
   const [isEditMode, editMode] = useState(false);
   const { userInfo } = useContext(UserInfoContext);
   const { issueInfo, dispatch } = useContext(IssueContext);
   const [currentIssue, setCurrentIssue] = useState([]);
 
   const findIssue = () => {
-    // console.log(issueInfo, "findissue");
     if (issueInfo[0]) {
       const [currentIssue] = issueInfo.filter(issue => issue.id == issueId);
-      // console.log(currentIssue, "asdasdas")
       setCurrentIssue(currentIssue)
     }
   }

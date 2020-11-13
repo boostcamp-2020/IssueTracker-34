@@ -123,13 +123,13 @@ const LoginPage = ({ setLoggedIn }) => {
               </div>
               <div>
                 <PersonSvg />
-                사람들과 Issue들을 등록 해서 프로젝트를 관리 해보세요
+                사람들과 Issue들을 등록 해서 프로젝트를 관리 해보세요.
               </div>
             </Box>
             <Box color="black">
               <GitHubSvg />
               <Title>
-                지금 당신 프로젝트에서 무슨 일이 일어나고 있는지 알아보세요
+                지금 당신의 프로젝트에서 무슨 일이 일어나고 있는지 알아보세요.
               </Title>
               <div>오늘 Issue Tracker에 가입하세요.</div>
               <StyledLink href={GITHUB_AUTHORIZATION_URL}>
