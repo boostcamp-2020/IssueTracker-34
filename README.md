@@ -53,6 +53,10 @@ http://127.0.0.1:3000/ 접속
 - [2020.11.03 개발 일지](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.03-%EA%B0%9C%EB%B0%9C-%EC%9D%BC%EC%A7%80)
 - [2020.11.04 개발 일지](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.04-%EA%B0%9C%EB%B0%9C-%EC%9D%BC%EC%A7%80)
 - [2020.11.05 개발 일지](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.05-%EA%B0%9C%EB%B0%9C-%EC%9D%BC%EC%A7%80)
+- [2020.11.09 개발 일지](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.09-%EA%B0%9C%EB%B0%9C-%EC%9D%BC%EC%A7%80)
+- [2020.11.10 개발 일지](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.10-%EA%B0%9C%EB%B0%9C-%EC%9D%BC%EC%A7%80)
+- [2020.11.11 개발 일지](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.11-%EA%B0%9C%EB%B0%9C-%EC%9D%BC%EC%A7%80)
+- [2020.11.12 개발 일지](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.12-%EA%B0%9C%EB%B0%9C-%EC%9D%BC%EC%A7%80)
 
 </p>
 </details>
@@ -69,6 +73,9 @@ http://127.0.0.1:3000/ 접속
 - [2020.11.03 스크럼](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.03-%EC%8A%A4%ED%81%AC%EB%9F%BC)
 - [2020.11.04 스크럼](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.04-%EC%8A%A4%ED%81%AC%EB%9F%BC)
 - [2020.11.05 스크럼](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.05-%EC%8A%A4%ED%81%AC%EB%9F%BC)
+- [2020.11.10 스크럼](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.10-%EC%8A%A4%ED%81%AC%EB%9F%BC)
+- [2020.11.11 스크럼](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.11-%EC%8A%A4%ED%81%AC%EB%9F%BC)
+- [2020.11.12 스크럼](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.12-%EC%8A%A4%ED%81%AC%EB%9F%BC)
 
 </p>
 </details>
@@ -78,6 +85,7 @@ http://127.0.0.1:3000/ 접속
 
 - [2020.10.26 회의록](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.10.26-%ED%9A%8C%EC%9D%98%EB%A1%9D)
 - [2020.11.02 회의록](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.02-%ED%9A%8C%EC%9D%98%EB%A1%9D)
+- [2020.11.09 회의록](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.09-%ED%9A%8C%EC%9D%98%EB%A1%9D)
 
 </p>
 </details>
@@ -86,6 +94,7 @@ http://127.0.0.1:3000/ 접속
 <p>
 
 - [2020.10.30 피어 세션](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.10.30-%ED%94%BC%EC%96%B4%EC%84%B8%EC%85%98-1%EC%A3%BC%EC%B0%A8)
+- [2020.11.06 피어 세션](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.06-%ED%94%BC%EC%96%B4-%EC%84%B8%EC%85%98)
 
 </p>
 </details>
@@ -94,6 +103,7 @@ http://127.0.0.1:3000/ 접속
 <p>
 
 - [2020.10.30 그룹 회고](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.10.30-%EA%B7%B8%EB%A3%B9-%ED%9A%8C%EA%B3%A0)
+- [2020.11.06 그룹 회고](https://github.com/boostcamp-2020/IssueTracker-34/wiki/2020.11.06-%EA%B7%B8%EB%A3%B9-%ED%9A%8C%EA%B3%A0)
 
 </p>
 </details>
