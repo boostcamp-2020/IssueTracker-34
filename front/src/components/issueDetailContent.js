@@ -151,7 +151,6 @@ const IssueDetailContent = ({ issueId }) => {
       setCurrentIssue(currentIssue)
     }
   }
-  console.log(currentIssue);
   const authorizedUserId = userInfo.authorizedUserId;
   const userName = currentIssue.user?.name ? currentIssue.user?.name : 'unnamed';
 
