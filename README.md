@@ -37,13 +37,15 @@ GitHub OAuth 설정 후 Client ID와 Client Secret을 `.env`에서 활용합니�
 
 ### Frontend
 
-`IssueTracker-34/front/.env` 파일 생성
+- `IssueTracker-34/front/.env` 파일 생성
 
 ```.env
 API_URL=api_url
 HOMEPAGE_URL=front_url
 GITHUB_CLIENT_ID=client_id
 ```
+
+- npm install & start
 
 ```shell=
 cd IssueTracker-34/front
@@ -53,7 +55,7 @@ npm start
 
 ### Backend
 
-`IssueTracker-34/back/.env` 파일 생성
+- `IssueTracker-34/back/.env` 파일 생성
 
 ```.env
 DB_HOST=localhost
@@ -73,6 +75,8 @@ baseURL=base_url
 GITHUB_CLIENT_ID=github_client_id
 GITHUB_CLIENT_SECRET=github_client_secret
 ```
+
+- npm install & start
 
 ```shell=
 cd IssueTracker-34/back
