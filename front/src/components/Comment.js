@@ -188,7 +188,7 @@ const Comment = ({ data }) => {
           <Header authorColor={authorColor}>
             {!isEditMode ? (
               <HeaderInnerDiv1>
-                {userName} commented ...
+                {userName} commented
                 {checkAuthor ? (
                   <HeaderInnerDiv2>
                     <OwnderDiv> owner </OwnderDiv>

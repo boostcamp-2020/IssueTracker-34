@@ -48,7 +48,6 @@ const Label = {
         },
 
       },
-      console.log(data),
     );
     return data;
 

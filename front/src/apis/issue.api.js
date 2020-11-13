@@ -21,14 +21,13 @@ const issueAPI = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return data;
   },
 
   async getIssues() {
     const token = localStorage.getItem('token');
-    console.log('token getissue', token);
     const { data } = await axios.get(API_URL + '/issue', {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -50,7 +49,7 @@ const issueAPI = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
   },
 
@@ -67,7 +66,7 @@ const issueAPI = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
   },
 
@@ -84,7 +83,7 @@ const issueAPI = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
   },
 
@@ -101,7 +100,7 @@ const issueAPI = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
   },
 
@@ -118,7 +117,7 @@ const issueAPI = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
   },
 };
