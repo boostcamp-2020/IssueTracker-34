@@ -26,12 +26,60 @@ http://118.67.132.237/
 
 ## :computer: Install & Run
 
+### Install
 ```shell=
 git clone -b production --single-branch https://github.com/boostcamp-2020/IssueTracker-34.git
+```
+
+### GitHub OAuth
+
+GitHub OAuth 설정 후 Client ID와 Client Secret을 `.env`에서 활용합니다.
+
+### Frontend
+
+`IssueTracker-34/front/.env` 파일 생성
+
+```.env
+API_URL=api_url
+HOMEPAGE_URL=front_url
+GITHUB_CLIENT_ID=client_id
+```
+
+```shell=
 cd IssueTracker-34/front
 npm install
 npm start
 ```
+
+### Backend
+
+`IssueTracker-34/back/.env` 파일 생성
+
+```.env
+DB_HOST=localhost
+DB_USER=username
+DB_PASS=password
+DB_DATABASE=database_name
+
+SEQ_DIALECT=mysql
+SEQ_POOL_MAX=pool_max
+SEQ_POOL_MIN=pool_min
+SEQ_POOL_ACQUIRE=pool_acquire
+SEQ_POOL_IDLE=pool_idle
+
+PORT=port_number
+PRIVATEKEY=privatekey_name
+baseURL=base_url
+GITHUB_CLIENT_ID=github_client_id
+GITHUB_CLIENT_SECRET=github_client_secret
+```
+
+```shell=
+cd IssueTracker-34/back
+npm install
+npm start
+```
+
 http://127.0.0.1:3000/ 접속
 
 <br />
