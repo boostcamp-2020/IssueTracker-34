@@ -1,7 +1,9 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { IssueContext } from '../App';
 import IssueAPI from '../apis/issue.api';
+import { UserInfoContext } from './../App';
+
 
 const defaultUserImageUrl =
   'https://Img.favpng.com/22/0/21/computer-icons-user-profile-clip-art-png-favpng-MhMHJ0Fw21MJadYjpvDQbzu5S.jpg';
@@ -145,26 +147,29 @@ const IssueDetailContent = ({
   placeholder,
   issueId,
 }) => {
-  // status 로 edit 인지 생성인지 구분
-  // placeholder는 edit용 이전 썼던 글
-  // userProfileURL 은 현제 로그인 유저의 이미지 주소
   const [isEditMode, editMode] = useState(false);
-
+  const { userInfo } = useContext(UserInfoContext);
   const { issueInfo, dispatch } = useContext(IssueContext);
+  const [currentIssue, setCurrentIssue] = useState([]);
 
-  const userId = 1; //로그인 후에 받아와야 함.
-  const userName = issueInfo.user ? issueInfo.user.name : '';
+  const findIssue = () => {
+    if (issueInfo[0]) {
+      const [currentIssue] = issueInfo.filter(issue => issue.id == issueId);
+      setCurrentIssue(currentIssue)
+    }
+  }
 
-  const authorizedUserId = 1;
+  const authorizedUserId = userInfo.authorizedUserId;
+  const userName = userInfo.authorizedUsername ? userInfo.authorizedUsername : 'unnamed';
   const authorColor =
-    issueInfo.user && issueInfo.user.id === authorizedUserId
+    userInfo.authorizedUsername && userInfo.authorizedUserId === authorizedUserId
       ? '#acc9eaad'
       : '#F6F8FA';
   const checkAuthor =
-    issueInfo.user && issueInfo.user.id === authorizedUserId ? true : false;
+    userInfo.authorizedUsername && userInfo.authorizedUserId === authorizedUserId ? true : false;
 
-  const imageURL = issueInfo.user
-    ? issueInfo.user.profile_url
+  const imageURL = userInfo
+    ? userInfo.authorizedProfileURL
     : defaultUserImageUrl;
 
   const inputRef = useRef();
@@ -185,6 +190,10 @@ const IssueDetailContent = ({
     IssueAPI.editIssueContent(issueId, newIssueContent);
     editMode(false);
   };
+
+  useEffect(() => {
+    findIssue();
+  }, [])
 
   return (
     <>
@@ -216,13 +225,13 @@ const IssueDetailContent = ({
 
           <LowerContainer>
             {!isEditMode ? (
-              <>{issueInfo.content}</>
+              <>{currentIssue.content}</>
             ) : (
               <>
                 <TextArea
                   type="text"
                   ref={inputRef}
-                  defaultValue={issueInfo.content}
+                  defaultValue={currentIssue.content}
                   placeholder="Leave a comment"
                   // onChange={handleTextInputChange}
                 />

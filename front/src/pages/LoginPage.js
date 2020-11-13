@@ -84,7 +84,6 @@ const Title = styled.span`
 
 const LoginPage = ({ setLoggedIn }) => {
   const { userInfoDispatch } = useContext(UserInfoContext);
-
   const auth = async () => {
     const token = localStorage.getItem('token');
     const { code } = queryString.parse(window.location.search);
@@ -96,18 +95,18 @@ const LoginPage = ({ setLoggedIn }) => {
     }
 
     if (!token && code) {
-      const newToken = await Auth.login(code);
 
-      localStorage.setItem('token', newToken);
-      const userInfo = await userAPI.getUserInfo(newToken);
+      const { token, authorizedUserId, authorizedUsername, authorizedProfileURL } = await Auth.login(code);
+      localStorage.setItem('token', token);
+      const userInfo = { 'authorizedUserId': authorizedUserId, 'authorizedUsername': authorizedUsername, 'authorizedProfileURL': authorizedProfileURL };
       userInfoDispatch({ type: 'setInitial', payload: userInfo });
       setLoggedIn(true);
       return;
     }
   };
 
-  useEffect(() => {
-    auth();
+  useEffect(async () => {
+    await auth();
   }, []);
 
   return (
@@ -124,13 +123,13 @@ const LoginPage = ({ setLoggedIn }) => {
               </div>
               <div>
                 <PersonSvg />
-                사람들과 Issue들을 등록 해서 프로젝트를 관리 해보세요
+                사람들과 Issue들을 등록 해서 프로젝트를 관리 해보세요.
               </div>
             </Box>
             <Box color="black">
               <GitHubSvg />
               <Title>
-                지금 당신 프로젝트에서 무슨 일이 일어나고 있는지 알아보세요
+                지금 당신의 프로젝트에서 무슨 일이 일어나고 있는지 알아보세요.
               </Title>
               <div>오늘 Issue Tracker에 가입하세요.</div>
               <StyledLink href={GITHUB_AUTHORIZATION_URL}>

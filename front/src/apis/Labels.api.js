@@ -15,36 +15,43 @@ const Label = {
 
   async getLabels() {
     const token = localStorage.getItem('token');
+
     const { data } = await axios.get(API_URL + '/label', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     return data;
+
   },
 
   async updateLabel(labelInfo) {
     const token = localStorage.getItem('token');
-    const { data } = await axios.patch(API_URL + '/label', labelInfo, {
-      headers: {
+    const { data } = await axios.patch(API_URL + '/label',
+      labelInfo,
+      { headers: {
         Authorization: `Bearer ${token}`,
       },
-    });
+      })
     return data;
   },
 
   async deleteLabel(labelId) {
     const token = localStorage.getItem('token');
+
     const { data } = await axios.delete(
       API_URL + '/label',
-      { data: labelId },
       {
+        data: labelId,
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+
+      },
+      console.log(data),
     );
     return data;
+
   },
 };
 

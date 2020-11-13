@@ -151,10 +151,9 @@ const Comment = ({ data }) => {
   const authorizedUserId = userInfo.authorizedUserId;
   const userName = data.user ? data.user.name : '';
   const authorColor =
-    data.user && data.user.id === authorizedUserId ? '#acc9eaad' : '#F6F8FA';
+    data.user && data.user.github_id === authorizedUserId ? '#acc9eaad' : '#F6F8FA';
   const checkAuthor =
-    data.user && data.user.id === authorizedUserId ? true : false;
-
+    data.user && data.user.github_id === authorizedUserId ? true : false;
   const imageURL = data.user ? data.user.profile_url : defaultUserImageUrl;
 
   const inputRef = useRef();
