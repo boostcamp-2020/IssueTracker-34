@@ -18,7 +18,7 @@ const HomeDiv = styled.div`
 `;
 
 const LogoutButton = styled.button`
-  position: fixed;
+  position: absolute;
   right: 4rem;
 `;
 

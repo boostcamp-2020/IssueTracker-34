@@ -39,7 +39,6 @@ const Box = styled.div`
 `;
 
 const Header = styled.div`
-  // padding: 5px;
   position: relative;
   border-radius: 1px;
   height: 40px;
@@ -103,7 +102,6 @@ const Button = styled.button`
   color: ${(props) => props.color || 'black'};
   border: ${(props) => props.border || '1px solid #d9dadc'};
   &:hover {
-    /* background-color: black; */
     background-color: ${(props) => props.hoverColor || props.background};
   }
   &:active {
@@ -141,12 +139,7 @@ const CancelButton = styled.button`
   }
 `;
 
-const IssueDetailContent = ({
-  userProfileURL,
-  status,
-  placeholder,
-  issueId,
-}) => {
+const IssueDetailContent = ({ issueId }) => {
   const [isEditMode, editMode] = useState(false);
   const { userInfo } = useContext(UserInfoContext);
   const { issueInfo, dispatch } = useContext(IssueContext);
@@ -158,18 +151,20 @@ const IssueDetailContent = ({
       setCurrentIssue(currentIssue)
     }
   }
-
+  console.log(currentIssue);
   const authorizedUserId = userInfo.authorizedUserId;
-  const userName = userInfo.authorizedUsername ? userInfo.authorizedUsername : 'unnamed';
-  const authorColor =
-    userInfo.authorizedUsername && userInfo.authorizedUserId === authorizedUserId
-      ? '#acc9eaad'
-      : '#F6F8FA';
-  const checkAuthor =
-    userInfo.authorizedUsername && userInfo.authorizedUserId === authorizedUserId ? true : false;
+  const userName = currentIssue.user?.name ? currentIssue.user?.name : 'unnamed';
 
-  const imageURL = userInfo
-    ? userInfo.authorizedProfileURL
+  const authorColor =
+  currentIssue.user && currentIssue.user?.github_id == authorizedUserId
+    ? '#acc9eaad'
+    : '#F6F8FA';
+
+  const checkAuthor =
+  currentIssue.user && currentIssue.user?.github_id == authorizedUserId ? true : false;
+
+  const imageURL = currentIssue
+    ? currentIssue.user?.profile_url
     : defaultUserImageUrl;
 
   const inputRef = useRef();
@@ -208,7 +203,7 @@ const IssueDetailContent = ({
           <Header authorColor={authorColor}>
             {!isEditMode ? (
               <HeaderInnerDiv1>
-                {userName} commented ...
+                {userName} commented
                 {checkAuthor ? (
                   <HeaderInnerDiv2>
                     <OwnderDiv> owner </OwnderDiv>
@@ -233,7 +228,6 @@ const IssueDetailContent = ({
                   ref={inputRef}
                   defaultValue={currentIssue.content}
                   placeholder="Leave a comment"
-                  // onChange={handleTextInputChange}
                 />
                 <ButtonBox>
                   <CancelButton onClick={changeToDefaultMode}>
