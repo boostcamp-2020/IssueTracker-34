@@ -70,6 +70,7 @@ const TextArea = styled.textarea`
   min-height: 4rem;
   border-radius: 4px;
   margin-bottom: 8px;
+  resize: vertical;
   &:focus {
     border: 0.5px solid #0366d6;
     box-shadow: 0px 0px 3px 2px #0366d680;
